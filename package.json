@@ -1,0 +1,25 @@
+{
+  "name": "youtube-sort",
+  "version": "1.0.0",
+  "description": "a Firefox extension that sorts YouTube videos based on video length.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandertbratrich/youtube-sort.git"
+  },
+  "keywords": [
+    "Firefox",
+    "Extension",
+    "YouTube",
+    "Mozilla"
+  ],
+  "author": "Alexander T. Bratrich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexandertbratrich/youtube-sort/issues"
+  },
+  "homepage": "https://github.com/alexandertbratrich/youtube-sort#readme"
+}

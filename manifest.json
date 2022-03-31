@@ -1,0 +1,25 @@
+{
+  "background": {
+      "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["yt.js"]
+    }
+  ],
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Tabs, tabs, tabs",
+    "default_popup": "tabs.html"
+  },
+  "description": "Sorts YouTube-Tab based on video length.",
+  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/tabs-tabs-tabs",
+  "manifest_version": 2,
+  "name": "YT Video Sort",
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "version": "1.1"
+}
