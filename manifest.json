@@ -35,7 +35,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "alexander.t.bratrich@pm.me",
-      "strict_min_version": "48.0"
+      "strict_min_version": "57.0"
     }
   }
 }
