@@ -1,25 +1,17 @@
-/*
-this file searches for the runtime on a YouTube video, 
-marks it grey (just so I can see that it works),
-and stores it (in seconds) in the extension storage with the URL.
-*/
+// searches the runtime on a youtube tab, and marks it grey (so you know it works)
+const timeNode = document.querySelector(".ytp-time-duration");
+if(timeNode) timeNode.style.cssText = "background-color:#FFFFFF33;border-radius:2px;padding:0px 2px;";
 
-const timeNode = document.querySelector(".ytp-time-duration")
-timeNode.style.backgroundColor = "#FFFFFF33"
-timeNode.style.borderRadius = "2px"
-timeNode.style.padding = "0px 2px"
+// collects data for the storage
+const videoNodes = document.querySelectorAll("video");
+const validVideoNode = Array.from(videoNodes).find(videoNode => !isNaN(videoNode.duration));
+const url = window.location.href;
 
-let url = window.location.href
-let time = timeNode.innerHTML.split(":")
-
-let seconds = Infinity
-if (time.length == 2)
- seconds = (parseInt(time[0]) * 60) + parseInt(time[1])
-else if (time.length == 3)
- seconds = (parseInt(time[0]) * 3600) + (parseInt(time[1]) * 60) + parseInt(time[2])
-
+// saves tab time with url as key
 try {
-  browser.storage.local.set({[url]: seconds})
+  if (validVideoNode && !isNaN(validVideoNode.duration)) {
+    browser.storage.local.set({[url]: validVideoNode.duration});
+  }
 } catch (error) {
-  console.log("[YT Sort]", error)
+  console.log("[YT Sort]", error);
 }
