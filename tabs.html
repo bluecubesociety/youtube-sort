@@ -5,12 +5,49 @@
     <link rel="stylesheet" href="tabs.css"/>
   </head>
   <body>
-    <div>
-      <input type="button" id="sortTabs" name="sortTabs" value="Sort Tabs">
+    <div class="segment">
+      <button id="sortTabs">
+        Sort Tabs
+      </button>
     </div>
-    <div>
-      <p><span id="count-tabs">X</span> YouTube Tabs</p>
-      <p><span id="count-videos">X</span> Video Tabs</p>
+
+    <div class="stats segment">
+      <b>Tabs open</b>
+      <div class="stats-inner"></div>
+    </div>
+
+    <div class="settings segment">
+      <b>Settings</b>
+      <label for="ignore_inactive">
+        <span>
+          Ignore Discarded Tabs<br/>
+          <small>They don't get reloaded and will be ignored when sorting.</small>
+        </span>
+        <input id="ignore_inactive" type="checkbox" />
+      </label>
+      <label for="ignore_trailers">
+        Ignore Channel Videos (Trailers)
+        <input id="ignore_trailers" type="checkbox" />
+      </label>
+      <label for="ignore_shorts">
+        Ignore Shorts
+        <input id="ignore_shorts" type="checkbox" />
+      </label>
+      <label for="ignore_playlists">
+        Ignore Playlists
+        <input id="ignore_playlists" type="checkbox" />
+      </label>
+      <label for="order">
+        Order
+        <select id="order">
+          <option value="asc">Ascending (Longest right)</option>
+          <option value="desc">Descending (Shortest right)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="version segment">
+      <small>Version <span id="version"></span></small>     
     </div>
 
     <script src="tabs.js"></script>
