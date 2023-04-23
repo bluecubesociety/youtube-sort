@@ -27,7 +27,7 @@
     "tabs",
     "storage"
   ],
-  "version": "1.2",
+  "version": "1.2.1",
   "icons": {
     "48": "icons/icon-48.png",
     "96": "icons/icon-96.png"
@@ -35,7 +35,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "alexander.t.bratrich@pm.me",
-      "strict_min_version": "42.0"
+      "strict_min_version": "48.0"
     }
   }
 }
