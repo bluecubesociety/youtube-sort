@@ -105,3 +105,4 @@ dist
 
 # Misc
 *.css.map
+/web-ext-artifacts
