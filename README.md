@@ -9,13 +9,13 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 **A New Look**
 - Changed the GUI design, to fit more into YouTube's design
 - Added a new tab to separate the settings from the rest
-- Video dectection indicator changed, and now recived a helper text, so you know what it is
+- Video detection indicator changed, and now received a helper text, so you know what it is
 
 **New Features**
 - You can now sort by something else than just the duration! You can sort by title, duration, channel name, views, and upload date
 - You can now ignore live streams
 - These new sorting methods can be combined, so if you sort videos by channel name, and the order isn't obvious because there more than one video by that channel, you can then sort further (by something else)
-- Improved collection of video data (all these are collected from the videoObject-Schema instead of the DOM)
+- Improved collection of video data ~~(all these are collected from the videoObject-Schema instead of the DOM)~~ Nope, now video meta-tags, which are also provided due to the schema
 - Now includes a list of detected tabs (mostly just for me for debugging).
 
 **Fixes and Improvements**
@@ -27,11 +27,12 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - 1.3.1: Fixed a bug that didn't show the indicator
 - 1.3.1: Fixed a bug that filters worked too well
 - 1.3.1: Fixed a bug that videoObject-schemas never get detected (switched over to meta-tags)
+- 1.3.2: Fixed another bug related to detection. Content-File was always reading data too soon, so now a mutation-detector waits for the video to load. Which means, I might be able to go back to the schema-variant and some me some code.
 
 **Known Issues and Limits, and new Bugs**
 - Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted, let me know or [contribute](https://github.com/alexandertbratrich/youtube-sort) to the code).
 - For the moment, I removed statistics, but if you like them back, let me know.
-- Due to the new data collection via schema, shorts seem to be problem for that, because somehow their schema isn't know right away, and if it is, it doesn't include all information (usually just the uploader) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
+- Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't know right away, and if it is, it doesn't include all information (usually just the uploader) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
 - For unknown reason, sometimes videos doesn't get detected (or don't get saved into the storage), or get sometimes mislabelled as a live stream, even though they aren't.
 
 **Things I'd love to improve in the future**
