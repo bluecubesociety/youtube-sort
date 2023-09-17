@@ -63,9 +63,9 @@ async function prefilterTabs () {
   }
   const combinedArray = Array.from(mergedMap.values()).filter(tab => {
     return tab.youtubeID &&
-    (settings.ignore_playlists && !tab.playlist) &&
-    (settings.ignore_live && !tab.live) &&
-    (settings.ignore_inactive && !tab.sleepy)
+    (!settings.ignore_playlists || !tab.playlist) &&
+    (!settings.ignore_live || !tab.live) &&
+    (!settings.ignore_inactive || !tab.sleepy)
   });
 
   // removes entries from storage that can not be found anymore
@@ -104,11 +104,11 @@ async function sortTabs () {
     renderList();
 
     // wake them up, if wanted
-    /*if (settings.ignore_inactive !== true) {
-      sleepyTabs.forEach(tab => {
-        browser.tabs.reload(tab.id)
+    if (settings.ignore_inactive !== true) {
+      sortedTabs.forEach(tab => {
+        if (tab.sleepy) browser.tabs.reload(tab.id)
       })
-    }*/
+    }
 
   } catch (error) {
     console.log("[YT Sort]", error);
@@ -158,14 +158,14 @@ async function renderList () {
 
     const smallElement = document.createElement("small");
     const properties = [
-      { prop: "live", text: "Live", className: "badge" },
-      { prop: "playlist", text: "Playlist", className: "badge" },
+      { prop: "live", textFunc: () => "Live", className: "badge" },
+      { prop: "playlist", textFunc: () => "Playlist", className: "badge" },
       { prop: "duration", textFunc: getDuration },
       { prop: "uploadDate", textFunc: (date) => new Date(date).toLocaleDateString() },
       { prop: "views", textFunc: (views) => `${getViews(views)} Views` },
       { prop: "author" }
     ];
-    properties.forEach(({ prop, text, textFunc, className }) => {
+    properties.forEach(({ prop, textFunc, className }) => {
       if (tab[prop]) {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;

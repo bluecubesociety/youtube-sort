@@ -24,6 +24,9 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - When filtering, old entries in the storage that can not be found anymore will not get deleted. In general, the filtering has been improved quite a bit, bit still could be improved further
 - Styling now uses SCSS (but hasn't been used to its full potential)
 - Improved code structure and naming.
+- 1.3.1: Fixed a bug that didn't show the indicator
+- 1.3.1: Fixed a bug that filters worked too well
+- 1.3.1: Fixed a bug that videoObject-schemas never get detected (switched over to meta-tags)
 
 **Known Issues and Limits, and new Bugs**
 - Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted, let me know or [contribute](https://github.com/alexandertbratrich/youtube-sort) to the code).
