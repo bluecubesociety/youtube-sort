@@ -88,8 +88,15 @@ body {
 
        .item {
             width: 100%;
-            padding: 4px 0;
+            padding: 4px;
+            background-color: transparent;
+            border: none;
             border-top: 1px solid #CCC;
+            cursor: pointer;
+
+            &:hover {
+              background-color: rgba(1, 1, 1, 0.1);
+            }
 
             &:first-of-type {
               border-top: none;
@@ -140,6 +147,7 @@ body {
 
     .badge {
       padding: 0px 4px;
+      margin-right: 4px;
       border-radius: $border-radius;
       background-color: rgba(1, 1, 1, 0.1);
     }
