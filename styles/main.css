@@ -69,8 +69,14 @@ body {
 }
 #main .tab-content .item {
   width: 100%;
-  padding: 4px 0;
+  padding: 4px;
+  background: transparent;
+  border: none;
   border-top: 1px solid #CCC;
+  cursor: pointer;
+}
+#main .tab-content .item:hover {
+  background-color: rgba(1, 1, 1, 0.1);
 }
 #main .tab-content .item:first-of-type {
   border-top: none;
@@ -112,6 +118,7 @@ body {
 }
 #tab-list #video-list .badge {
   padding: 0px 4px;
+  margin-right: 4px;
   border-radius: 10px;
   background-color: rgba(1, 1, 1, 0.1);
 }

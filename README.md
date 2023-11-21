@@ -4,6 +4,33 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 
 ## Patch Notes
 
+### Version 1.4 - November 21, 2023
+
+**Fixes**
+- Fixed an issue that kept old entries and youtube tabs that don't have videos in it in the tab list.
+- Fixed an issue where video durations where _always_ 2.999 seconds. Changed fetching of duration via meta tag with ISO 8601 conversion, which is unfortunately a tiny bit less precise, until YouTube changes things again.
+- Fixed a related issue where the author (aka channel name) was always undefined. It seems that the meta-data-tags seem a tiny bit unreliable.
+- Fixed an issue where the indicator didn't show up in the video controls
+- Fixed the icon on the store page
+
+**Improvements**
+- Replaced the indicator with a new icon instead of just a dot
+- Tabs in the list are now clickable
+- Slight styling adjustments
+- The MutationObserver now should fire the final data submission to the storage only once the video controls have been loaded.
+
+**Known Issues and Limits, and new Bugs**
+- Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, let me know or [contribute](https://github.com/alexandertbratrich/youtube-sort) to the code).
+- For the moment, I removed statistics, but if you like them back, let me know.
+- Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't known right away, and if it is, it doesn't include all information (usually just the channel name) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
+- For some unknown reason, some videos get mislabelled as a live stream, even though they aren't (my assumption so far is: Because they used to be premiere streams, but have already finished).
+
+**Things I'd love to improve in the future**
+- System dark/light theme preferences
+- Bring back shorts and stats
+- Include playback speed and sponsorBlock when sorting by duration
+- Include non-video tabs in the sorting as well (so they don't get mixed with the rest)
+
 ### Version 1.3 - September 17, 2023
 
 **A New Look**
@@ -27,21 +54,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - 1.3.1: Fixed a bug that didn't show the indicator
 - 1.3.1: Fixed a bug that filters worked too well
 - 1.3.1: Fixed a bug that videoObject-schemas never get detected (switched over to meta-tags)
-- 1.3.2: Fixed another bug related to detection. Content-File was always reading data too soon, so now a mutation-detector waits for the video to load. Which means, I might be able to go back to the schema-variant and some me some code.
-
-**Known Issues and Limits, and new Bugs**
-- Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted, let me know or [contribute](https://github.com/alexandertbratrich/youtube-sort) to the code).
-- For the moment, I removed statistics, but if you like them back, let me know.
-- Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't know right away, and if it is, it doesn't include all information (usually just the uploader) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
-- For unknown reason, sometimes videos doesn't get detected (or don't get saved into the storage), or get sometimes mislabelled as a live stream, even though they aren't.
-
-**Things I'd love to improve in the future**
-- System dark/light theme preferences
-- Better styling
-- Bring back shorts and stats
-- Maybe make list of tabs clickable
-- Icon on the store page (white on white)
-- Include playback speed when sorting by duration
+- 1.3.2: Fixed another bug related to detection. Content-File was always reading data too soon, so now a mutation-detector waits for the video to load. Which means, I might be able to go back to the schema-variant and skim me some code.
 
 ### Version 1.2 - April 23, 2023
 
