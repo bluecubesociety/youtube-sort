@@ -62,7 +62,7 @@ async function prefilterTabs () {
     Object.assign(mergedMap.get(tab.youtubeID), tab);
   }
   const combinedArray = Array.from(mergedMap.values()).filter(tab => {
-    return tab.youtubeID &&
+    return tab.youtubeID && tab.title &&
     (!settings.ignore_playlists || !tab.playlist) &&
     (!settings.ignore_live || !tab.live) &&
     (!settings.ignore_inactive || !tab.sleepy)
@@ -70,7 +70,8 @@ async function prefilterTabs () {
 
   // removes entries from storage that can not be found anymore
   combinedArray.forEach(async tab => {
-    if (!tab.id && !tab.title) {
+    console.log(tab)
+    if (!tab.title || !tab.id) {
       await browser.storage.local.remove(tab.youtubeID)
     }
   })
@@ -147,7 +148,10 @@ async function renderList () {
 
   const tabs = await prefilterTabs();
   for (const tab of tabs) {
-    const el = document.createElement('div');
+    const el = document.createElement('button');
+    el.onclick = () => {
+      browser.tabs.update(tab.id, { active: true });
+    };
     el.id = tab.youtubeID;
     el.classList.add('item');
     
