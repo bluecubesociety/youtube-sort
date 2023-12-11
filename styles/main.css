@@ -70,7 +70,7 @@ body {
 #main .tab-content .item {
   width: 100%;
   padding: 4px;
-  background: transparent;
+  background-color: transparent;
   border: none;
   border-top: 1px solid #CCC;
   cursor: pointer;
@@ -113,7 +113,7 @@ body {
   font: 400 14px/16px "Roboto", "Arial", sans-serif;
 }
 #tab-list #video-list {
-  max-height: 450px;
+  max-height: 400px;
   overflow: auto;
 }
 #tab-list #video-list .badge {

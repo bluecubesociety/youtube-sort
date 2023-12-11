@@ -36,12 +36,12 @@ async function prefilterTabs () {
 
   // removes all info I don't care about and remaps all data
   const trimmedAllTabs = allTabs.map(tab => {
-    const youtubeID = regex.exec(tab.url)[6]
+    const youtubeID = regex.test(tab.url) && regex.exec(tab.url)[6]
     return {
       sleepy: tab.discarded,
       selected: tab.highlighted,
       id: tab.id,
-      ...(youtubeID ? { youtubeID: youtubeID } : {})
+      ...(typeof youtubeID == "string" && youtubeID.length == 11 ? { youtubeID: youtubeID } : {})
     }
   })
   const storedTabs = Object.entries(detectedTabs).map(tab => {
@@ -70,7 +70,6 @@ async function prefilterTabs () {
 
   // removes entries from storage that can not be found anymore
   combinedArray.forEach(async tab => {
-    console.log(tab)
     if (!tab.title || !tab.id) {
       await browser.storage.local.remove(tab.youtubeID)
     }
@@ -141,12 +140,24 @@ function getDuration (seconds) {
   return `${formattedHours ? formattedHours+":" : ""}${formattedMinutes}:${formattedSeconds}`
 }
 
+async function updateStats(tabs) {
+  document.getElementById("stat_tabs").innerText = tabs.length;
+  document.getElementById("stat_duration").innerText = getDuration(tabs.reduce((acc, tab) => {
+    return acc + tab.duration;
+  }, 0));
+  document.getElementById("stat_views").innerText = getViews(tabs.reduce((acc, tab) => {
+    return acc + tab.views;
+  }, 0));
+}
+
 /** renders the list of detected tabs. */
 async function renderList () {
   const tabList = document.getElementById("video-list");
   tabList.innerHTML = "";
 
   const tabs = await prefilterTabs();
+  updateStats(tabs)
+
   for (const tab of tabs) {
     const el = document.createElement('button');
     el.onclick = () => {
