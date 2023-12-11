@@ -1,6 +1,6 @@
 {
   "name": "youtube-sort",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs by various stats (title, channel name, view count and more).",
   "main": "index.js",
   "scripts": {
@@ -26,5 +26,8 @@
   "homepage": "https://github.com/alexandertbratrich/youtube-sort#readme",
   "dependencies": {
     "web-ext": "^7.8.0"
+  },
+  "devDependencies": {
+    "sass": "^1.69.5"
   }
 }
