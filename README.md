@@ -4,18 +4,12 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 
 ## Patch Notes
 
-### Version 1.5 - December 11, 2023
+### Version 1.5.1 - May 23, 2024
 
 **Fixes**
-- Fixed an issue that entries that don't have youtubeIDs, break the whole sorting/listing process.
-- Fixed an issue that videos that premiered as a live stream got still marked as live stream, even though they finished years ago (endDate wasn't checked).
-- Fixed an issue that some videos have not been detected, because the mutationObserver didn't detect any changes. Now, the detection is called once manually on page-load
-- Fixed styling issue (transparent background)
-- Fixed type issue (String -> Integer)
-- Adjusted setup (dev deps) and publish process (instructions)
-
-**New Features**
-- Statistics are back! Shows the total video count, total runtime and total views.
+- Fixed an issue that the indicator accidentally hid the video settings on certain devices.
+- Fixed an issue that videos with unusual query parameters got accidentally removed with each sorting (i.e. when opening a tab from a different app, the url might include "app=desktop" before the "v=")
+- Fixed an issue that apparently not all videos have an embedUrl in the DOM, so the video ID gets fetched from the URL directly.
 
 **Known Issues and Limits, and new Bugs**
 - Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, [let me know or contribute to the code](https://github.com/alexandertbratrich/youtube-sort)).
@@ -31,6 +25,19 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - Option to hide the statistics
 - Option to force-reload all YT tabs (helpful for debugging as well)
 - Adjust setup to not include dev-data in final distribution
+
+### Version 1.5 - December 11, 2023
+
+**Fixes**
+- Fixed an issue that entries that don't have youtubeIDs, break the whole sorting/listing process.
+- Fixed an issue that videos that premiered as a live stream got still marked as live stream, even though they finished years ago (endDate wasn't checked).
+- Fixed an issue that some videos have not been detected, because the mutationObserver didn't detect any changes. Now, the detection is called once manually on page-load
+- Fixed styling issue (transparent background)
+- Fixed type issue (String -> Integer)
+- Adjusted setup (dev deps) and publish process (instructions)
+
+**New Features**
+- Statistics are back! Shows the total video count, total runtime and total views.
 
 ### Version 1.4 - November 21, 2023
 

@@ -1,4 +1,4 @@
-console.log("[YouTube Sort] Content File loaded.")
+console.debug("[YouTube Sort] Content File loaded.")
 let observerActive = false;
 
 // converts a ISO 8601 string into seconds
@@ -17,22 +17,22 @@ function calcDuration (duration) {
   return totalseconds
 }
 
-function fetchVideoData (observer) {
+function fetchVideoData (observer) {  
   // collects data for the storage (via meta tags)
   const uploadDate = document.querySelector("meta[itemprop='uploadDate']")?.content
   const title = document.querySelector("meta[itemprop='name']")?.content
   const author = document.querySelector(".ytd-channel-name")?.innerText
   const interactionCount = document.querySelector("meta[itemprop='interactionCount']")?.content
-  const embedUrl = document.querySelector("link[itemprop='embedUrl']")?.href
   const publication = document.querySelector("meta[itemprop='isLiveBroadcast'][content='True']")?.content
   const endDate = document.querySelector("meta[itemprop='endDate']")?.content
   const duration = document.querySelector("meta[itemprop='duration']")?.content
-  
-  const videoID = embedUrl.match(/\/embed\/([a-zA-Z0-9_-]+)/)[1];
+
+  const url = new URLSearchParams(window.location.search);
+  const videoID = url.get('v');
 
   const tabUrl = window.location.href;
   const isLive = publication && !endDate;
-  
+      
   // saves data with video id as key
   if (videoID) {
     const videoData = {
@@ -51,7 +51,7 @@ function fetchVideoData (observer) {
       const previousIndicator = document.querySelector("#youtube-sort-indictor");
 
       if (controlDiv) {
-        console.log("[YouTube Sort] submitted.")
+        console.debug("[YouTube Sort] submitted.")
         observer?.disconnect();
         observerActive = false
 
@@ -59,12 +59,17 @@ function fetchVideoData (observer) {
           const indicator = document.createElement('img');
           indicator.id = "youtube-sort-indictor";
           indicator.src = `${browser.runtime.getURL("icons/icon-trans.svg")}`
-          indicator.title = "Tab detected by YouTube Sort";
-          indicator.style.cssText = "cursor: help; width: 50%; aspect-ratio: 1"
-
-          const indicatorWrapper = document.createElement('div');
-          indicatorWrapper.style.cssText = "user-select: none; height: 100%; aspect-ratio: 1; display: flex; justify-content: center; align-items: center;"
-
+          indicator.style.width = "60%" 
+          
+          const indicatorWrapper = document.createElement('button');
+          indicatorWrapper.readonly = "true";
+          indicatorWrapper.style.cssText = "display: flex; align-items: center;"
+          indicatorWrapper.classList = "ytp-sort-button ytp-button";
+          indicatorWrapper.dataset.tooltipTargetId = "ytp-sort-button";
+          indicatorWrapper.dataset.titleNoTooltip = "Tab detected by YouTube Sort";
+          indicatorWrapper.title = "Tab detected by YouTube Sort";
+          indicatorWrapper.ariaLabel = "Tab detected by YouTube Sort";
+          
           indicatorWrapper.prepend(indicator);
           controlDiv.prepend(indicatorWrapper);
         }
@@ -82,7 +87,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
       }
     }
   } catch (error) {
-    console.log("[YouTube Sort]", error);
+    console.debug("[YouTube Sort]", error);
   }
 });
 

@@ -1,4 +1,4 @@
-const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]*)(\S+)?/i
+const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?|embed\/|v\/)?)?.*(v=([\w\-]+)(?=&|\s|$))/i
 
 const settings = {
   ignore_inactive: false,
@@ -16,7 +16,9 @@ const settings = {
 
 /** saves extension settings in the local storage */
 async function updateSettings () {
-  await browser.storage.sync.set({"settings": settings});
+  await browser.storage.sync.set({
+    settings: settings
+  });
 }
 
 /** loads settings from the sync storage */
@@ -36,7 +38,7 @@ async function prefilterTabs () {
 
   // removes all info I don't care about and remaps all data
   const trimmedAllTabs = allTabs.map(tab => {
-    const youtubeID = regex.test(tab.url) && regex.exec(tab.url)[6]
+    const youtubeID = regex.test(tab.url) && regex.exec(tab.url)[7]
     return {
       sleepy: tab.discarded,
       selected: tab.highlighted,
@@ -111,7 +113,7 @@ async function sortTabs () {
     }
 
   } catch (error) {
-    console.log("[YT Sort]", error);
+    console.debug("[YouTube Sort]", error);
     document.getElementById("alert-error").innerText = "Error: " + error;
   } finally {
     document.getElementById("tab-button-sort").classList.remove("loading")
@@ -317,7 +319,7 @@ async function init () {
   renderMenu();
 
   // update version
-  document.getElementById("version-number").innerText = browser.runtime.getManifest().version;
+  document.getElementById("version-number").innerText = browser.runtime.getManifest().version || "Unknown";
   
   // render sort options and other settings
   renderSortOptions();
@@ -331,4 +333,5 @@ async function init () {
   document.getElementById("delete-storage").addEventListener("click", deleteStorage);
   document.getElementById('tab-button-sort').addEventListener("click", sortTabs);
 }
-init();
+
+document.addEventListener('DOMContentLoaded', init);
