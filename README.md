@@ -7,7 +7,6 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 ### Version 1.5.1 - May 23, 2024
 
 **Fixes**
-- Updated Icon(s) in store // todo: 128px icon
 - Fixed an issue that the indicator accidentally hid the video settings on certain devices.
 - Fixed an issue that videos with unusual query parameters got accidentally removed with each sorting (i.e. when opening a tab from a different app, the url might include "app=desktop" before the "v=")
 - Fixed an issue that apparently not all videos have an embedUrl in the DOM, so the video ID gets fetched from the URL directly.
