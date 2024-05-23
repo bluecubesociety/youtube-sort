@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
-    "build": "web-ext build --source-dir=src --artifacts-dir=dist",
-    "test": "jest"
+    "build": "web-ext build --source-dir=src --artifacts-dir=dist"
   },
   "repository": {
     "type": "git",
@@ -29,8 +28,6 @@
     "web-ext": "^7.8.0"
   },
   "devDependencies": {
-    "dompurify": "^3.0.6",
-    "jest": "^29.7.0",
     "sass": "^1.69.5"
   },
   "webExt": {
