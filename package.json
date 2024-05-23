@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
-    "build": "web-ext build --source-dir=src --artifacts-dir=dist"
+    "build": "web-ext build"
   },
   "repository": {
     "type": "git",
