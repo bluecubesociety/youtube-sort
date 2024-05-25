@@ -1,5 +1,6 @@
 console.debug("[YouTube Sort] Content File loaded.")
 let observerActive = false;
+let foundSponsorBlock = false;
 
 // converts a ISO 8601 string into seconds
 function calcDuration (duration) {
@@ -27,6 +28,13 @@ function fetchVideoData (observer) {
   const endDate = document.querySelector("meta[itemprop='endDate']")?.content
   const duration = document.querySelector("meta[itemprop='duration']")?.content
 
+  // sponsorBlock-specific
+  const skipDuration = document.querySelector("#sponsorBlockDurationAfterSkips")?.innerText
+  if (skipDuration) {
+    foundSponsorBlock = true;
+    sponsorBlockObserver?.disconnect();
+  }
+
   const url = new URLSearchParams(window.location.search);
   const videoID = url.get('v');
 
@@ -38,6 +46,7 @@ function fetchVideoData (observer) {
     const videoData = {
       title: title,
       duration: calcDuration(duration),
+      ...(skipDuration ? { skipped: calcDuration(skipDuration.replace("(","PT").replace(")","S").replace(":","M").trim()) } : {}),
       uploadDate: uploadDate,
       author: author,
       views: parseInt(interactionCount),
@@ -83,7 +92,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
     for (const mutation of mutationsList) {
       if (mutation.addedNodes.length > 0 &&
       Array.from(mutation.addedNodes).some(addedNode => addedNode.nodeType === 1 && addedNode.classList.contains('ytp-right-controls'))) {
-        if (observerActive) fetchVideoData(observer, observerActive);
+        if (observerActive) fetchVideoData(observer);
       }
     }
   } catch (error) {
@@ -91,5 +100,19 @@ const observer = new MutationObserver((mutationsList, observer) => {
   }
 });
 
+// sponsorBlock specific: fetch and submit video data (again), if the observer finds the sponsorBlock-add on
+const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
+  try {
+    for (const mutation of mutationsList) {
+      if (mutation.target.id.includes("sponsorBlockDurationAfterSkips")) {
+        fetchVideoData(observer);
+      }
+    }
+  } catch (error) {
+    console.debug("[YouTube Sort]", error);
+  }
+});
+
+if (!foundSponsorBlock) sponsorBlockObserver.observe(document, { childList: true, subtree: true });
 observer.observe(document, { childList: true, subtree: true });
-fetchVideoData(observer, observerActive);
+fetchVideoData(observer);

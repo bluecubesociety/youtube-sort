@@ -4,6 +4,7 @@ const settings = {
   ignore_inactive: false,
   ignore_playlists: false,
   ignore_live: false,
+  sort_sponsorblock: false,
   sorting: [
     { dropdown: ["A-Z","Z-A"], asc: false, order: 0, attr: "title", title: "Video Title" },
     { dropdown: ["Oldest first","Newest first"], asc: false, order: 1, attr: "uploadDate", title: "Upload Date" },
@@ -145,7 +146,7 @@ function getDuration (seconds) {
 async function updateStats(tabs) {
   document.getElementById("stat_tabs").innerText = tabs.length;
   document.getElementById("stat_duration").innerText = getDuration(tabs.reduce((acc, tab) => {
-    return acc + tab.duration;
+    return acc + (settings.sort_sponsorblock ? tab?.skipped ?? tab.duration : tab.duration);
   }, 0));
   document.getElementById("stat_views").innerText = getViews(tabs.reduce((acc, tab) => {
     return acc + tab.views;
@@ -186,7 +187,11 @@ async function renderList () {
       if (tab[prop]) {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
-        spanElement.textContent = textFunc ? textFunc(tab[prop]) : tab[prop];
+        if (settings.sort_sponsorblock && prop === "duration") {
+          spanElement.textContent = textFunc(tab["skipped"] ?? tab["duration"]);
+        } else {
+          spanElement.textContent = textFunc ? textFunc(tab[prop]) : tab[prop];
+        }
         smallElement.appendChild(spanElement);
       }
     });
@@ -302,6 +307,14 @@ async function renderSettings() {
   document.getElementById("ignore-inactive").checked = settings.ignore_inactive
   document.getElementById("ignore-live").checked = settings.ignore_live
   document.getElementById("ignore-playlists").checked = settings.ignore_playlists
+  // sort-sponsorblock
+  document.getElementById("sort-sponsorblock").checked = settings.sort_sponsorblock
+  const tabs = await prefilterTabs();
+  if (tabs.some(tab => tab.skipped)) {
+    document.getElementById("sort-sponsorblock").style.display = "intial"
+  } else {
+    document.getElementById("sort-sponsorblock").style.display = "none"
+  }
 }
 
 async function changeSetting(setting, e) {
@@ -329,6 +342,7 @@ async function init () {
   document.getElementById("ignore-inactive").addEventListener("click", (e) => changeSetting("ignore_inactive", e));
   document.getElementById("ignore-live").addEventListener("click", (e) => changeSetting("ignore_live", e));
   document.getElementById("ignore-playlists").addEventListener("click", (e) => changeSetting("ignore_playlists", e));
+  document.getElementById("sort-sponsorblock").addEventListener("click", (e) => changeSetting("sort_sponsorblock", e));
   
   document.getElementById("delete-storage").addEventListener("click", deleteStorage);
   document.getElementById('tab-button-sort').addEventListener("click", sortTabs);
