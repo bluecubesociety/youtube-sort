@@ -1,32 +1,43 @@
 # YouTube Sort
 
-Enhance your YouTube viewing experience, by sorting your open video tabs by various stats (title, channel name, view count and more).
+Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.
 
 ## Patch Notes
 
-### Version 1.5.1 - May 23, 2024
+### Version 1.5.2 – May 25, 2024
+
+**Fixes**
+- Updated Store-Icon
+- Shorted Extension Name just to "YouTube Sort"
+
+**New Features**
+- Now supports SponsorBlock when sorting by duration (and in the statistics).
+
+**Known Issues and Limits**
+- Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, [let me know or contribute to the code](https://github.com/alexandertbratrich/youtube-sort)).
+- Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't known right away, and if it is, it doesn't include all information (usually just the channel name) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
+- When opening the popup, the stats and list isn't up-to-date immediately, only after manually pressing the sorting button.
+- If you have the same video open multiple times, only one of the tabs gets sorted correctly (maybe close them automatically?).
+- Views are not entirely acurate (they don't update once the tab has been put into storage).
+
+**Things I would love to improve in the future**
+- System dark/light theme preferences
+- Bring back shorts?
+- Include playback speed when sorting by duration (and in statistics)
+- Include non-video tabs in the sorting as well? (so they don't get mixed with other tabs)
+- Option to hide the statistics
+- Option to force-reload all YT tabs (helpful for debugging as well)
+- Adjust setup to not include dev-data in final distribution
+- Maybe, instead of sorting the tabs to the end, I should remember the old tab positions and just swap around the ids?
+
+### Version 1.5.1 – May 23, 2024
 
 **Fixes**
 - Fixed an issue that the indicator accidentally hid the video settings on certain devices.
 - Fixed an issue that videos with unusual query parameters got accidentally removed with each sorting (i.e. when opening a tab from a different app, the url might include "app=desktop" before the "v=")
 - Fixed an issue that apparently not all videos have an embedUrl in the DOM, so the video ID gets fetched from the URL directly.
 
-**Known Issues and Limits, and new Bugs**
-- Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, [let me know or contribute to the code](https://github.com/alexandertbratrich/youtube-sort)).
-- Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't known right away, and if it is, it doesn't include all information (usually just the channel name) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
-- When opening the popup, the stats and list isn't up-to-date immediately, only faster manually pressing the sorting button.
-- If you have the same video open multiple times, only one of the tabs gets sorted correctly.
-
-**Things I'd love to improve in the future**
-- System dark/light theme preferences
-- Bring back shorts?
-- Include playback speed and sponsorBlock when sorting by duration (and in statistics)
-- Include non-video tabs in the sorting as well (so they don't get mixed with other tabs?)
-- Option to hide the statistics
-- Option to force-reload all YT tabs (helpful for debugging as well)
-- Adjust setup to not include dev-data in final distribution
-
-### Version 1.5 - December 11, 2023
+### Version 1.5 – December 11, 2023
 
 **Fixes**
 - Fixed an issue that entries that don't have youtubeIDs, break the whole sorting/listing process.
@@ -39,7 +50,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 **New Features**
 - Statistics are back! Shows the total video count, total runtime and total views.
 
-### Version 1.4 - November 21, 2023
+### Version 1.4 – November 21, 2023
 
 **Fixes**
 - Fixed an issue that kept old entries and youtube tabs that don't have videos in it in the tab list.
@@ -54,7 +65,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - Slight styling adjustments
 - The MutationObserver now should fire the final data submission to the storage only once the video controls have been loaded.
 
-### Version 1.3 - September 17, 2023
+### Version 1.3 – September 17, 2023
 
 **A New Look**
 - Changed the GUI design, to fit more into YouTube's design
@@ -79,7 +90,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - 1.3.1: Fixed a bug that videoObject-schemas never get detected (switched over to meta-tags)
 - 1.3.2: Fixed another bug related to detection. Content-File was always reading data too soon, so now a mutation-detector waits for the video to load. Which means, I might be able to go back to the schema-variant and skim me some code.
 
-### Version 1.2 - April 23, 2023
+### Version 1.2 – April 23, 2023
 
 **A New Look**
 - Added custom icon
@@ -105,7 +116,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs by vari
 - Use video ideas in storage only (so if multiple windows/tabs have the same video open, but with a different URL (i.e. query parameters), they still use the same slot in the storage, saving space)
 - What is the storage limit?
 
-### Initial Version - March 31, 2022
+### Initial Version – March 31, 2022
 
 - Highlights the runtime in open YouTube videos when detected
 - Grabs the runtime of all loaded YouTube tabs and stores it in the local browser storage

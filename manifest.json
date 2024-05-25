@@ -21,16 +21,16 @@
     "name": "Alexander T. Bratrich",
     "url": "https://github.com/alexandertbratrich/youtube-sort"
   },
-  "description": "Enhance your YouTube viewing experience, by sorting your open video tabs by various stats (title, channel name, view count and more).",
+  "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "homepage_url": "https://github.com/alexandertbratrich/youtube-sort",
   "manifest_version": 2,
-  "name": "YouTube Sort — Sort YouTube Video Tabs",
+  "name": "YouTube Sort",
   "short_name": "YouTube Sort",
   "permissions": [
     "tabs",
     "storage"
   ],
-  "version": "1.5.1",
+  "version": "1.5.2",
   "web_accessible_resources": [
     "icons/icon-trans.svg"
   ],
