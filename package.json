@@ -1,7 +1,7 @@
 {
   "name": "youtube-sort",
-  "version": "1.5.1",
-  "description": "Enhance your YouTube viewing experience, by sorting your open video tabs by various stats (title, channel name, view count and more).",
+  "version": "1.5.2",
+  "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "main": "index.js",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
