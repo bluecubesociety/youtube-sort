@@ -4,20 +4,21 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 ## Patch Notes
 
-### Version 1.5.2 – May 25, 2024
-
-**Fixes**
-- Updated Store-Icon
-- Shorted Extension Name just to "YouTube Sort"
+### Version 1.6.0 – Sep 07, 2024
 
 **New Features**
-- Now supports SponsorBlock when sorting by duration (and in the statistics).
+- Added Tips (there is only one so far).
+
+**Fixes**
+- Fixed an issue (#17) that prevented the video controls to be used, due to the indicator. It's now been moved to the description instead.
+- Fixed an issue (#16) where duplicate tabs haven't been sorted properly.
+- Fixed issue that the SponsorBlock specific setting wasn't being hidden properly, when no SponsorBlock detected.
+- Adjustment comments and issue references.
 
 **Known Issues and Limits**
 - Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, [let me know or contribute to the code](https://github.com/alexandertbratrich/youtube-sort)).
 - Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't known right away, and if it is, it doesn't include all information (usually just the channel name) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
 - When opening the popup, the stats and list isn't up-to-date immediately, only after manually pressing the sorting button.
-- If you have the same video open multiple times, only one of the tabs gets sorted correctly (maybe close them automatically?).
 - Views are not entirely acurate (they don't update once the tab has been put into storage).
 
 **Things I would love to improve in the future**
@@ -29,6 +30,15 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 - Option to force-reload all YT tabs (helpful for debugging as well)
 - Adjust setup to not include dev-data in final distribution
 - Maybe, instead of sorting the tabs to the end, I should remember the old tab positions and just swap around the ids?
+
+### Version 1.5.2 – May 25, 2024
+
+**Fixes**
+- Updated Store-Icon
+- Shorted Extension Name just to "YouTube Sort"
+
+**New Features**
+- (#11) Now supports SponsorBlock when sorting by duration (and in the statistics).
 
 ### Version 1.5.1 – May 23, 2024
 
@@ -53,8 +63,8 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 ### Version 1.4 – November 21, 2023
 
 **Fixes**
-- Fixed an issue that kept old entries and youtube tabs that don't have videos in it in the tab list.
-- Fixed an issue where video durations where _always_ 2.999 seconds. Changed fetching of duration via meta tag with ISO 8601 conversion, which is unfortunately a tiny bit less precise, until YouTube changes things again.
+- Fixed an issue (#10) that kept old entries and youtube tabs that don't have videos in it in the tab list.
+- Fixed an issue (#9) where video durations where _always_ 2.999 seconds. Changed fetching of duration via meta tag with ISO 8601 conversion, which is unfortunately a tiny bit less precise, until YouTube changes things again.
 - Fixed a related issue where the author (aka channel name) was always undefined. It seems that the meta-data-tags seem a tiny bit unreliable.
 - Fixed an issue where the indicator didn't show up in the video controls
 - Fixed the icon on the store page
@@ -73,7 +83,7 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 - Video detection indicator changed, and now received a helper text, so you know what it is
 
 **New Features**
-- You can now sort by something else than just the duration! You can sort by title, duration, channel name, views, and upload date
+- (#3) You can now sort by something else than just the duration! You can sort by title, duration, channel name, views, and upload date
 - You can now ignore live streams
 - These new sorting methods can be combined, so if you sort videos by channel name, and the order isn't obvious because there more than one video by that channel, you can then sort further (by something else)
 - Improved collection of video data ~~(all these are collected from the videoObject-Schema instead of the DOM)~~ Nope, now video meta-tags, which are also provided due to the schema
@@ -86,8 +96,8 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 - Styling now uses SCSS (but hasn't been used to its full potential)
 - Improved code structure and naming.
 - 1.3.1: Fixed a bug that didn't show the indicator
-- 1.3.1: Fixed a bug that filters worked too well
-- 1.3.1: Fixed a bug that videoObject-schemas never get detected (switched over to meta-tags)
+- 1.3.1: Fixed a bug (#6) that filters worked too well
+- 1.3.1: Fixed a bug (#5) that videoObject-schemas never get detected (switched over to meta-tags)
 - 1.3.2: Fixed another bug related to detection. Content-File was always reading data too soon, so now a mutation-detector waits for the video to load. Which means, I might be able to go back to the schema-variant and skim me some code.
 
 ### Version 1.2 – April 23, 2023
