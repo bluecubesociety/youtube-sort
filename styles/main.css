@@ -72,7 +72,7 @@ body {
   padding: 4px;
   background-color: transparent;
   border: none;
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #ccc;
   cursor: pointer;
 }
 #main .tab-content .item:hover {
@@ -93,11 +93,13 @@ body {
 #main .tab-content .item small span:not(.badge):not(:last-of-type):after {
   content: " | ";
 }
-#main .tab-content.hidden {
-  display: none;
+
+.hidden {
+  display: none !important;
 }
 
 .segment {
+  position: relative;
   color: #0f0f0f;
   font: 400 14px/20px "Roboto", "Arial", sans-serif;
   background-color: rgba(128, 128, 128, 0.1);
@@ -106,6 +108,25 @@ body {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+}
+.segment #close-button {
+  border: none;
+  width: 16px;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  opacity: 0.5;
+  background-color: transparent;
+}
+.segment #close-button:hover {
+  opacity: 1;
+  cursor: pointer;
+  background-color: rgba(1, 1, 1, 0.1);
 }
 
 #tab-list {
@@ -133,7 +154,7 @@ body {
   align-items: center;
   padding: 4px 0;
   transition: color 0.3s ease, fill 0.3s ease;
-  color: #CCC;
+  color: #ccc;
 }
 #sorting-rules #sortable-list li .title {
   color: #0f0f0f;
