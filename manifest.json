@@ -26,14 +26,9 @@
   "manifest_version": 2,
   "name": "YouTube Sort",
   "short_name": "YouTube Sort",
-  "permissions": [
-    "tabs",
-    "storage"
-  ],
-  "version": "1.5.2",
-  "web_accessible_resources": [
-    "icons/icon-trans.svg"
-  ],
+  "permissions": ["tabs", "storage"],
+  "version": "1.6.0",
+  "web_accessible_resources": ["icons/icon-trans.svg"],
   "icons": {
     "48": "icons/icon-48.png",
     "64": "icons/icon-64.png",
