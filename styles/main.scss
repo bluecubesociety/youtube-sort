@@ -2,26 +2,26 @@ $border-radius: 10px;
 $font: #0f0f0f;
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 html {
-  width: 320px;
-  font-size: 16px;
-  font-family: sans-serif;
+    width: 320px;
+    font-size: 16px;
+    font-family: sans-serif;
 }
 
 body {
-  width: 320px;
+    width: 320px;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #menu {
@@ -36,7 +36,10 @@ body {
 
     .tab-button {
         color: $font;
-        font: 400 14px/20px "Roboto","Arial", sans-serif;
+        font:
+            400 14px/20px "Roboto",
+            "Arial",
+            sans-serif;
 
         height: 40px;
         min-width: 40px;
@@ -48,246 +51,279 @@ body {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        transition: background-color 0.3s ease,
-          color 0.3s ease,
-          width 0.1s ease,
-          fill 0.3s ease;
+        transition:
+            background-color 0.3s ease,
+            color 0.3s ease,
+            width 0.1s ease,
+            fill 0.3s ease;
 
         &:hover {
-          fill: currentColor;
-          background-color: rgba(1, 1, 1, 0.1);
+            fill: currentColor;
+            background-color: rgba(1, 1, 1, 0.1);
         }
 
         &.active {
-          fill: currentColor;
-          background-color: rgba(1, 1, 1, 0.1);
+            fill: currentColor;
+            background-color: rgba(1, 1, 1, 0.1);
         }
 
         svg {
-          display: block;
-          height: 24px;
+            display: block;
+            height: 24px;
         }
     }
 
     #tab-button-sort {
-      width: 50%;
+        width: 50%;
 
-      border-radius: $border-radius;
-      background-color: rgba(1, 1, 1, 0.1);
-      font-weight: 500;
+        border-radius: $border-radius;
+        background-color: rgba(1, 1, 1, 0.1);
+        font-weight: 500;
 
-      &:hover {
-        width: 55%;
-      }
+        &:hover {
+            width: 55%;
+        }
     }
 }
 
 #main {
     .tab-content {
-      padding: 8px;
+        padding: 8px;
 
-       .item {
+        .item {
             width: 100%;
             padding: 4px;
             background-color: transparent;
             border: none;
-            border-top: 1px solid #CCC;
+            border-top: 1px solid #ccc;
             cursor: pointer;
 
             &:hover {
-              background-color: rgba(1, 1, 1, 0.1);
+                background-color: rgba(1, 1, 1, 0.1);
             }
 
             &:first-of-type {
-              border-top: none;
+                border-top: none;
             }
 
             .title {
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis; 
-              width: 100%;       
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
             }
-            
-            small {
-              color: grey;
-              
-              span:not(.badge):not(:last-of-type):after {
-                content: ' | ';
-              }
-            }
-        }
 
-        &.hidden {
-          display: none;
+            small {
+                color: grey;
+
+                span:not(.badge):not(:last-of-type):after {
+                    content: " | ";
+                }
+            }
         }
     }
+}
+
+.hidden {
+    display: none !important;
 }
 
 .segment {
-  color: $font;
-  font: 400 14px/20px "Roboto","Arial", sans-serif;
+    position: relative;
+    color: $font;
+    font:
+        400 14px/20px "Roboto",
+        "Arial",
+        sans-serif;
 
-  background-color: rgba(128, 128, 128, 0.1);
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: $border-radius;
+    background-color: rgba(128, 128, 128, 0.1);
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: $border-radius;
 
-  display: flex;
-  flex-direction: column;
-}
-
-#tab-list {
-  color: $font;
-  font: 400 14px/16px "Roboto","Arial", sans-serif;
-
-  #video-list {
-    max-height: 400px;
-    overflow: auto;
-
-    .badge {
-      padding: 0px 4px;
-      margin-right: 4px;
-      border-radius: $border-radius;
-      background-color: rgba(1, 1, 1, 0.1);
-    }
-  }
-}
-
-#sorting-rules {
-  #sortable-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  #sortable-list li {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
-    transition: color 0.3s ease, fill 0.3s ease;
-    color: #CCC;
+    flex-direction: column;
 
-    .title {
-      color: $font;
-    }
-
-    svg {
-      color: inherit;
-      fill: currentColor;
-    }
-
-    &:hover {
-      color: $font;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      button {
+    #close-button {
+        border: none;
+        width: 16px;
+        aspect-ratio: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        color: inherit;
-
-        cursor: pointer;
-        border: none;
         border-radius: $border-radius;
-        width: 24px;
-
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        opacity: 0.5;
         background-color: transparent;
-        transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: rgba(1, 1, 1, 0.1);
+            opacity: 1;
+            cursor: pointer;
+            background-color: rgba(1, 1, 1, 0.1);
         }
-      }
+    }
+}
+
+#tab-list {
+    color: $font;
+    font:
+        400 14px/16px "Roboto",
+        "Arial",
+        sans-serif;
+
+    #video-list {
+        max-height: 400px;
+        overflow: auto;
+
+        .badge {
+            padding: 0px 4px;
+            margin-right: 4px;
+            border-radius: $border-radius;
+            background-color: rgba(1, 1, 1, 0.1);
+        }
+    }
+}
+
+#sorting-rules {
+    #sortable-list {
+        list-style: none;
+        padding: 0;
     }
 
-    select {
-      cursor: pointer;
-      height: 24px;
-      padding: 0 4px;
-      border: none;
-      border-radius: $border-radius;
-      background-color: transparent;
-      transition: background-color 0.3s ease;
-      color: inherit;
-      
-      &:hover {
-        background-color: rgba(1, 1, 1, 0.1);
-      }
-    }
+    #sortable-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        transition:
+            color 0.3s ease,
+            fill 0.3s ease;
+        color: #ccc;
 
-    &:first-of-type {
-      .up {
-        display: none;
-      }
-      .down {
-        margin-left: 24px;
-      }
-    }
+        .title {
+            color: $font;
+        }
 
-    &:last-of-type {
-      .up {
-        margin-right: 24px;
-      }
-      .down {
-        display: none;
-      }
+        svg {
+            color: inherit;
+            fill: currentColor;
+        }
+
+        &:hover {
+            color: $font;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: inherit;
+
+                cursor: pointer;
+                border: none;
+                border-radius: $border-radius;
+                width: 24px;
+
+                background-color: transparent;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: rgba(1, 1, 1, 0.1);
+                }
+            }
+        }
+
+        select {
+            cursor: pointer;
+            height: 24px;
+            padding: 0 4px;
+            border: none;
+            border-radius: $border-radius;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            color: inherit;
+
+            &:hover {
+                background-color: rgba(1, 1, 1, 0.1);
+            }
+        }
+
+        &:first-of-type {
+            .up {
+                display: none;
+            }
+            .down {
+                margin-left: 24px;
+            }
+        }
+
+        &:last-of-type {
+            .up {
+                margin-right: 24px;
+            }
+            .down {
+                display: none;
+            }
+        }
     }
-  }
 }
 
 #filter-rules {
-  label {
-    display: inline-block;
-    width: 100%;
-  }
+    label {
+        display: inline-block;
+        width: 100%;
+    }
 }
 
 #version {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  font-size: 12px;
-  line-height: 18px;
-  color: rgb(144, 144, 144);
+    font-size: 12px;
+    line-height: 18px;
+    color: rgb(144, 144, 144);
 }
 
 #alert-error {
-  margin: 8px;
-  padding: 8px;
+    margin: 8px;
+    padding: 8px;
 
-  border-radius: $border-radius;
-  background-color: red;
-  color: white;
+    border-radius: $border-radius;
+    background-color: red;
+    color: white;
 
-  &:empty {
-    display: none;
-  }
+    &:empty {
+        display: none;
+    }
 }
 
 #delete-storage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: inherit;
 
-  cursor: pointer;
-  border: none;
-  border-radius: $border-radius;
-  max-width: 50%;
-  height: 24px;
+    cursor: pointer;
+    border: none;
+    border-radius: $border-radius;
+    max-width: 50%;
+    height: 24px;
 
-  background-color: rgba(1, 1, 1, 0.1);
-  transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: rgba(1, 1, 1, 0.1);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 
-  &:hover {
-    background-color: rgba(255, 1, 1, 0.1);
-    color: red;
-  }
+    &:hover {
+        background-color: rgba(255, 1, 1, 0.1);
+        color: red;
+    }
 }
