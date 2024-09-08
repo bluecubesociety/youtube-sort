@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
-    "build": "web-ext build"
+    "build": "web-ext build --overwrite-dest"
   },
   "repository": {
     "type": "git",
