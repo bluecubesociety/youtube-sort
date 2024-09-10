@@ -9,6 +9,7 @@ const settings = {
   ignore_playlists: false,
   ignore_live: false,
   sort_sponsorblock: false,
+  force_reload: false,
   sorting: [
     {
       dropdown: ["A-Z", "Z-A"],
@@ -42,7 +43,7 @@ const settings = {
       dropdown: ["Shortest first", "Longest first"],
       asc: false,
       order: 4,
-      attr: "duration",
+      attr: "liveDuration",
       title: "Video Duration",
     },
   ],
@@ -88,6 +89,10 @@ async function prefilterTabs() {
         sleepy: tab.discarded,
         selected: tab.highlighted,
         tabTitle: tab.title,
+        liveDuration:
+          videoTabs[youtubeID]?.live ??
+          videoTabs[youtubeID]?.skipped ??
+          videoTabs[youtubeID].duration,
         ...(typeof youtubeID == "string" && youtubeID.length == 11
           ? { youtubeID: youtubeID }
           : {}),
@@ -135,9 +140,18 @@ async function sortTabs() {
 
   try {
     const tabs = await prefilterTabs();
+
+    // wake them up, if wanted
+    if (settings.force_reload) {
+      tabs.forEach((tab) => {
+        browser.tabs.reload(tab.id);
+      });
+    }
+
     const sortedTabs = tabs.sort((a, b) => {
       for (const sorting of settings.sorting) {
-        const criteria = sorting.attr;
+        const criteria =
+          sorting.attr === "duration" ? "liveDuration" : sorting.attr;
         const critA =
           typeof a[criteria] === "string"
             ? a[criteria].toLowerCase()
@@ -182,17 +196,27 @@ function getViews(views) {
   return (views / divisor).toFixed(1) + SI_SYMBOL[tier];
 }
 
+/** returns relative premiere time */
+function getPremiereTime(timestamp) {
+  const today = new Date();
+  const premiere = new Date(timestamp);
+  const diff = premiere - today;
+  return getDuration(diff / 1000);
+}
+
 /** returns duration as a string */
 function getDuration(seconds) {
-  const hours = Math.floor(seconds / 3600);
+  const days = Math.floor(seconds / 86400); // 86400 seconds in a day
+  const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = Math.floor(seconds % 60);
 
-  const formattedHours = hours ? String(hours).padStart(2, "0") : "";
+  const formattedDays = days ? String(days).padStart(2, "0") + ":" : "";
+  const formattedHours = hours ? String(hours).padStart(2, "0") + ":" : "";
   const formattedMinutes = String(minutes).padStart(2, "0");
   const formattedSeconds = String(remainingSeconds).padStart(2, "0");
 
-  return `${formattedHours ? formattedHours + ":" : ""}${formattedMinutes}:${formattedSeconds}`;
+  return `${formattedDays}${formattedHours}${formattedMinutes}:${formattedSeconds}`;
 }
 
 async function updateStats(tabs) {
@@ -239,7 +263,13 @@ async function renderList() {
     const properties = [
       { prop: "live", textFunc: () => "Live", className: "badge" },
       { prop: "playlist", textFunc: () => "Playlist", className: "badge" },
-      { prop: "duration", textFunc: getDuration },
+      {
+        prop: "duration",
+        textFunc: (duration) =>
+          tab.live > 0
+            ? `Live in ${getPremiereTime(tab.live)}`
+            : getDuration(duration),
+      },
       {
         prop: "uploadDate",
         textFunc: (date) => new Date(date).toLocaleDateString(),
@@ -248,7 +278,7 @@ async function renderList() {
       { prop: "author" },
     ];
     properties.forEach(({ prop, textFunc, className }) => {
-      if (tab[prop]) {
+      if (tab[prop] || prop === "duration") {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
         if (settings.sort_sponsorblock && prop === "duration") {
@@ -387,9 +417,9 @@ async function renderSettings() {
   document.getElementById("ignore-live").checked = settings.ignore_live;
   document.getElementById("ignore-playlists").checked =
     settings.ignore_playlists;
-  // sort-sponsorblock
   document.getElementById("sort-sponsorblock").checked =
     settings.sort_sponsorblock;
+  document.getElementById("force-reload").checked = settings.force_reload;
   const tabs = await prefilterTabs();
   if (tabs.some((tab) => tab.skipped)) {
     document.getElementById("sort-sponsorblock").parentNode.style.display =
@@ -454,6 +484,9 @@ async function init() {
   document
     .getElementById("sort-sponsorblock")
     .addEventListener("click", (e) => changeSetting("sort_sponsorblock", e));
+  document
+    .getElementById("force-reload")
+    .addEventListener("click", (e) => changeSetting("force_reload", e));
 
   document
     .getElementById("delete-storage")
