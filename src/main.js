@@ -92,7 +92,7 @@ async function prefilterTabs() {
         liveDuration:
           videoTabs[youtubeID]?.live ??
           videoTabs[youtubeID]?.skipped ??
-          videoTabs[youtubeID].duration,
+          videoTabs[youtubeID]?.duration,
         ...(typeof youtubeID == "string" && youtubeID.length == 11
           ? { youtubeID: youtubeID }
           : {}),

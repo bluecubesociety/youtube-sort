@@ -4,6 +4,11 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 ## Patch Notes
 
+### Version 1.6.2 – Sep 11, 2024
+
+**Fixes**
+- Fixed an issue with unknown video tab data
+
 ### Version 1.6.1 – Sep 10, 2024
 
 **New Features**
