@@ -43,6 +43,9 @@ function fetchVideoData(observer) {
   const publication = document.querySelector(
     "meta[itemprop='isLiveBroadcast'][content='True']",
   )?.content;
+  const startDate = document.querySelector(
+    "meta[itemprop='startDate']",
+  )?.content;
   const endDate = document.querySelector("meta[itemprop='endDate']")?.content;
   const duration = document.querySelector("meta[itemprop='duration']")?.content;
 
@@ -61,6 +64,23 @@ function fetchVideoData(observer) {
   const tabUrl = window.location.href;
   const isLive = publication && !endDate;
 
+  function convertTimeFormat(timeString) {
+    // Regular expression to capture hours (optional), minutes, and seconds
+    const regex = /\((?:(\d+):)?(\d+):(\d+)\)/;
+    const match = timeString.match(regex);
+    if (!match) return timeString; // If the string doesn't match the pattern, return it as is.
+    const [, hours, minutes, seconds] = match;
+    let result = "PT";
+    if (hours) {
+      result += `${hours}H`;
+      result += `${minutes}M${seconds}S`;
+    } else {
+      result += `${minutes}M${seconds}S`;
+    }
+
+    return result;
+  }
+
   // saves data with video id as key
   if (videoID) {
     const videoData = {
@@ -68,21 +88,16 @@ function fetchVideoData(observer) {
       duration: calcDuration(duration),
       ...(skipDuration
         ? {
-            skipped: calcDuration(
-              skipDuration
-                .replace("(", "PT")
-                .replace(")", "S")
-                .replace(":", "M")
-                .trim(),
-            ),
+            skipped: calcDuration(convertTimeFormat(skipDuration)),
           }
         : {}),
       uploadDate: uploadDate,
       author: author,
       views: parseInt(interactionCount),
-      ...(isLive ? { live: true } : {}),
+      ...(isLive ? { live: new Date(startDate).getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
+
     browser.storage.local.set({ [videoID]: videoData }).then(() => {
       // create an indicator and append it to the page at targetNode.
       // (unless the extension is reloading)

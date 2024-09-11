@@ -4,6 +4,21 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 ## Patch Notes
 
+### Version 1.6.2 – Sep 11, 2024
+
+**Fixes**
+- Fixed an issue with unknown video tab data
+
+### Version 1.6.1 – Sep 10, 2024
+
+**New Features**
+- YouTube Premieres are being sorted now to the _back_ of the duration list (as in: having infinite duration), while sorting them based on time until premiere.
+- Tab list now shows time until premiere
+- Added option to force reload all video tabs for debugging
+
+**Fixes**
+- Fixed an issue that videos with SponsorBlock that were longer than 60 minutes didn't get detected.
+
 ### Version 1.6.0 – Sep 08, 2024
 
 **New Features**
@@ -16,7 +31,6 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 - Adjustment comments and issue references.
 
 **Known Issues and Limits**
-- Video Premieres that go something like "Premieres in X days" do not get tracked or sorted, because their videos don't have a duration (yet), and I don't track the time until the premiere (but if there's someone out there who has such a specific use case that they have multiple premieres open at once and want them sorted ny time, [let me know or contribute to the code](https://github.com/alexandertbratrich/youtube-sort)).
 - Due to the new data collection via ~~schema~~ meta-tags, shorts seem to be problem for that, because somehow their schema isn't known right away, and if it is, it doesn't include all information (usually just the channel name) and the schema is structured differently. Shorts are a bit of a problem in general, due to their nature of just scrolling further, so that would mean I would need to track if the url changes and update accordingly. I may update that in the future, but I personally don't watch shorts that much that I need to sort them, but if that's a special case you want to me to patch for you, let me know.
 - When opening the popup, the stats and list isn't up-to-date immediately, only after manually pressing the sorting button.
 - Views are not entirely acurate (they don't update once the tab has been put into storage).
@@ -27,7 +41,6 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 - Include playback speed when sorting by duration (and in statistics)
 - Include non-video tabs in the sorting as well? (so they don't get mixed with other tabs)
 - Option to hide the statistics
-- Option to force-reload all YT tabs (helpful for debugging as well)
 - Adjust setup to not include dev-data in final distribution
 - Maybe, instead of sorting the tabs to the end, I should remember the old tab positions and just swap around the ids?
 

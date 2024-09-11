@@ -27,7 +27,7 @@
   "name": "YouTube Sort",
   "short_name": "YouTube Sort",
   "permissions": ["tabs", "storage"],
-  "version": "1.6.0",
+  "version": "1.6.2",
   "web_accessible_resources": ["icons/icon-trans.svg"],
   "icons": {
     "48": "icons/icon-48.png",
