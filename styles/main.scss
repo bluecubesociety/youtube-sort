@@ -1,5 +1,28 @@
 $border-radius: 10px;
-$font: #0f0f0f;
+
+:root {
+    --color-text: #0f0f0f;
+    --color-bg: #ffffff;
+    --color-border: #ccc;
+    --color-surface: rgba(128, 128, 128, 0.1);
+    --color-hover: rgba(0, 0, 0, 0.1);
+    --color-muted: rgb(144, 144, 144);
+    --color-inactive: #ccc;
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f1f1f1;
+        --color-bg: #0f0f0f;
+        --color-border: #3f3f3f;
+        --color-surface: rgba(255, 255, 255, 0.05);
+        --color-hover: rgba(255, 255, 255, 0.1);
+        --color-muted: rgb(144, 144, 144);
+        --color-inactive: #555;
+        color-scheme: dark;
+    }
+}
 
 * {
     box-sizing: border-box;
@@ -11,6 +34,8 @@ html {
     width: 320px;
     font-size: 16px;
     font-family: sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
 }
 
 body {
@@ -35,7 +60,8 @@ body {
     cursor: pointer;
 
     .tab-button {
-        color: $font;
+        color: var(--color-text);
+        fill: var(--color-text);
         font:
             400 14px/20px "Roboto",
             "Arial",
@@ -59,12 +85,12 @@ body {
 
         &:hover {
             fill: currentColor;
-            background-color: rgba(1, 1, 1, 0.1);
+            background-color: var(--color-hover);
         }
 
         &.active {
             fill: currentColor;
-            background-color: rgba(1, 1, 1, 0.1);
+            background-color: var(--color-hover);
         }
 
         svg {
@@ -77,7 +103,7 @@ body {
         width: 50%;
 
         border-radius: $border-radius;
-        background-color: rgba(1, 1, 1, 0.1);
+        background-color: var(--color-hover);
         font-weight: 500;
 
         &:hover {
@@ -95,11 +121,12 @@ body {
             padding: 4px;
             background-color: transparent;
             border: none;
-            border-top: 1px solid #ccc;
+            border-top: 1px solid var(--color-border);
             cursor: pointer;
+            color: var(--color-text);
 
             &:hover {
-                background-color: rgba(1, 1, 1, 0.1);
+                background-color: var(--color-hover);
             }
 
             &:first-of-type {
@@ -114,7 +141,7 @@ body {
             }
 
             small {
-                color: grey;
+                color: var(--color-muted);
 
                 span:not(.badge):not(:last-of-type):after {
                     content: " | ";
@@ -130,13 +157,13 @@ body {
 
 .segment {
     position: relative;
-    color: $font;
+    color: var(--color-text);
     font:
         400 14px/20px "Roboto",
         "Arial",
         sans-serif;
 
-    background-color: rgba(128, 128, 128, 0.1);
+    background-color: var(--color-surface);
     padding: 8px;
     margin-bottom: 8px;
     border-radius: $border-radius;
@@ -157,17 +184,18 @@ body {
         top: 8px;
         opacity: 0.5;
         background-color: transparent;
+        color: var(--color-text);
 
         &:hover {
             opacity: 1;
             cursor: pointer;
-            background-color: rgba(1, 1, 1, 0.1);
+            background-color: var(--color-hover);
         }
     }
 }
 
 #tab-list {
-    color: $font;
+    color: var(--color-text);
     font:
         400 14px/16px "Roboto",
         "Arial",
@@ -181,7 +209,7 @@ body {
             padding: 0px 4px;
             margin-right: 4px;
             border-radius: $border-radius;
-            background-color: rgba(1, 1, 1, 0.1);
+            background-color: var(--color-hover);
         }
     }
 }
@@ -200,10 +228,10 @@ body {
         transition:
             color 0.3s ease,
             fill 0.3s ease;
-        color: #ccc;
+        color: var(--color-inactive);
 
         .title {
-            color: $font;
+            color: var(--color-text);
         }
 
         svg {
@@ -212,7 +240,7 @@ body {
         }
 
         &:hover {
-            color: $font;
+            color: var(--color-text);
         }
 
         .buttons {
@@ -235,7 +263,7 @@ body {
                 transition: background-color 0.3s ease;
 
                 &:hover {
-                    background-color: rgba(1, 1, 1, 0.1);
+                    background-color: var(--color-hover);
                 }
             }
         }
@@ -251,7 +279,7 @@ body {
             color: inherit;
 
             &:hover {
-                background-color: rgba(1, 1, 1, 0.1);
+                background-color: var(--color-hover);
             }
         }
 
@@ -289,7 +317,7 @@ body {
 
     font-size: 12px;
     line-height: 18px;
-    color: rgb(144, 144, 144);
+    color: var(--color-muted);
 }
 
 #alert-error {
@@ -309,7 +337,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: inherit;
+    color: var(--color-text);
 
     cursor: pointer;
     border: none;
@@ -317,7 +345,7 @@ body {
     max-width: 50%;
     height: 24px;
 
-    background-color: rgba(1, 1, 1, 0.1);
+    background-color: var(--color-hover);
     transition:
         background-color 0.3s ease,
         color 0.3s ease;

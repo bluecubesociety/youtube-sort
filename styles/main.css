@@ -1,3 +1,26 @@
+:root {
+  --color-text: #0f0f0f;
+  --color-bg: #ffffff;
+  --color-border: #ccc;
+  --color-surface: rgba(128, 128, 128, 0.1);
+  --color-hover: rgba(0, 0, 0, 0.1);
+  --color-muted: rgb(144, 144, 144);
+  --color-inactive: #ccc;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #f1f1f1;
+    --color-bg: #0f0f0f;
+    --color-border: #3f3f3f;
+    --color-surface: rgba(255, 255, 255, 0.05);
+    --color-hover: rgba(255, 255, 255, 0.1);
+    --color-muted: rgb(144, 144, 144);
+    --color-inactive: #555;
+    color-scheme: dark;
+  }
+}
 * {
   box-sizing: border-box;
   padding: 0;
@@ -8,6 +31,8 @@ html {
   width: 320px;
   font-size: 16px;
   font-family: sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 body {
@@ -29,7 +54,8 @@ body {
   cursor: pointer;
 }
 #menu .tab-button {
-  color: #0f0f0f;
+  color: var(--color-text);
+  fill: var(--color-text);
   font: 400 14px/20px "Roboto", "Arial", sans-serif;
   height: 40px;
   min-width: 40px;
@@ -44,11 +70,11 @@ body {
 }
 #menu .tab-button:hover {
   fill: currentColor;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 #menu .tab-button.active {
   fill: currentColor;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 #menu .tab-button svg {
   display: block;
@@ -57,7 +83,7 @@ body {
 #menu #tab-button-sort {
   width: 50%;
   border-radius: 10px;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
   font-weight: 500;
 }
 #menu #tab-button-sort:hover {
@@ -72,11 +98,12 @@ body {
   padding: 4px;
   background-color: transparent;
   border: none;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--color-border);
   cursor: pointer;
+  color: var(--color-text);
 }
 #main .tab-content .item:hover {
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 #main .tab-content .item:first-of-type {
   border-top: none;
@@ -88,7 +115,7 @@ body {
   width: 100%;
 }
 #main .tab-content .item small {
-  color: grey;
+  color: var(--color-muted);
 }
 #main .tab-content .item small span:not(.badge):not(:last-of-type):after {
   content: " | ";
@@ -100,9 +127,9 @@ body {
 
 .segment {
   position: relative;
-  color: #0f0f0f;
+  color: var(--color-text);
   font: 400 14px/20px "Roboto", "Arial", sans-serif;
-  background-color: rgba(128, 128, 128, 0.1);
+  background-color: var(--color-surface);
   padding: 8px;
   margin-bottom: 8px;
   border-radius: 10px;
@@ -122,15 +149,16 @@ body {
   top: 8px;
   opacity: 0.5;
   background-color: transparent;
+  color: var(--color-text);
 }
 .segment #close-button:hover {
   opacity: 1;
   cursor: pointer;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 
 #tab-list {
-  color: #0f0f0f;
+  color: var(--color-text);
   font: 400 14px/16px "Roboto", "Arial", sans-serif;
 }
 #tab-list #video-list {
@@ -141,7 +169,7 @@ body {
   padding: 0px 4px;
   margin-right: 4px;
   border-radius: 10px;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 
 #sorting-rules #sortable-list {
@@ -154,17 +182,17 @@ body {
   align-items: center;
   padding: 4px 0;
   transition: color 0.3s ease, fill 0.3s ease;
-  color: #ccc;
+  color: var(--color-inactive);
 }
 #sorting-rules #sortable-list li .title {
-  color: #0f0f0f;
+  color: var(--color-text);
 }
 #sorting-rules #sortable-list li svg {
   color: inherit;
   fill: currentColor;
 }
 #sorting-rules #sortable-list li:hover {
-  color: #0f0f0f;
+  color: var(--color-text);
 }
 #sorting-rules #sortable-list li .buttons {
   display: flex;
@@ -184,7 +212,7 @@ body {
   transition: background-color 0.3s ease;
 }
 #sorting-rules #sortable-list li .buttons button:hover {
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 #sorting-rules #sortable-list li select {
   cursor: pointer;
@@ -197,7 +225,7 @@ body {
   color: inherit;
 }
 #sorting-rules #sortable-list li select:hover {
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
 }
 #sorting-rules #sortable-list li:first-of-type .up {
   display: none;
@@ -223,7 +251,7 @@ body {
   align-items: center;
   font-size: 12px;
   line-height: 18px;
-  color: rgb(144, 144, 144);
+  color: var(--color-muted);
 }
 
 #alert-error {
@@ -241,13 +269,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: inherit;
+  color: var(--color-text);
   cursor: pointer;
   border: none;
   border-radius: 10px;
   max-width: 50%;
   height: 24px;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: var(--color-hover);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 #delete-storage:hover {
