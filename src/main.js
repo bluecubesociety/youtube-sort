@@ -239,8 +239,8 @@ async function updateStats(tabs) {
       return (
         acc +
         (settings.sort_sponsorblock
-          ? (tab?.skipped ?? tab.duration ?? 0)
-          : (tab.duration ?? 0))
+          ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
+          : (Number.isFinite(tab.duration) ? tab.duration : 0))
       );
     }, 0),
   );
@@ -291,7 +291,7 @@ async function renderList() {
       { prop: "author" },
     ];
     properties.forEach(({ prop, textFunc, className }) => {
-      if (tab[prop] || prop === "duration") {
+      if (prop === "duration" ? Number.isFinite(tab[prop]) : tab[prop]) {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
         if (settings.sort_sponsorblock && prop === "duration") {
