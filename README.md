@@ -6,13 +6,14 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 ### Version 2.0.0 – Mar 22, 2026
 
-After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to extend sorting due to my personal use with the Zen Browser.
+After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to at least extend the sorting rules due to personal change in use.
 
 **New Features**
 - Added dark mode support
 - Added support for shorts
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Design Overhaul: Added DnD for sorting rules, better visual feedback
+- Now also available for Chromium!
 
 **Fixes**
 - Fixed observer issue staying alive forever

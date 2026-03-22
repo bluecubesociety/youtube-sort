@@ -1,6 +1,6 @@
 {
   "background": {
-    "scripts": ["src/background.js"]
+    "service_worker": "src/background.js"
   },
   "content_scripts": [
     {
@@ -17,10 +17,6 @@
     },
     "default_title": "YouTube Sort",
     "default_popup": "src/popup.html"
-  },
-  "developer": {
-    "name": "Blue Cube Society",
-    "url": "https://github.com/bluecubesociety/youtube-sort"
   },
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "homepage_url": "https://github.com/bluecubesociety/youtube-sort",
@@ -39,11 +35,5 @@
     "48": "icons/icon-48.png",
     "64": "icons/icon-64.png",
     "96": "icons/icon-96.png"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{c3b18543-7a38-453c-a4f1-b55b07344d56}",
-      "strict_min_version": "109.0"
-    }
   }
 }
