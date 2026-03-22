@@ -10,7 +10,8 @@ After one and a half years, finally an update. Things were actually pretty stabl
 
 **New Features**
 - Added dark mode support
-- Added support for shorts
+- Added support for YouTube Shorts
+- Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Design Overhaul: Added DnD for sorting rules, better visual feedback
 - Now also available for Chromium!
