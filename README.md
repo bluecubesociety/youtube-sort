@@ -13,7 +13,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added support for YouTube Shorts
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
-- Design Overhaul: Added DnD for sorting rules, better visual feedback
+- Design Overhaul: Added DnD for sorting rules, better visual feedback, spacing adjustments
 - Now also available for Chromium!
 
 **Fixes**

@@ -109,8 +109,10 @@ async function prefilterTabs() {
 
 /** sorts tabs based on settings. */
 async function sortTabs() {
-  document.getElementById("tab-button-sort").classList.add("loading");
+  const sortBtn = document.getElementById("tab-button-sort");
+  sortBtn.classList.add("loading");
   document.getElementById("alert-error").innerText = "";
+  let success = false;
 
   try {
     const tabs = await prefilterTabs();
@@ -168,11 +170,16 @@ async function sortTabs() {
         if (tab.sleepy) browser.tabs.reload(tab.id);
       });
     }
+    success = true;
   } catch (error) {
     console.debug("[YouTube Sort]", error);
     document.getElementById("alert-error").innerText = "Error: " + (error?.message || error);
   } finally {
-    document.getElementById("tab-button-sort").classList.remove("loading");
+    sortBtn.classList.remove("loading");
+    if (success) {
+      sortBtn.classList.add("done");
+      setTimeout(() => sortBtn.classList.remove("done"), 1000);
+    }
   }
 }
 
