@@ -38,7 +38,7 @@ function renderMenu() {
   }
 }
 
-async function renderSettings() {
+function renderSettings() {
   document.getElementById("ignore-inactive").checked = settings.ignore_inactive;
   document.getElementById("ignore-live").checked = settings.ignore_live;
   document.getElementById("ignore-playlists").checked = settings.ignore_playlists;
@@ -46,12 +46,12 @@ async function renderSettings() {
   document.getElementById("sort-to-start").checked = settings.sort_to_start;
   document.getElementById("current-window-only").checked = settings.current_window_only;
   document.getElementById("force-reload").checked = settings.force_reload;
+}
+
+async function updateSponsorBlockVisibility() {
   const tabs = await prefilterTabs();
-  if (tabs.some((tab) => tab.skipped)) {
-    document.getElementById("sort-sponsorblock").parentNode.style.display = "initial";
-  } else {
-    document.getElementById("sort-sponsorblock").parentNode.style.display = "none";
-  }
+  document.getElementById("sort-sponsorblock").parentNode.style.display =
+    tabs.some((tab) => tab.skipped) ? "initial" : "none";
 }
 
 async function changeSetting(setting, e) {
@@ -59,6 +59,7 @@ async function changeSetting(setting, e) {
   renderSettings();
   await updateSettings();
 }
+
 
 async function init() {
   await getSettings();
@@ -77,7 +78,8 @@ async function init() {
     browser.runtime.getManifest().version || "Unknown";
 
   renderSortOptions();
-  await renderSettings();
+  renderSettings();
+  await updateSponsorBlockVisibility();
 
   document.getElementById("close-button").addEventListener("click", closeTip);
   document.getElementById("reset-tip").addEventListener("click", resetTip);
