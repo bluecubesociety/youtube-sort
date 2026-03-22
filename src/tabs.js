@@ -10,9 +10,7 @@ function extractYouTubeID(url) {
   return match ? match[7] : false;
 }
 
-/** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected.
-    TODO: merged data includes more stuff than I actually need. Also removes data from storage. Not sure if that's better somewhere else
-*/
+/** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected. */
 export async function prefilterTabs() {
   const videoTabs = await browser.storage.local.get();
   const allTabs = await browser.tabs.query({

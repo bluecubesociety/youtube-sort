@@ -164,6 +164,9 @@ body {
 #main .tab-content .item small {
   color: var(--color-muted);
 }
+#main .tab-content .item.no-data {
+  opacity: 0.45;
+}
 #main .tab-content .item small span:not(.badge):not(:last-of-type):after {
   content: " | ";
 }

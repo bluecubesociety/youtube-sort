@@ -99,6 +99,7 @@ export async function renderList() {
         smallElement.appendChild(spanElement);
       }
     });
+    if (smallElement.childElementCount === 0) el.classList.add("no-data");
     el.appendChild(smallElement);
     tabList.appendChild(el);
   }
