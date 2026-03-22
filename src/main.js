@@ -315,6 +315,7 @@ function showSettings() {
   document.getElementById("tab-settings").classList.remove("hidden");
   document.getElementById("tab-button-list").classList.remove("active");
   document.getElementById("tab-button-settings").classList.add("active");
+  renderList();
 }
 
 /** hides the settings menu and shows the list menu. */
