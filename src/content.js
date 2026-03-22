@@ -36,36 +36,26 @@ function isShorts() {
 
 function getVideoID() {
   if (isShorts()) {
-    return (
-      window.location.pathname.split("/shorts/")[1]?.split(/[?#]/)[0] || null
-    );
+    return window.location.pathname.split("/shorts/")[1]?.split(/[?#]/)[0] || null;
   }
   return new URLSearchParams(window.location.search).get("v");
 }
 
 function fetchVideoData(observer) {
   // collects data for the storage (via meta tags)
-  const uploadDate = document.querySelector(
-    "meta[itemprop='uploadDate']",
-  )?.content;
+  const uploadDate = document.querySelector("meta[itemprop='uploadDate']")?.content;
   const title = document.querySelector("meta[itemprop='name']")?.content;
   const author = document.querySelector(".ytd-channel-name")?.innerText;
-  const interactionCount = document.querySelector(
-    "meta[itemprop='interactionCount']",
-  )?.content;
+  const interactionCount = document.querySelector("meta[itemprop='interactionCount']")?.content;
   const publication = document.querySelector(
-    "meta[itemprop='isLiveBroadcast'][content='True']",
+    "meta[itemprop='isLiveBroadcast'][content='True']"
   )?.content;
-  const startDate = document.querySelector(
-    "meta[itemprop='startDate']",
-  )?.content;
+  const startDate = document.querySelector("meta[itemprop='startDate']")?.content;
   const endDate = document.querySelector("meta[itemprop='endDate']")?.content;
   const duration = document.querySelector("meta[itemprop='duration']")?.content;
 
   // sponsorBlock-specific
-  const skipDuration = document.querySelector(
-    "#sponsorBlockDurationAfterSkips",
-  )?.innerText;
+  const skipDuration = document.querySelector("#sponsorBlockDurationAfterSkips")?.innerText;
   if (skipDuration) {
     foundSponsorBlock = true;
     sponsorBlockObserver?.disconnect();
@@ -114,9 +104,7 @@ function fetchVideoData(observer) {
       // create an indicator and append it to the page at targetNode.
       // (unless the extension is reloading)
       const targetNode = document.querySelector("#description-inner");
-      const previousIndicator = document.querySelector(
-        "#youtube-sort-indicator",
-      );
+      const previousIndicator = document.querySelector("#youtube-sort-indicator");
 
       console.debug("targetNode", targetNode);
       console.debug("[YouTube Sort] submitted.");
@@ -133,8 +121,7 @@ function fetchVideoData(observer) {
           const indicatorWrapper = document.createElement("div");
           indicatorWrapper.style.cssText =
             "opacity: 0.3; display: flex; justify-content: center; align-items: center; right: 12px; position: absolute; height: 2rem; aspect-ratio: 1;";
-          indicatorWrapper.dataset.titleNoTooltip =
-            "Tab detected by YouTube Sort";
+          indicatorWrapper.dataset.titleNoTooltip = "Tab detected by YouTube Sort";
           indicatorWrapper.title = "Tab detected by YouTube Sort";
           indicatorWrapper.ariaLabel = "Tab detected by YouTube Sort";
 
@@ -154,7 +141,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
           (addedNode) =>
             addedNode.nodeType === 1 &&
             (addedNode.classList.contains("ytp-right-controls") ||
-              addedNode.tagName === "YTD-REEL-PLAYER-RENDERER"),
+              addedNode.tagName === "YTD-REEL-PLAYER-RENDERER")
         );
         if (loaded && observerActive) fetchVideoData(observer);
       }
@@ -169,14 +156,11 @@ let sponsorBlockDebounceTimer = null;
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
     const relevant = mutationsList.some((mutation) =>
-      mutation.target.id?.includes("sponsorBlockDurationAfterSkips"),
+      mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
     );
     if (relevant) {
       clearTimeout(sponsorBlockDebounceTimer);
-      sponsorBlockDebounceTimer = setTimeout(
-        () => fetchVideoData(observer),
-        300,
-      );
+      sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer), 300);
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);

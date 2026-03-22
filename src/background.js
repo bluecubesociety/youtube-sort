@@ -1,5 +1,5 @@
 const regex =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?|embed\/|v\/)?)?.*(v=([\w\-]+)(?=&|\s|$))/i;
+  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?|embed\/|v\/)?)?.*(v=([\w-]+)(?=&|\s|$))/i;
 
 function extractYouTubeID(url) {
   const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
@@ -31,9 +31,7 @@ async function autoSort(windowId) {
           videoTabs[youtubeID]?.live ??
           videoTabs[youtubeID]?.skipped ??
           videoTabs[youtubeID]?.duration,
-        ...(typeof youtubeID === "string" && youtubeID.length === 11
-          ? { youtubeID }
-          : {}),
+        ...(typeof youtubeID === "string" && youtubeID.length === 11 ? { youtubeID } : {}),
         ...tab,
         ...videoTabs[youtubeID],
       };
@@ -50,21 +48,14 @@ async function autoSort(windowId) {
       tab.title &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
-      (!settings.ignore_inactive || !tab.sleepy),
+      (!settings.ignore_inactive || !tab.sleepy)
   );
 
   const sortedTabs = filteredTabs.sort((a, b) => {
     for (const sorting of settings.sorting) {
-      const criteria =
-        sorting.attr === "duration" ? "liveDuration" : sorting.attr;
-      const critA =
-        typeof a[criteria] === "string"
-          ? a[criteria].toLowerCase()
-          : a[criteria];
-      const critB =
-        typeof b[criteria] === "string"
-          ? b[criteria].toLowerCase()
-          : b[criteria];
+      const criteria = sorting.attr;
+      const critA = typeof a[criteria] === "string" ? a[criteria].toLowerCase() : a[criteria];
+      const critB = typeof b[criteria] === "string" ? b[criteria].toLowerCase() : b[criteria];
       let res = String(critA).localeCompare(critB, undefined, {
         numeric: true,
       });

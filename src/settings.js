@@ -10,8 +10,18 @@ export const settings = {
   force_reload: false,
   sorting: [
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
-    { dropdown: ["Oldest first", "Newest first"], asc: false, attr: "uploadDate", title: "Upload Date" },
-    { dropdown: ["Shortest first", "Longest first"], asc: false, attr: "liveDuration", title: "Video Duration" },
+    {
+      dropdown: ["Oldest first", "Newest first"],
+      asc: false,
+      attr: "uploadDate",
+      title: "Upload Date",
+    },
+    {
+      dropdown: ["Shortest first", "Longest first"],
+      asc: false,
+      attr: "liveDuration",
+      title: "Video Duration",
+    },
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
     { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
   ],

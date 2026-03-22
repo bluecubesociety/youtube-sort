@@ -39,7 +39,9 @@ function updateStats(tabs, isSelection) {
   for (const tab of tabs) {
     totalDuration += settings.sort_sponsorblock
       ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
-      : (Number.isFinite(tab.duration) ? tab.duration : 0);
+      : Number.isFinite(tab.duration)
+        ? tab.duration
+        : 0;
     totalViews += Number.isFinite(tab.views) ? tab.views : 0;
   }
   document.getElementById("stat_tabs").innerText = tabs.length;
@@ -78,9 +80,7 @@ export async function renderList() {
       {
         prop: "duration",
         textFunc: (duration) =>
-          tab.live > 0
-            ? `Live in ${getPremiereTime(tab.live)}`
-            : getDuration(duration),
+          tab.live > 0 ? `Live in ${getPremiereTime(tab.live)}` : getDuration(duration),
       },
       {
         prop: "uploadDate",

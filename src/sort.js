@@ -21,16 +21,9 @@ export async function sortTabs() {
 
     const sortedTabs = tabs.sort((a, b) => {
       for (const sorting of settings.sorting) {
-        const criteria =
-          sorting.attr === "duration" ? "liveDuration" : sorting.attr;
-        const critA =
-          typeof a[criteria] === "string"
-            ? a[criteria].toLowerCase()
-            : a[criteria];
-        const critB =
-          typeof b[criteria] === "string"
-            ? b[criteria].toLowerCase()
-            : b[criteria];
+        const criteria = sorting.attr;
+        const critA = typeof a[criteria] === "string" ? a[criteria].toLowerCase() : a[criteria];
+        const critB = typeof b[criteria] === "string" ? b[criteria].toLowerCase() : b[criteria];
         let res = String(critA).localeCompare(critB, undefined, {
           numeric: true,
         });
@@ -90,7 +83,8 @@ export function renderSortOptions() {
   const container = document.getElementById("sortable-list");
   container.innerHTML = "";
   let dragSrcIndex = null;
-  const clearDragOver = () => container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
+  const clearDragOver = () =>
+    container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
 
   settings.sorting.forEach((sortRule, index) => {
     const toggleBtn = document.createElement("button");
@@ -118,7 +112,10 @@ export function renderSortOptions() {
     el.classList.add("item");
     el.draggable = true;
     el.tabIndex = 0;
-    el.setAttribute("aria-label", `${sortRule.title}, position ${index + 1} of ${settings.sorting.length}. Use Arrow Up and Arrow Down to reorder.`);
+    el.setAttribute(
+      "aria-label",
+      `${sortRule.title}, position ${index + 1} of ${settings.sorting.length}. Use Arrow Up and Arrow Down to reorder.`
+    );
 
     const spanElement = document.createElement("span");
     spanElement.className = "title";

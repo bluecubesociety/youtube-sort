@@ -1,7 +1,7 @@
 import { settings } from "./settings.js";
 
 const regex =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?|embed\/|v\/)?)?.*(v=([\w\-]+)(?=&|\s|$))/i;
+  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?|embed\/|v\/)?)?.*(v=([\w-]+)(?=&|\s|$))/i;
 
 function extractYouTubeID(url) {
   const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
@@ -33,9 +33,7 @@ export async function prefilterTabs() {
           videoTabs[youtubeID]?.live ??
           videoTabs[youtubeID]?.skipped ??
           videoTabs[youtubeID]?.duration,
-        ...(typeof youtubeID === "string" && youtubeID.length === 11
-          ? { youtubeID }
-          : {}),
+        ...(typeof youtubeID === "string" && youtubeID.length === 11 ? { youtubeID } : {}),
         ...tab,
         ...videoTabs[youtubeID],
       };
