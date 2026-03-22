@@ -125,8 +125,8 @@ async function prefilterTabs() {
 
   // removes entries from storage that can not be found anymore
   await Promise.all(
-    filteredTabs
-      .filter((tab) => !tab.title || !tab.id)
+    tabArray
+      .filter((tab) => tab.youtubeID && !tab.title)
       .map((tab) => browser.storage.local.remove(tab.youtubeID))
   );
 
