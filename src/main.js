@@ -425,7 +425,7 @@ async function renderSettings() {
   const tabs = await prefilterTabs();
   if (tabs.some((tab) => tab.skipped)) {
     document.getElementById("sort-sponsorblock").parentNode.style.display =
-      "intial";
+      "initial";
   } else {
     document.getElementById("sort-sponsorblock").parentNode.style.display =
       "none";
