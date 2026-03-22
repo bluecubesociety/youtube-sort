@@ -327,8 +327,12 @@ function renderSortOptions() {
 
     const handle = document.createElement("span");
     handle.className = "drag-handle";
-    handle.textContent = "⠿";
     handle.setAttribute("aria-hidden", "true");
+    handle.innerHTML = `<svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="2" cy="3" r="1.5"/><circle cx="8" cy="3" r="1.5"/>
+      <circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/>
+      <circle cx="2" cy="13" r="1.5"/><circle cx="8" cy="13" r="1.5"/>
+    </svg>`;
 
     const buttons = document.createElement("div");
     buttons.classList.add("buttons");

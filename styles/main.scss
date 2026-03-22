@@ -339,9 +339,10 @@ body {
     .drag-handle {
         cursor: grab;
         color: var(--color-muted);
-        font-size: 16px;
         padding: 0 4px;
         user-select: none;
+        display: flex;
+        align-items: center;
 
         &:active {
             cursor: grabbing;
