@@ -118,6 +118,18 @@ body {
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
+#menu #tab-button-sort .sort-done-check {
+  display: none;
+}
+#menu #tab-button-sort.done {
+  pointer-events: none;
+}
+#menu #tab-button-sort.done p {
+  display: none;
+}
+#menu #tab-button-sort.done .sort-done-check {
+  display: block;
+}
 
 @keyframes spin {
   to {

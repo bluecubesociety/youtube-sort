@@ -141,6 +141,22 @@ body {
                 animation: spin 0.7s linear infinite;
             }
         }
+
+        .sort-done-check {
+            display: none;
+        }
+
+        &.done {
+            pointer-events: none;
+
+            p {
+                display: none;
+            }
+
+            .sort-done-check {
+                display: block;
+            }
+        }
     }
 }
 
