@@ -9,10 +9,11 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to extend sorting due to my personal use with the Zen Browser.
 
 **Fixes**
-- Updated manifest_version
+- Updated manifest-version
 - Fixed observer issue staying alive forever
-- Fixed NaN views
+- Added fallbacks to stats
 - Removals now run in parallel
+- Minor other optimisations
 
 ### Version 1.6.2 – Sep 11, 2024
 

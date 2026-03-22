@@ -103,7 +103,7 @@ function fetchVideoData(observer) {
       // (unless the extension is reloading)
       const targetNode = document.querySelector("#description-inner");
       const previousIndicator = document.querySelector(
-        "#youtube-sort-indictor",
+        "#youtube-sort-indicator",
       );
 
       console.debug("targetNode", targetNode);
@@ -114,7 +114,7 @@ function fetchVideoData(observer) {
       if (targetNode) {
         if (previousIndicator == null) {
           const indicator = document.createElement("img");
-          indicator.id = "youtube-sort-indictor";
+          indicator.id = "youtube-sort-indicator";
           indicator.src = `${browser.runtime.getURL("icons/icon-trans.svg")}`;
           indicator.style.width = "100%";
 
