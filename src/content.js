@@ -107,11 +107,11 @@ function fetchVideoData(observer) {
       );
 
       console.debug("targetNode", targetNode);
-      if (targetNode) {
-        console.debug("[YouTube Sort] submitted.");
-        observer?.disconnect();
-        observerActive = false;
+      console.debug("[YouTube Sort] submitted.");
+      observer?.disconnect();
+      observerActive = false;
 
+      if (targetNode) {
         if (previousIndicator == null) {
           const indicator = document.createElement("img");
           indicator.id = "youtube-sort-indictor";
@@ -157,7 +157,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
     for (const mutation of mutationsList) {
-      if (mutation.target.id.includes("sponsorBlockDurationAfterSkips")) {
+      if (mutation.target.id?.includes("sponsorBlockDurationAfterSkips")) {
         fetchVideoData(observer);
       }
     }
@@ -166,7 +166,9 @@ const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   }
 });
 
-if (!foundSponsorBlock)
+if (!foundSponsorBlock) {
   sponsorBlockObserver.observe(document, { childList: true, subtree: true });
+  setTimeout(() => sponsorBlockObserver.disconnect(), 10000);
+}
 observer.observe(document, { childList: true, subtree: true });
 fetchVideoData(observer);
