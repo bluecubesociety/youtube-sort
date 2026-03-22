@@ -13,12 +13,12 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added support for shorts
 
 **Fixes**
-- Updated manifest-version
 - Fixed observer issue staying alive forever
 - Added fallbacks to stats
 - Removals now run in parallel
-- Minor other optimisations
 - Added debouncer to SponsorBlock detection for improved performance
+- Updated manifest-version
+- Minor other optimisations
 
 ### Version 1.6.2 – Sep 11, 2024
 
