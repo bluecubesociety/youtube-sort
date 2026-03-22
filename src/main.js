@@ -226,8 +226,8 @@ async function updateStats(tabs) {
       return (
         acc +
         (settings.sort_sponsorblock
-          ? (tab?.skipped ?? tab.duration)
-          : tab.duration)
+          ? (tab?.skipped ?? tab.duration ?? 0)
+          : (tab.duration ?? 0))
       );
     }, 0),
   );
