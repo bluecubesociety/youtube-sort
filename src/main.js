@@ -170,9 +170,9 @@ async function sortTabs() {
       }
     });
 
-    sortedTabs.forEach(async (tab) => {
-      browser.tabs.move(tab.id, { index: -1 });
-    });
+    for (const tab of sortedTabs) {
+      await browser.tabs.move(tab.id, { index: -1 });
+    }
     renderList();
 
     // wake them up, if wanted
