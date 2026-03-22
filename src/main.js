@@ -9,6 +9,7 @@ const settings = {
   ignore_playlists: false,
   ignore_live: false,
   sort_sponsorblock: false,
+  sort_to_start: false,
   force_reload: false,
   sorting: [
     {
@@ -171,8 +172,17 @@ async function sortTabs() {
       }
     });
 
-    for (const tab of sortedTabs) {
-      await browser.tabs.move(tab.id, { index: -1 });
+    if (settings.sort_to_start) {
+      const windowId = sortedTabs[0].windowId;
+      const pinnedTabs = await browser.tabs.query({ windowId, pinned: true });
+      const startIndex = pinnedTabs.length;
+      for (const tab of [...sortedTabs].reverse()) {
+        await browser.tabs.move(tab.id, { index: startIndex });
+      }
+    } else {
+      for (const tab of sortedTabs) {
+        await browser.tabs.move(tab.id, { index: -1 });
+      }
     }
     renderList();
 
@@ -423,6 +433,7 @@ async function renderSettings() {
     settings.ignore_playlists;
   document.getElementById("sort-sponsorblock").checked =
     settings.sort_sponsorblock;
+  document.getElementById("sort-to-start").checked = settings.sort_to_start;
   document.getElementById("force-reload").checked = settings.force_reload;
   const tabs = await prefilterTabs();
   if (tabs.some((tab) => tab.skipped)) {
@@ -488,6 +499,9 @@ async function init() {
   document
     .getElementById("sort-sponsorblock")
     .addEventListener("click", (e) => changeSetting("sort_sponsorblock", e));
+  document
+    .getElementById("sort-to-start")
+    .addEventListener("click", (e) => changeSetting("sort_to_start", e));
   document
     .getElementById("force-reload")
     .addEventListener("click", (e) => changeSetting("force_reload", e));

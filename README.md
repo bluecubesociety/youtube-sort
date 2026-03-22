@@ -11,6 +11,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 **New Features**
 - Added dark mode support
 - Added support for shorts
+- Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 
 **Fixes**
 - Fixed observer issue staying alive forever
@@ -19,7 +20,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Removals now run in parallel
 - Added debouncer to SponsorBlock detection for improved performance
 - Updated manifest-version
-- Minor other optimisations
+- Minor other optimisations (better error handling, redundancy)
 
 ### Version 1.6.2 – Sep 11, 2024
 
