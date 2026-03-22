@@ -4,6 +4,13 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 ## Patch Notes
 
+### Version 2.0.0 – Mar 22, 2026
+
+After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code.
+
+**Fixes**
+- Updated manifest_version
+
 ### Version 1.6.2 – Sep 11, 2024
 
 **Fixes**

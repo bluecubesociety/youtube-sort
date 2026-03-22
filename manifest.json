@@ -1,7 +1,6 @@
 {
   "background": {
-    "scripts": ["src/background.js"],
-    "persistent": false
+    "scripts": ["src/background.js"]
   },
   "content_scripts": [
     {
@@ -9,8 +8,7 @@
       "js": ["src/content.js"]
     }
   ],
-  "browser_action": {
-    "browser_style": true,
+  "action": {
     "default_icon": {
       "64": "icons/icon-64.png"
     },
@@ -23,12 +21,17 @@
   },
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "homepage_url": "https://github.com/alexandertbratrich/youtube-sort",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "YouTube Sort",
   "short_name": "YouTube Sort",
   "permissions": ["tabs", "storage"],
   "version": "1.6.2",
-  "web_accessible_resources": ["icons/icon-trans.svg"],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/icon-trans.svg"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ],
   "icons": {
     "48": "icons/icon-48.png",
     "64": "icons/icon-64.png",
@@ -37,7 +40,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{c3b18543-7a38-453c-a4f1-b55b07344d56}",
-      "strict_min_version": "58.0"
+      "strict_min_version": "109.0"
     }
   }
 }
