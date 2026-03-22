@@ -12,41 +12,11 @@ const settings = {
   sort_to_start: false,
   force_reload: false,
   sorting: [
-    {
-      dropdown: ["A-Z", "Z-A"],
-      asc: false,
-      order: 0,
-      attr: "title",
-      title: "Video Title",
-    },
-    {
-      dropdown: ["Oldest first", "Newest first"],
-      asc: false,
-      order: 1,
-      attr: "uploadDate",
-      title: "Upload Date",
-    },
-    {
-      dropdown: ["Least first", "Most first"],
-      asc: false,
-      order: 2,
-      attr: "views",
-      title: "Views",
-    },
-    {
-      dropdown: ["A-Z", "Z-A"],
-      asc: false,
-      order: 3,
-      attr: "author",
-      title: "Channel Name",
-    },
-    {
-      dropdown: ["Shortest first", "Longest first"],
-      asc: false,
-      order: 4,
-      attr: "liveDuration",
-      title: "Video Duration",
-    },
+    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
+    { dropdown: ["Oldest first", "Newest first"], asc: false, attr: "uploadDate", title: "Upload Date" },
+    { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
+    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
+    { dropdown: ["Shortest first", "Longest first"], asc: false, attr: "liveDuration", title: "Video Duration" },
   ],
   menu: 0,
 };
@@ -60,10 +30,8 @@ async function updateSettings() {
 
 /** loads settings from the sync storage */
 async function getSettings() {
-  const { settings: loadedSettings } =
-    await browser.storage.sync.get("settings");
-  const updatedSettings = { ...settings, ...loadedSettings };
-  Object.assign(settings, updatedSettings);
+  const { settings: loadedSettings } = await browser.storage.sync.get("settings");
+  if (loadedSettings) Object.assign(settings, loadedSettings);
 }
 
 function extractYouTubeID(url) {
@@ -97,8 +65,8 @@ async function prefilterTabs() {
           videoTabs[youtubeID]?.live ??
           videoTabs[youtubeID]?.skipped ??
           videoTabs[youtubeID]?.duration,
-        ...(typeof youtubeID == "string" && youtubeID.length == 11
-          ? { youtubeID: youtubeID }
+        ...(typeof youtubeID === "string" && youtubeID.length === 11
+          ? { youtubeID }
           : {}),
         ...tab,
         ...videoTabs[youtubeID],
@@ -233,22 +201,17 @@ function getDuration(seconds) {
 }
 
 async function updateStats(tabs) {
+  let totalDuration = 0;
+  let totalViews = 0;
+  for (const tab of tabs) {
+    totalDuration += settings.sort_sponsorblock
+      ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
+      : (Number.isFinite(tab.duration) ? tab.duration : 0);
+    totalViews += Number.isFinite(tab.views) ? tab.views : 0;
+  }
   document.getElementById("stat_tabs").innerText = tabs.length;
-  document.getElementById("stat_duration").innerText = getDuration(
-    tabs.reduce((acc, tab) => {
-      return (
-        acc +
-        (settings.sort_sponsorblock
-          ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
-          : (Number.isFinite(tab.duration) ? tab.duration : 0))
-      );
-    }, 0),
-  );
-  document.getElementById("stat_views").innerText = getViews(
-    tabs.reduce((acc, tab) => {
-      return acc + (Number.isFinite(tab.views) ? tab.views : 0);
-    }, 0),
-  );
+  document.getElementById("stat_duration").innerText = getDuration(totalDuration);
+  document.getElementById("stat_views").innerText = getViews(totalViews);
 }
 
 /** renders the list of detected tabs. */
@@ -347,12 +310,12 @@ function renderMenu() {
   }
 }
 
-let dragSrcIndex = null;
-
 /** renders the sort options incl the dropdown and drag handles */
 function renderSortOptions() {
   const container = document.getElementById("sortable-list");
   container.innerHTML = "";
+  let dragSrcIndex = null;
+  const clearDragOver = () => container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
 
   settings.sorting.forEach((sortRule, index) => {
     const toggleBtn = document.createElement("button");
@@ -389,12 +352,12 @@ function renderSortOptions() {
     });
     el.addEventListener("dragend", () => {
       el.classList.remove("dragging");
-      container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
+      clearDragOver();
     });
     el.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
-      container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
+      clearDragOver();
       el.classList.add("drag-over");
     });
     el.addEventListener("drop", async (e) => {
@@ -473,35 +436,21 @@ async function init() {
   await renderSettings();
 
   // set events
-  document
-    .getElementById("close-button")
-    .addEventListener("click", (e) => closeTip(e));
+  document.getElementById("close-button").addEventListener("click", (e) => closeTip(e));
 
-  document
-    .getElementById("ignore-inactive")
-    .addEventListener("click", (e) => changeSetting("ignore_inactive", e));
-  document
-    .getElementById("ignore-live")
-    .addEventListener("click", (e) => changeSetting("ignore_live", e));
-  document
-    .getElementById("ignore-playlists")
-    .addEventListener("click", (e) => changeSetting("ignore_playlists", e));
-  document
-    .getElementById("sort-sponsorblock")
-    .addEventListener("click", (e) => changeSetting("sort_sponsorblock", e));
-  document
-    .getElementById("sort-to-start")
-    .addEventListener("click", (e) => changeSetting("sort_to_start", e));
-  document
-    .getElementById("force-reload")
-    .addEventListener("click", (e) => changeSetting("force_reload", e));
+  for (const [id, key] of [
+    ["ignore-inactive", "ignore_inactive"],
+    ["ignore-live", "ignore_live"],
+    ["ignore-playlists", "ignore_playlists"],
+    ["sort-sponsorblock", "sort_sponsorblock"],
+    ["sort-to-start", "sort_to_start"],
+    ["force-reload", "force_reload"],
+  ]) {
+    document.getElementById(id).addEventListener("click", (e) => changeSetting(key, e));
+  }
 
-  document
-    .getElementById("delete-storage")
-    .addEventListener("click", deleteStorage);
-  document
-    .getElementById("tab-button-sort")
-    .addEventListener("click", sortTabs);
+  document.getElementById("delete-storage").addEventListener("click", deleteStorage);
+  document.getElementById("tab-button-sort").addEventListener("click", sortTabs);
 }
 
 document.addEventListener("DOMContentLoaded", init);
