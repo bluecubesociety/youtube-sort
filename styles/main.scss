@@ -411,6 +411,24 @@ input[type="checkbox"] {
     }
 }
 
+#reset-tip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text);
+    cursor: pointer;
+    border: none;
+    border-radius: $border-radius;
+    max-width: 50%;
+    height: 24px;
+    background-color: var(--color-hover);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        filter: brightness(1.2);
+    }
+}
+
 #delete-storage {
     display: flex;
     justify-content: center;

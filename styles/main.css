@@ -337,6 +337,23 @@ input[type=checkbox] {
   display: none;
 }
 
+#reset-tip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text);
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  max-width: 50%;
+  height: 24px;
+  background-color: var(--color-hover);
+  transition: background-color 0.3s ease;
+}
+#reset-tip:hover {
+  background-color: var(--color-hover);
+  filter: brightness(1.2);
+}
 #delete-storage {
   display: flex;
   justify-content: center;
