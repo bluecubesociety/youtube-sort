@@ -21,7 +21,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Removals now run in parallel
 - Added debouncer to SponsorBlock detection for improved performance
 - Updated manifest-version
-- Minor other optimisations (better error handling, redundancy)
+- Minor other optimisations (better error handling, redundancy, simplifications)
 
 ### Version 1.6.2 – Sep 11, 2024
 
