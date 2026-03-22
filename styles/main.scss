@@ -191,12 +191,13 @@ body {
         sans-serif;
 
     background-color: var(--color-surface);
-    padding: 8px;
+    padding: 12px;
     margin-bottom: 8px;
     border-radius: $border-radius;
 
     display: flex;
     flex-direction: column;
+    gap: 6px;
 
     #close-button {
         border: none;
@@ -274,7 +275,7 @@ body {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 40%;
+            width: 48%;
 
             button {
                 display: flex;
@@ -302,7 +303,7 @@ body {
             padding: 0 6px;
             border: none;
             border-radius: $border-radius;
-            background-color: transparent;
+            background-color: var(--color-surface);
             transition: background-color 0.3s ease;
             color: inherit;
             white-space: nowrap;
