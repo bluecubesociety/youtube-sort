@@ -153,11 +153,12 @@ body {
   color: var(--color-text);
   font: 400 14px/20px "Roboto", "Arial", sans-serif;
   background-color: var(--color-surface);
-  padding: 8px;
+  padding: 12px;
   margin-bottom: 8px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 .segment #close-button {
   border: none;
@@ -221,7 +222,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 48%;
 }
 #sorting-rules #sortable-list li .buttons button {
   display: flex;
@@ -244,7 +245,7 @@ body {
   padding: 0 6px;
   border: none;
   border-radius: 10px;
-  background-color: transparent;
+  background-color: var(--color-surface);
   transition: background-color 0.3s ease;
   color: inherit;
   white-space: nowrap;

@@ -12,6 +12,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added dark mode support
 - Added support for shorts
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
+- Design Overhaul: Added DnD for sorting rules, better visual feedback
 
 **Fixes**
 - Fixed observer issue staying alive forever
