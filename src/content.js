@@ -30,6 +30,19 @@ function calcDuration(duration) {
   return totalseconds;
 }
 
+function isShorts() {
+  return window.location.pathname.startsWith("/shorts/");
+}
+
+function getVideoID() {
+  if (isShorts()) {
+    return (
+      window.location.pathname.split("/shorts/")[1]?.split(/[?#]/)[0] || null
+    );
+  }
+  return new URLSearchParams(window.location.search).get("v");
+}
+
 function fetchVideoData(observer) {
   // collects data for the storage (via meta tags)
   const uploadDate = document.querySelector(
@@ -58,8 +71,7 @@ function fetchVideoData(observer) {
     sponsorBlockObserver?.disconnect();
   }
 
-  const url = new URLSearchParams(window.location.search);
-  const videoID = url.get("v");
+  const videoID = getVideoID();
 
   const tabUrl = window.location.href;
   const isLive = publication && !endDate;
@@ -137,15 +149,14 @@ function fetchVideoData(observer) {
 const observer = new MutationObserver((mutationsList, observer) => {
   try {
     for (const mutation of mutationsList) {
-      if (
-        mutation.addedNodes.length > 0 &&
-        Array.from(mutation.addedNodes).some(
+      if (mutation.addedNodes.length > 0) {
+        const loaded = Array.from(mutation.addedNodes).some(
           (addedNode) =>
             addedNode.nodeType === 1 &&
-            addedNode.classList.contains("ytp-right-controls"),
-        )
-      ) {
-        if (observerActive) fetchVideoData(observer);
+            (addedNode.classList.contains("ytp-right-controls") ||
+              addedNode.tagName === "YTD-REEL-PLAYER-RENDERER"),
+        );
+        if (loaded && observerActive) fetchVideoData(observer);
       }
     }
   } catch (error) {
@@ -158,11 +169,14 @@ let sponsorBlockDebounceTimer = null;
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
     const relevant = mutationsList.some((mutation) =>
-      mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
+      mutation.target.id?.includes("sponsorBlockDurationAfterSkips"),
     );
     if (relevant) {
       clearTimeout(sponsorBlockDebounceTimer);
-      sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer), 300);
+      sponsorBlockDebounceTimer = setTimeout(
+        () => fetchVideoData(observer),
+        300,
+      );
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);
@@ -175,3 +189,9 @@ if (!foundSponsorBlock) {
 }
 observer.observe(document, { childList: true, subtree: true });
 fetchVideoData(observer);
+
+// on shorts, YouTube uses SPA navigation when scrolling between videos.
+// yt-navigate-finish fires after each navigation, allowing us to re-fetch.
+if (isShorts()) {
+  window.addEventListener("yt-navigate-finish", () => fetchVideoData(null));
+}

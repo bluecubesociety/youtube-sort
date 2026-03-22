@@ -8,6 +8,10 @@ Enhance your YouTube viewing experience, by sorting your open video tabs alphabe
 
 After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to extend sorting due to my personal use with the Zen Browser.
 
+**New Features**
+- Added dark mode support
+- Added support for shorts
+
 **Fixes**
 - Updated manifest-version
 - Fixed observer issue staying alive forever
