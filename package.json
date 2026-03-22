@@ -3,10 +3,15 @@
   "version": "2.0.0",
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
     "build": "web-ext build --overwrite-dest",
-    "build:chrome": "cp manifest.json /tmp/manifest_firefox_bak.json && cp manifest.chrome.json manifest.json && web-ext build --overwrite-dest && cp /tmp/manifest_firefox_bak.json manifest.json"
+    "build:chrome": "cp manifest.json /tmp/manifest_firefox_bak.json && cp manifest.chrome.json manifest.json && web-ext build --overwrite-dest && cp /tmp/manifest_firefox_bak.json manifest.json",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
   },
   "repository": {
     "type": "git",
@@ -30,6 +35,10 @@
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "sass": "^1.69.5"
   },
   "webExt": {

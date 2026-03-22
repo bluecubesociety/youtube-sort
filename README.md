@@ -14,7 +14,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens 
-- Design Overhaul: Added DnD for sorting rules, better visual feedback, spacing adjustments
+- Design Overhaul: Added DnD for sorting rules, better visual feedback, layout/spacing adjustments
 - Now also available for Chromium!
 
 **Fixes**

@@ -51,8 +51,11 @@ function renderSettings() {
 
 async function updateSponsorBlockVisibility() {
   const tabs = await prefilterTabs();
-  document.getElementById("sort-sponsorblock").parentNode.style.display =
-    tabs.some((tab) => tab.skipped) ? "initial" : "none";
+  document.getElementById("sort-sponsorblock").parentNode.style.display = tabs.some(
+    (tab) => tab.skipped
+  )
+    ? "initial"
+    : "none";
 }
 
 async function changeSetting(setting, e) {
@@ -61,16 +64,11 @@ async function changeSetting(setting, e) {
   await updateSettings();
 }
 
-
 async function init() {
   await getSettings();
 
-  document
-    .getElementById("tab-button-settings")
-    .addEventListener("click", () => setActiveMenu(0));
-  document
-    .getElementById("tab-button-list")
-    .addEventListener("click", () => setActiveMenu(1));
+  document.getElementById("tab-button-settings").addEventListener("click", () => setActiveMenu(0));
+  document.getElementById("tab-button-list").addEventListener("click", () => setActiveMenu(1));
   renderMenu();
 
   initTips();
