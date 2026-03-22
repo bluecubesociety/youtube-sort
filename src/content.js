@@ -105,7 +105,7 @@ function fetchVideoData(observer) {
         : {}),
       uploadDate: uploadDate,
       author: author,
-      views: parseInt(interactionCount),
+      views: parseInt(interactionCount) || undefined,
       ...(isLive ? { live: new Date(startDate).getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };

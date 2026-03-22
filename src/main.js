@@ -246,7 +246,7 @@ async function updateStats(tabs) {
   );
   document.getElementById("stat_views").innerText = getViews(
     tabs.reduce((acc, tab) => {
-      return acc + (tab.views ?? 0);
+      return acc + (Number.isFinite(tab.views) ? tab.views : 0);
     }, 0),
   );
 }
