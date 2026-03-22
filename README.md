@@ -10,6 +10,8 @@ After one and a half years, finally an update. Things were actually pretty stabl
 
 **Fixes**
 - Updated manifest_version
+- Fixed observer issue staying alive forever
+- Fixed NaN views
 
 ### Version 1.6.2 – Sep 11, 2024
 
