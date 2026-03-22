@@ -187,6 +187,21 @@ body {
   flex-direction: column;
   gap: 6px;
 }
+#stats {
+  flex-direction: row;
+  justify-content: space-around;
+}
+#stats .stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+#stats .stat small {
+  color: var(--color-muted);
+  text-align: center;
+}
 .segment #close-button {
   border: none;
   width: 16px;

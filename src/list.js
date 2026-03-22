@@ -33,7 +33,7 @@ function getDuration(seconds) {
   return `${formattedDays}${formattedHours}${formattedMinutes}:${formattedSeconds}`;
 }
 
-function updateStats(tabs) {
+function updateStats(tabs, isSelection) {
   let totalDuration = 0;
   let totalViews = 0;
   for (const tab of tabs) {
@@ -43,6 +43,7 @@ function updateStats(tabs) {
     totalViews += Number.isFinite(tab.views) ? tab.views : 0;
   }
   document.getElementById("stat_tabs").innerText = tabs.length;
+  document.getElementById("stat_tabs_label").innerText = isSelection ? "selected" : "videos";
   document.getElementById("stat_duration").innerText = getDuration(totalDuration);
   document.getElementById("stat_views").innerText = getViews(totalViews);
 }
@@ -54,7 +55,8 @@ export async function renderList() {
 
   const tabs = await prefilterTabs();
   tabList.innerHTML = "";
-  updateStats(tabs);
+  const isSelection = tabs.length > 1 && tabs.every((t) => t.selected);
+  updateStats(tabs, isSelection);
 
   for (const tab of tabs) {
     const el = document.createElement("button");
