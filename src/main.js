@@ -254,9 +254,10 @@ async function updateStats(tabs) {
 /** renders the list of detected tabs. */
 async function renderList() {
   const tabList = document.getElementById("video-list");
-  tabList.innerHTML = "";
+  tabList.innerHTML = '<div class="spinner"></div>';
 
   const tabs = await prefilterTabs();
+  tabList.innerHTML = "";
   updateStats(tabs);
 
   for (const tab of tabs) {
@@ -346,82 +347,71 @@ function renderMenu() {
   }
 }
 
-/** renders the sort options incl the buttons and dropdowns */
+let dragSrcIndex = null;
+
+/** renders the sort options incl the dropdown and drag handles */
 function renderSortOptions() {
   const container = document.getElementById("sortable-list");
   container.innerHTML = "";
 
-  for (const sortRule of settings.sorting) {
-    const dropdown = document.createElement("select");
-    dropdown.addEventListener("click", (e) =>
-      changeSortOrder(sortRule.attr, undefined, e),
-    );
+  settings.sorting.forEach((sortRule, index) => {
+    const toggleBtn = document.createElement("button");
+    toggleBtn.className = "toggle-asc";
+    toggleBtn.textContent = sortRule.asc === true ? sortRule.dropdown[1] : sortRule.dropdown[0];
+    toggleBtn.addEventListener("click", () => toggleSortAsc(sortRule.attr));
 
-    const option1 = document.createElement("option");
-    option1.value = "false";
-    if (sortRule.asc !== true) {
-      option1.selected = true;
-    }
-    option1.textContent = sortRule.dropdown[0];
-
-    const option2 = document.createElement("option");
-    option2.value = "true";
-    if (sortRule.asc === true) {
-      option2.selected = true;
-    }
-    option2.textContent = sortRule.dropdown[1];
-
-    dropdown.appendChild(option1);
-    dropdown.appendChild(option2);
-
-    const buttonUp = document.createElement("button");
-    buttonUp.classList.add("up");
-    buttonUp.addEventListener("click", () =>
-      changeSortOrder(sortRule.attr, false),
-    );
-    buttonUp.innerHTML =
-      '<svg height="24" viewBox="0 0 24 24" width="24" transform="scale(1, -1)"><path d="m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z"></path></svg>';
-
-    const buttonDown = document.createElement("button");
-    buttonDown.classList.add("down");
-    buttonDown.addEventListener("click", () =>
-      changeSortOrder(sortRule.attr, true),
-    );
-    buttonDown.innerHTML =
-      '<svg height="24" viewBox="0 0 24 24" width="24"><path d="m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z"></path></svg>';
+    const handle = document.createElement("span");
+    handle.className = "drag-handle";
+    handle.textContent = "⠿";
 
     const buttons = document.createElement("div");
     buttons.classList.add("buttons");
-    buttons.appendChild(dropdown);
-    buttons.appendChild(buttonUp);
-    buttons.appendChild(buttonDown);
+    buttons.appendChild(toggleBtn);
 
     const el = document.createElement("li");
     el.id = sortRule.attr;
     el.classList.add("item");
+    el.draggable = true;
+
     const spanElement = document.createElement("span");
     spanElement.className = "title";
     spanElement.textContent = sortRule.title;
-    el.appendChild(spanElement);
 
+    el.appendChild(handle);
+    el.appendChild(spanElement);
     el.appendChild(buttons);
     container.appendChild(el);
-  }
+
+    el.addEventListener("dragstart", (e) => {
+      dragSrcIndex = index;
+      e.dataTransfer.effectAllowed = "move";
+      setTimeout(() => el.classList.add("dragging"), 0);
+    });
+    el.addEventListener("dragend", () => {
+      el.classList.remove("dragging");
+      container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
+    });
+    el.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
+      el.classList.add("drag-over");
+    });
+    el.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      if (dragSrcIndex !== null && dragSrcIndex !== index) {
+        const [moved] = settings.sorting.splice(dragSrcIndex, 1);
+        settings.sorting.splice(index, 0, moved);
+        renderSortOptions();
+        await updateSettings();
+      }
+    });
+  });
 }
 
-async function changeSortOrder(attr, down, e) {
+async function toggleSortAsc(attr) {
   const index = settings.sorting.findIndex((item) => item.attr === attr);
-  if (down === true)
-    [settings.sorting[index], settings.sorting[index + 1]] = [
-      settings.sorting[index + 1],
-      settings.sorting[index],
-    ];
-  else if (down === false)
-    [settings.sorting[index], settings.sorting[index - 1]] = [
-      settings.sorting[index - 1],
-      settings.sorting[index],
-    ];
-  if (e !== undefined) settings.sorting[index].asc = JSON.parse(e.target.value);
+  settings.sorting[index].asc = !settings.sorting[index].asc;
   renderSortOptions();
   await updateSettings();
 }

@@ -42,6 +42,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  user-select: none;
 }
 
 #menu {
@@ -89,7 +90,28 @@ body {
 #menu #tab-button-sort:hover {
   width: 55%;
 }
+#menu #tab-button-sort.loading {
+  pointer-events: none;
+}
+#menu #tab-button-sort.loading p {
+  display: none;
+}
+#menu #tab-button-sort.loading::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-text);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 #main .tab-content {
   padding: 8px;
 }
@@ -101,6 +123,7 @@ body {
   border-top: 1px solid var(--color-border);
   cursor: pointer;
   color: var(--color-text);
+  text-align: left;
 }
 #main .tab-content .item:hover {
   background-color: var(--color-hover);
@@ -198,6 +221,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 40%;
 }
 #sorting-rules #sortable-list li .buttons button {
   display: flex;
@@ -207,42 +231,64 @@ body {
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  width: 24px;
   background-color: transparent;
   transition: background-color 0.3s ease;
 }
 #sorting-rules #sortable-list li .buttons button:hover {
   background-color: var(--color-hover);
 }
-#sorting-rules #sortable-list li select {
+#sorting-rules #sortable-list li .toggle-asc {
   cursor: pointer;
   height: 24px;
-  padding: 0 4px;
+  width: 100%;
+  padding: 0 6px;
   border: none;
   border-radius: 10px;
   background-color: transparent;
   transition: background-color 0.3s ease;
   color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-#sorting-rules #sortable-list li select:hover {
+#sorting-rules #sortable-list li .toggle-asc:hover {
   background-color: var(--color-hover);
 }
-#sorting-rules #sortable-list li:first-of-type .up {
-  display: none;
+#sorting-rules #sortable-list li.dragging {
+  opacity: 0.4;
 }
-#sorting-rules #sortable-list li:first-of-type .down {
-  margin-left: 24px;
+#sorting-rules #sortable-list li.drag-over {
+  border-top: 2px solid var(--color-text);
 }
-#sorting-rules #sortable-list li:last-of-type .up {
-  margin-right: 24px;
+#sorting-rules .drag-handle {
+  cursor: grab;
+  color: var(--color-muted);
+  font-size: 16px;
+  padding: 0 4px;
+  user-select: none;
 }
-#sorting-rules #sortable-list li:last-of-type .down {
-  display: none;
+#sorting-rules .drag-handle:active {
+  cursor: grabbing;
 }
 
 #filter-rules label {
   display: inline-block;
   width: 100%;
+}
+
+input[type=checkbox] {
+  accent-color: var(--color-text);
+  cursor: pointer;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  margin: 12px auto;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-text);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 
 #version {
