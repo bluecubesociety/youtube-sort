@@ -66,6 +66,8 @@ async function getSettings() {
 }
 
 function extractYouTubeID(url) {
+  const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
+  if (shortsMatch) return shortsMatch[1];
   return regex.test(url) && regex.exec(url)[7];
 }
 
