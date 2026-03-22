@@ -1,3 +1,4 @@
+// @ts-check
 import { settings, updateSettings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 import { renderList } from "./list.js";
@@ -133,14 +134,14 @@ export function renderSortOptions() {
         settings.sorting.splice(index - 1, 0, moved);
         renderSortOptions();
         await updateSettings();
-        container.children[index - 1].focus();
+        /** @type {HTMLElement} */ (container.children[index - 1]).focus();
       } else if (e.key === "ArrowDown" && index < settings.sorting.length - 1) {
         e.preventDefault();
         const [moved] = settings.sorting.splice(index, 1);
         settings.sorting.splice(index + 1, 0, moved);
         renderSortOptions();
         await updateSettings();
-        container.children[index + 1].focus();
+        /** @type {HTMLElement} */ (container.children[index + 1]).focus();
       }
     });
 

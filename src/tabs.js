@@ -1,3 +1,4 @@
+// @ts-check
 import { settings } from "./settings.js";
 
 const regex =
@@ -12,7 +13,7 @@ function extractYouTubeID(url) {
 
 /** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected. */
 export async function prefilterTabs() {
-  const videoTabs = await browser.storage.local.get();
+  const videoTabs = /** @type {Record<string, any>} */ (await browser.storage.local.get());
   const allTabs = await browser.tabs.query({
     pinned: false,
     url: "*://*.youtube.com/*",

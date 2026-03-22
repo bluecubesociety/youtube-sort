@@ -1,3 +1,4 @@
+// @ts-check
 export const settings = {
   tip_index: 0,
   ignore_inactive: false,

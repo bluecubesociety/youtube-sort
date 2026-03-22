@@ -11,7 +11,8 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "format:check": "prettier --check src",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -36,10 +37,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/chrome": "^0.1.38",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
-    "sass": "^1.69.5"
+    "sass": "^1.69.5",
+    "typescript": "^5.9.3"
   },
   "webExt": {
     "sourceDir": "./"

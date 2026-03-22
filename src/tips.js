@@ -1,3 +1,4 @@
+// @ts-check
 import { settings, updateSettings } from "./settings.js";
 
 const TIPS = [

@@ -1,3 +1,4 @@
+// @ts-check
 import { settings, getSettings, updateSettings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 import { renderList, deleteStorage } from "./list.js";
@@ -39,19 +40,21 @@ function renderMenu() {
 }
 
 function renderSettings() {
-  document.getElementById("ignore-inactive").checked = settings.ignore_inactive;
-  document.getElementById("ignore-live").checked = settings.ignore_live;
-  document.getElementById("ignore-playlists").checked = settings.ignore_playlists;
-  document.getElementById("sort-sponsorblock").checked = settings.sort_sponsorblock;
-  document.getElementById("sort-to-start").checked = settings.sort_to_start;
-  document.getElementById("current-window-only").checked = settings.current_window_only;
-  document.getElementById("auto-sort").checked = settings.auto_sort;
-  document.getElementById("force-reload").checked = settings.force_reload;
+  /** @param {string} id @returns {HTMLInputElement} */
+  const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id));
+  cb("ignore-inactive").checked = settings.ignore_inactive;
+  cb("ignore-live").checked = settings.ignore_live;
+  cb("ignore-playlists").checked = settings.ignore_playlists;
+  cb("sort-sponsorblock").checked = settings.sort_sponsorblock;
+  cb("sort-to-start").checked = settings.sort_to_start;
+  cb("current-window-only").checked = settings.current_window_only;
+  cb("auto-sort").checked = settings.auto_sort;
+  cb("force-reload").checked = settings.force_reload;
 }
 
 async function updateSponsorBlockVisibility() {
   const tabs = await prefilterTabs();
-  document.getElementById("sort-sponsorblock").parentNode.style.display = tabs.some(
+  /** @type {HTMLElement} */ (document.getElementById("sort-sponsorblock").parentNode).style.display = tabs.some(
     (tab) => tab.skipped
   )
     ? "initial"

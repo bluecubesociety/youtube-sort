@@ -1,3 +1,4 @@
+// @ts-check
 import { settings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 
@@ -14,7 +15,7 @@ function getViews(views) {
 function getPremiereTime(timestamp) {
   const today = new Date();
   const premiere = new Date(timestamp);
-  const diff = premiere - today;
+  const diff = premiere.getTime() - today.getTime();
   return getDuration(diff / 1000);
 }
 
