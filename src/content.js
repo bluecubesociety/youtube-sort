@@ -19,8 +19,8 @@ function calcDuration(duration) {
     seconds = 0,
     totalseconds = 0;
 
-  if (regexPT.test(duration)) {
-    const matches = regexPT.exec(duration);
+  const matches = regexPT.exec(duration);
+  if (matches) {
     if (matches[1]) hours = Number(matches[1]);
     if (matches[2]) minutes = Number(matches[2]);
     if (matches[3]) seconds = Number(matches[3]);
