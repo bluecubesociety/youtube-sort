@@ -15,6 +15,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 **Fixes**
 - Fixed observer issue staying alive forever
 - Added fallbacks to stats
+- Sorting awaits to avoid incorrect order
 - Removals now run in parallel
 - Added debouncer to SponsorBlock detection for improved performance
 - Updated manifest-version
