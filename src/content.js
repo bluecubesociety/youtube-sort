@@ -154,12 +154,15 @@ const observer = new MutationObserver((mutationsList, observer) => {
 });
 
 // sponsorBlock specific: fetch and submit video data (again), if the observer finds the sponsorBlock-add on
+let sponsorBlockDebounceTimer = null;
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
-    for (const mutation of mutationsList) {
-      if (mutation.target.id?.includes("sponsorBlockDurationAfterSkips")) {
-        fetchVideoData(observer);
-      }
+    const relevant = mutationsList.some((mutation) =>
+      mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
+    );
+    if (relevant) {
+      clearTimeout(sponsorBlockDebounceTimer);
+      sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer), 300);
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);
