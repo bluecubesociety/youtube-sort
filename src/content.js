@@ -1,3 +1,4 @@
+// @ts-check
 // This file is being loaded on ever YouTube tab to read out the video information and pass them to the storage.
 // It also marks the video as being detected which helps identifying issues in the future.
 console.debug("[YouTube Sort] Content File loaded.");
@@ -43,19 +44,19 @@ function getVideoID() {
 
 function fetchVideoData(observer) {
   // collects data for the storage (via meta tags)
-  const uploadDate = document.querySelector("meta[itemprop='uploadDate']")?.content;
-  const title = document.querySelector("meta[itemprop='name']")?.content;
-  const author = document.querySelector(".ytd-channel-name")?.innerText;
-  const interactionCount = document.querySelector("meta[itemprop='interactionCount']")?.content;
-  const publication = document.querySelector(
-    "meta[itemprop='isLiveBroadcast'][content='True']"
-  )?.content;
-  const startDate = document.querySelector("meta[itemprop='startDate']")?.content;
-  const endDate = document.querySelector("meta[itemprop='endDate']")?.content;
-  const duration = document.querySelector("meta[itemprop='duration']")?.content;
+  /** @param {string} sel @returns {HTMLMetaElement | null} */
+  const meta = (sel) => /** @type {HTMLMetaElement | null} */ (document.querySelector(sel));
+  const uploadDate = meta("meta[itemprop='uploadDate']")?.content;
+  const title = meta("meta[itemprop='name']")?.content;
+  const author = /** @type {HTMLElement | null} */ (document.querySelector(".ytd-channel-name"))?.innerText;
+  const interactionCount = meta("meta[itemprop='interactionCount']")?.content;
+  const publication = meta("meta[itemprop='isLiveBroadcast'][content='True']")?.content;
+  const startDate = meta("meta[itemprop='startDate']")?.content;
+  const endDate = meta("meta[itemprop='endDate']")?.content;
+  const duration = meta("meta[itemprop='duration']")?.content;
 
   // sponsorBlock-specific
-  const skipDuration = document.querySelector("#sponsorBlockDurationAfterSkips")?.innerText;
+  const skipDuration = /** @type {HTMLElement | null} */ (document.querySelector("#sponsorBlockDurationAfterSkips"))?.innerText;
   if (skipDuration) {
     foundSponsorBlock = true;
     sponsorBlockObserver?.disconnect();
@@ -139,7 +140,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
       if (mutation.addedNodes.length > 0) {
         const loaded = Array.from(mutation.addedNodes).some(
           (addedNode) =>
-            addedNode.nodeType === 1 &&
+            addedNode instanceof Element &&
             (addedNode.classList.contains("ytp-right-controls") ||
               addedNode.tagName === "YTD-REEL-PLAYER-RENDERER")
         );
@@ -155,8 +156,10 @@ const observer = new MutationObserver((mutationsList, observer) => {
 let sponsorBlockDebounceTimer = null;
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
-    const relevant = mutationsList.some((mutation) =>
-      mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
+    const relevant = mutationsList.some(
+      (mutation) =>
+        mutation.target instanceof Element &&
+        mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
     );
     if (relevant) {
       clearTimeout(sponsorBlockDebounceTimer);

@@ -1,3 +1,4 @@
+// @ts-check
 const regex =
   /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?|embed\/|v\/)?)?.*(v=([\w-]+)(?=&|\s|$))/i;
 
@@ -9,10 +10,12 @@ function extractYouTubeID(url) {
 }
 
 async function autoSort(windowId) {
-  const { settings } = await browser.storage.sync.get("settings");
+  const { settings } = /** @type {{ settings: typeof import('./settings.js').settings }} */ (
+    await browser.storage.sync.get("settings")
+  );
   if (!settings?.auto_sort) return;
 
-  const videoTabs = await browser.storage.local.get();
+  const videoTabs = /** @type {Record<string, any>} */ (await browser.storage.local.get());
   const allTabs = await browser.tabs.query({
     pinned: false,
     url: "*://*.youtube.com/*",
