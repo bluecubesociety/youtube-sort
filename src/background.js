@@ -1,3 +1,2 @@
-browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
-  console.log("")
-});
+// Background script intentionally kept minimal.
+// Removing it has caused the extension to stop working in some cases.
