@@ -30,6 +30,12 @@ $border-radius: 10px;
     margin: 0;
 }
 
+:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+    border-radius: $border-radius;
+}
+
 html {
     width: 320px;
     font-size: 16px;
@@ -47,6 +53,10 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+#menu,
+#tab-settings {
     user-select: none;
 }
 
@@ -61,6 +71,8 @@ body {
     cursor: pointer;
 
     .tab-button {
+        border: none;
+        background: none;
         color: var(--color-text);
         fill: var(--color-text);
         font:
