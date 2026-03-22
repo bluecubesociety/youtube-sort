@@ -12,11 +12,11 @@ const settings = {
   sort_to_start: false,
   force_reload: false,
   sorting: [
-    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
-    { dropdown: ["Oldest first", "Newest first"], asc: false, attr: "uploadDate", title: "Upload Date" },
-    { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
+    { dropdown: ["Oldest first", "Newest first"], asc: false, attr: "uploadDate", title: "Upload Date" },
     { dropdown: ["Shortest first", "Longest first"], asc: false, attr: "liveDuration", title: "Video Duration" },
+    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
+    { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
   ],
   menu: 0,
 };
@@ -320,7 +320,9 @@ function renderSortOptions() {
   settings.sorting.forEach((sortRule, index) => {
     const toggleBtn = document.createElement("button");
     toggleBtn.className = "toggle-asc";
-    toggleBtn.textContent = sortRule.asc === true ? sortRule.dropdown[1] : sortRule.dropdown[0];
+    const label = sortRule.asc === true ? sortRule.dropdown[1] : sortRule.dropdown[0];
+    toggleBtn.textContent = label;
+    toggleBtn.setAttribute("aria-label", `${sortRule.title} sort direction: ${label}`);
     toggleBtn.addEventListener("click", () => toggleSortAsc(sortRule.attr));
 
     const handle = document.createElement("span");
