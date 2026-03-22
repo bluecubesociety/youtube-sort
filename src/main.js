@@ -217,7 +217,7 @@ async function updateStats(tabs) {
 /** renders the list of detected tabs. */
 async function renderList() {
   const tabList = document.getElementById("video-list");
-  tabList.innerHTML = '<div class="spinner"></div>';
+  tabList.innerHTML = '<div class="spinner" role="status" aria-label="Loading"></div>';
 
   const tabs = await prefilterTabs();
   tabList.innerHTML = "";
@@ -328,6 +328,7 @@ function renderSortOptions() {
     const handle = document.createElement("span");
     handle.className = "drag-handle";
     handle.textContent = "⠿";
+    handle.setAttribute("aria-hidden", "true");
 
     const buttons = document.createElement("div");
     buttons.classList.add("buttons");
