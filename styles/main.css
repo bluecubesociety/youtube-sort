@@ -276,9 +276,10 @@ body {
 #sorting-rules .drag-handle {
   cursor: grab;
   color: var(--color-muted);
-  font-size: 16px;
   padding: 0 4px;
   user-select: none;
+  display: flex;
+  align-items: center;
 }
 #sorting-rules .drag-handle:active {
   cursor: grabbing;
