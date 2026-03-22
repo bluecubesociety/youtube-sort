@@ -14,6 +14,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added fallbacks to stats
 - Removals now run in parallel
 - Minor other optimisations
+- Added debouncer to SponsorBlock detection for improved performance
 
 ### Version 1.6.2 – Sep 11, 2024
 
