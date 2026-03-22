@@ -45,6 +45,7 @@ function renderSettings() {
   document.getElementById("sort-sponsorblock").checked = settings.sort_sponsorblock;
   document.getElementById("sort-to-start").checked = settings.sort_to_start;
   document.getElementById("current-window-only").checked = settings.current_window_only;
+  document.getElementById("auto-sort").checked = settings.auto_sort;
   document.getElementById("force-reload").checked = settings.force_reload;
 }
 
@@ -91,6 +92,7 @@ async function init() {
     ["sort-sponsorblock", "sort_sponsorblock"],
     ["sort-to-start", "sort_to_start"],
     ["current-window-only", "current_window_only"],
+    ["auto-sort", "auto_sort"],
     ["force-reload", "force_reload"],
   ]) {
     document.getElementById(id).addEventListener("click", (e) => changeSetting(key, e));
