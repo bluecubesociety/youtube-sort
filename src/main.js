@@ -10,6 +10,7 @@ const settings = {
   ignore_live: false,
   sort_sponsorblock: false,
   sort_to_start: false,
+  current_window_only: false,
   force_reload: false,
   sorting: [
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
@@ -49,6 +50,7 @@ async function prefilterTabs() {
   const allTabs = await browser.tabs.query({
     pinned: false,
     url: "*://*.youtube.com/*",
+    ...(settings.current_window_only ? { currentWindow: true } : {}),
   });
 
   const mergedTabData = {};
@@ -140,16 +142,22 @@ async function sortTabs() {
       }
     });
 
-    if (settings.sort_to_start) {
-      const windowId = sortedTabs[0].windowId;
-      const pinnedTabs = await browser.tabs.query({ windowId, pinned: true });
-      const startIndex = pinnedTabs.length;
-      for (const tab of [...sortedTabs].reverse()) {
-        await browser.tabs.move(tab.id, { index: startIndex });
-      }
-    } else {
-      for (const tab of sortedTabs) {
-        await browser.tabs.move(tab.id, { index: -1 });
+    const windowGroups = new Map();
+    for (const tab of sortedTabs) {
+      if (!windowGroups.has(tab.windowId)) windowGroups.set(tab.windowId, []);
+      windowGroups.get(tab.windowId).push(tab);
+    }
+    for (const [windowId, windowTabs] of windowGroups) {
+      if (settings.sort_to_start) {
+        const pinnedTabs = await browser.tabs.query({ windowId, pinned: true });
+        const startIndex = pinnedTabs.length;
+        for (const tab of [...windowTabs].reverse()) {
+          await browser.tabs.move(tab.id, { index: startIndex });
+        }
+      } else {
+        for (const tab of windowTabs) {
+          await browser.tabs.move(tab.id, { index: -1 });
+        }
       }
     }
     renderList();
@@ -414,6 +422,7 @@ async function renderSettings() {
   document.getElementById("sort-sponsorblock").checked =
     settings.sort_sponsorblock;
   document.getElementById("sort-to-start").checked = settings.sort_to_start;
+  document.getElementById("current-window-only").checked = settings.current_window_only;
   document.getElementById("force-reload").checked = settings.force_reload;
   const tabs = await prefilterTabs();
   if (tabs.some((tab) => tab.skipped)) {
@@ -471,6 +480,7 @@ async function init() {
     ["ignore-playlists", "ignore_playlists"],
     ["sort-sponsorblock", "sort_sponsorblock"],
     ["sort-to-start", "sort_to_start"],
+    ["current-window-only", "current_window_only"],
     ["force-reload", "force_reload"],
   ]) {
     document.getElementById(id).addEventListener("click", (e) => changeSetting(key, e));
