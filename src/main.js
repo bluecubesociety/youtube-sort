@@ -1,304 +1,8 @@
-// This file renders the add-on dropdown menu.
-
-const TIPS = [
-  "You can sort selected tabs only — highlight a few tabs first, then sort!",
-  "Use Arrow Up / Arrow Down on a focused sort rule to reorder without a mouse.",
-  "Multiple sort rules are applied in order — lower rules only break ties from the one above.",
-  "Unloaded tabs are still sorted using their cached metadata from the last time they were open.",
-  "SponsorBlock adjusts the duration used for sorting, not just the display — so shorter effective runtime ranks first.",
-  "If a video's duration looks wrong, the metadata may be stale — 'Delete Storage' in the Danger Zone resets it.",
-];
-
-const regex =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?|embed\/|v\/)?)?.*(v=([\w\-]+)(?=&|\s|$))/i;
-
-const settings = {
-  tip_index: 0,
-  ignore_inactive: false,
-  ignore_playlists: false,
-  ignore_live: false,
-  sort_sponsorblock: false,
-  sort_to_start: false,
-  current_window_only: false,
-  force_reload: false,
-  sorting: [
-    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
-    { dropdown: ["Oldest first", "Newest first"], asc: false, attr: "uploadDate", title: "Upload Date" },
-    { dropdown: ["Shortest first", "Longest first"], asc: false, attr: "liveDuration", title: "Video Duration" },
-    { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
-    { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
-  ],
-  menu: 0,
-};
-
-/** saves extension settings in the local storage */
-async function updateSettings() {
-  await browser.storage.sync.set({
-    settings: settings,
-  });
-}
-
-/** loads settings from the sync storage */
-async function getSettings() {
-  const { settings: loadedSettings } = await browser.storage.sync.get("settings");
-  if (loadedSettings) Object.assign(settings, loadedSettings);
-}
-
-function extractYouTubeID(url) {
-  const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
-  if (shortsMatch) return shortsMatch[1];
-  const match = regex.exec(url);
-  return match ? match[7] : false;
-}
-
-/** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected.
-    TODO: merged data includes more stuff than I actually need. Also removes data from storage. Not sure if that's better somewhere else
-*/
-async function prefilterTabs() {
-  const videoTabs = await browser.storage.local.get();
-  const allTabs = await browser.tabs.query({
-    pinned: false,
-    url: "*://*.youtube.com/*",
-    ...(settings.current_window_only ? { currentWindow: true } : {}),
-  });
-
-  const mergedTabData = {};
-  // merges firefoxTab info and youtubeTab info and adjusts attribute-names
-  allTabs.forEach((tab) => {
-    const youtubeID = extractYouTubeID(tab.url);
-    if (youtubeID) {
-      const key = `${youtubeID}-${tab.id}`;
-      mergedTabData[key] = {
-        sleepy: tab.discarded,
-        selected: tab.highlighted,
-        tabTitle: tab.title,
-        liveDuration:
-          videoTabs[youtubeID]?.live ??
-          videoTabs[youtubeID]?.skipped ??
-          videoTabs[youtubeID]?.duration,
-        ...(typeof youtubeID === "string" && youtubeID.length === 11
-          ? { youtubeID }
-          : {}),
-        ...tab,
-        ...videoTabs[youtubeID],
-      };
-    }
-  });
-
-  // remap to an array
-  const tabArray = Object.entries(mergedTabData).map((tab) => {
-    return {
-      tabId: tab[0],
-      ...tab[1],
-    };
-  });
-
-  // filter tabs based on settings
-  const filteredTabs = tabArray.filter((tab) => {
-    return (
-      tab.youtubeID &&
-      tab.title &&
-      (!settings.ignore_playlists || !tab.playlist) &&
-      (!settings.ignore_live || !tab.live) &&
-      (!settings.ignore_inactive || !tab.sleepy)
-    );
-  });
-
-  // removes entries from storage that can not be found anymore
-  await Promise.all(
-    tabArray
-      .filter((tab) => tab.youtubeID && !tab.title)
-      .map((tab) => browser.storage.local.remove(tab.youtubeID))
-  );
-
-  // filters other tabs if at least two have been selected, and return them
-  const selectedTabs = filteredTabs.filter((tab) => tab.selected);
-  return selectedTabs.length > 1 ? selectedTabs : filteredTabs;
-}
-
-/** sorts tabs based on settings. */
-async function sortTabs() {
-  const sortBtn = document.getElementById("tab-button-sort");
-  sortBtn.classList.add("loading");
-  document.getElementById("alert-error").innerText = "";
-  let success = false;
-
-  try {
-    const tabs = await prefilterTabs();
-
-    // wake them up, if wanted
-    if (settings.force_reload) {
-      tabs.forEach((tab) => {
-        browser.tabs.reload(tab.id);
-      });
-    }
-
-    const sortedTabs = tabs.sort((a, b) => {
-      for (const sorting of settings.sorting) {
-        const criteria =
-          sorting.attr === "duration" ? "liveDuration" : sorting.attr;
-        const critA =
-          typeof a[criteria] === "string"
-            ? a[criteria].toLowerCase()
-            : a[criteria];
-        const critB =
-          typeof b[criteria] === "string"
-            ? b[criteria].toLowerCase()
-            : b[criteria];
-        let res = String(critA).localeCompare(critB, undefined, {
-          numeric: true,
-        });
-        if (sorting.asc === true && res !== 0) res = -res;
-        if (res !== 0) return res;
-      }
-    });
-
-    const windowGroups = new Map();
-    for (const tab of sortedTabs) {
-      if (!windowGroups.has(tab.windowId)) windowGroups.set(tab.windowId, []);
-      windowGroups.get(tab.windowId).push(tab);
-    }
-    for (const [windowId, windowTabs] of windowGroups) {
-      if (settings.sort_to_start) {
-        const pinnedTabs = await browser.tabs.query({ windowId, pinned: true });
-        const startIndex = pinnedTabs.length;
-        for (const tab of [...windowTabs].reverse()) {
-          await browser.tabs.move(tab.id, { index: startIndex });
-        }
-      } else {
-        for (const tab of windowTabs) {
-          await browser.tabs.move(tab.id, { index: -1 });
-        }
-      }
-    }
-    renderList();
-
-    // wake them up, if wanted
-    if (settings.ignore_inactive !== true) {
-      sortedTabs.forEach((tab) => {
-        if (tab.sleepy) browser.tabs.reload(tab.id);
-      });
-    }
-    success = true;
-  } catch (error) {
-    console.debug("[YouTube Sort]", error);
-    document.getElementById("alert-error").innerText = "Error: " + (error?.message || error);
-  } finally {
-    sortBtn.classList.remove("loading");
-    if (success) {
-      sortBtn.classList.add("done");
-      setTimeout(() => sortBtn.classList.remove("done"), 1000);
-    }
-  }
-}
-
-/** returns views as a string */
-function getViews(views) {
-  const SI_SYMBOL = ["", "K", "M", "B", "T"];
-  const tier = (Math.log10(Math.abs(views)) / 3) | 0;
-  if (tier === 0) return views.toString();
-  const divisor = Math.pow(10, tier * 3);
-  return (views / divisor).toFixed(1) + SI_SYMBOL[tier];
-}
-
-/** returns relative premiere time */
-function getPremiereTime(timestamp) {
-  const today = new Date();
-  const premiere = new Date(timestamp);
-  const diff = premiere - today;
-  return getDuration(diff / 1000);
-}
-
-/** returns duration as a string */
-function getDuration(seconds) {
-  const days = Math.floor(seconds / 86400); // 86400 seconds in a day
-  const hours = Math.floor((seconds % 86400) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-
-  const formattedDays = days ? String(days).padStart(2, "0") + ":" : "";
-  const formattedHours = hours ? String(hours).padStart(2, "0") + ":" : "";
-  const formattedMinutes = String(minutes).padStart(2, "0");
-  const formattedSeconds = String(remainingSeconds).padStart(2, "0");
-
-  return `${formattedDays}${formattedHours}${formattedMinutes}:${formattedSeconds}`;
-}
-
-async function updateStats(tabs) {
-  let totalDuration = 0;
-  let totalViews = 0;
-  for (const tab of tabs) {
-    totalDuration += settings.sort_sponsorblock
-      ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
-      : (Number.isFinite(tab.duration) ? tab.duration : 0);
-    totalViews += Number.isFinite(tab.views) ? tab.views : 0;
-  }
-  document.getElementById("stat_tabs").innerText = tabs.length;
-  document.getElementById("stat_duration").innerText = getDuration(totalDuration);
-  document.getElementById("stat_views").innerText = getViews(totalViews);
-}
-
-/** renders the list of detected tabs. */
-async function renderList() {
-  const tabList = document.getElementById("video-list");
-  tabList.innerHTML = '<div class="spinner" role="status" aria-label="Loading"></div>';
-
-  const tabs = await prefilterTabs();
-  tabList.innerHTML = "";
-  updateStats(tabs);
-
-  for (const tab of tabs) {
-    const el = document.createElement("button");
-    el.onclick = () => {
-      browser.tabs.update(tab.id, { active: true });
-    };
-    el.id = tab.youtubeID;
-    el.classList.add("item");
-
-    const titleElement = document.createElement("p");
-    titleElement.className = "title";
-    titleElement.textContent = tab.title;
-    el.appendChild(titleElement);
-
-    const smallElement = document.createElement("small");
-    const properties = [
-      { prop: "live", textFunc: () => "Live", className: "badge" },
-      { prop: "playlist", textFunc: () => "Playlist", className: "badge" },
-      {
-        prop: "duration",
-        textFunc: (duration) =>
-          tab.live > 0
-            ? `Live in ${getPremiereTime(tab.live)}`
-            : getDuration(duration),
-      },
-      {
-        prop: "uploadDate",
-        textFunc: (date) => new Date(date).toLocaleDateString(),
-      },
-      { prop: "views", textFunc: (views) => `${getViews(views)} Views` },
-      { prop: "author" },
-    ];
-    properties.forEach(({ prop, textFunc, className }) => {
-      if (prop === "duration" ? Number.isFinite(tab[prop]) : tab[prop]) {
-        const spanElement = document.createElement("span");
-        if (className) spanElement.className = className;
-        if (settings.sort_sponsorblock && prop === "duration") {
-          spanElement.textContent = textFunc(tab["skipped"] ?? tab["duration"]);
-        } else {
-          spanElement.textContent = textFunc ? textFunc(tab[prop]) : tab[prop];
-        }
-        smallElement.appendChild(spanElement);
-      }
-    });
-    el.appendChild(smallElement);
-    tabList.appendChild(el);
-  }
-}
-
-/** hard reset in storage if needed. */
-async function deleteStorage() {
-  await browser.storage.local.clear();
-}
+import { settings, getSettings, updateSettings } from "./settings.js";
+import { prefilterTabs } from "./tabs.js";
+import { renderList, deleteStorage } from "./list.js";
+import { sortTabs, renderSortOptions } from "./sort.js";
+import { initTips, closeTip, resetTip } from "./tips.js";
 
 /** changes the active menu in the settings and saves it */
 async function setActiveMenu(menu) {
@@ -334,119 +38,19 @@ function renderMenu() {
   }
 }
 
-/** renders the sort options incl the dropdown and drag handles */
-function renderSortOptions() {
-  const container = document.getElementById("sortable-list");
-  container.innerHTML = "";
-  let dragSrcIndex = null;
-  const clearDragOver = () => container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
-
-  settings.sorting.forEach((sortRule, index) => {
-    const toggleBtn = document.createElement("button");
-    toggleBtn.className = "toggle-asc";
-    const label = sortRule.asc === true ? sortRule.dropdown[1] : sortRule.dropdown[0];
-    toggleBtn.textContent = label;
-    toggleBtn.setAttribute("aria-label", `${sortRule.title} sort direction: ${label}`);
-    toggleBtn.addEventListener("click", () => toggleSortAsc(sortRule.attr));
-
-    const handle = document.createElement("span");
-    handle.className = "drag-handle";
-    handle.setAttribute("aria-hidden", "true");
-    handle.innerHTML = `<svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="2" cy="3" r="1.5"/><circle cx="8" cy="3" r="1.5"/>
-      <circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/>
-      <circle cx="2" cy="13" r="1.5"/><circle cx="8" cy="13" r="1.5"/>
-    </svg>`;
-
-    const buttons = document.createElement("div");
-    buttons.classList.add("buttons");
-    buttons.appendChild(toggleBtn);
-
-    const el = document.createElement("li");
-    el.id = sortRule.attr;
-    el.classList.add("item");
-    el.draggable = true;
-    el.tabIndex = 0;
-    el.setAttribute("aria-label", `${sortRule.title}, position ${index + 1} of ${settings.sorting.length}. Use Arrow Up and Arrow Down to reorder.`);
-
-    const spanElement = document.createElement("span");
-    spanElement.className = "title";
-    spanElement.textContent = sortRule.title;
-
-    el.appendChild(handle);
-    el.appendChild(spanElement);
-    el.appendChild(buttons);
-    container.appendChild(el);
-
-    el.addEventListener("keydown", async (e) => {
-      if (e.key === "ArrowUp" && index > 0) {
-        e.preventDefault();
-        const [moved] = settings.sorting.splice(index, 1);
-        settings.sorting.splice(index - 1, 0, moved);
-        renderSortOptions();
-        await updateSettings();
-        container.children[index - 1].focus();
-      } else if (e.key === "ArrowDown" && index < settings.sorting.length - 1) {
-        e.preventDefault();
-        const [moved] = settings.sorting.splice(index, 1);
-        settings.sorting.splice(index + 1, 0, moved);
-        renderSortOptions();
-        await updateSettings();
-        container.children[index + 1].focus();
-      }
-    });
-
-    el.addEventListener("dragstart", (e) => {
-      dragSrcIndex = index;
-      e.dataTransfer.effectAllowed = "move";
-      setTimeout(() => el.classList.add("dragging"), 0);
-    });
-    el.addEventListener("dragend", () => {
-      el.classList.remove("dragging");
-      clearDragOver();
-    });
-    el.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      clearDragOver();
-      el.classList.add("drag-over");
-    });
-    el.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      if (dragSrcIndex !== null && dragSrcIndex !== index) {
-        const [moved] = settings.sorting.splice(dragSrcIndex, 1);
-        settings.sorting.splice(index, 0, moved);
-        renderSortOptions();
-        await updateSettings();
-      }
-    });
-  });
-}
-
-async function toggleSortAsc(attr) {
-  const index = settings.sorting.findIndex((item) => item.attr === attr);
-  settings.sorting[index].asc = !settings.sorting[index].asc;
-  renderSortOptions();
-  await updateSettings();
-}
-
 async function renderSettings() {
   document.getElementById("ignore-inactive").checked = settings.ignore_inactive;
   document.getElementById("ignore-live").checked = settings.ignore_live;
-  document.getElementById("ignore-playlists").checked =
-    settings.ignore_playlists;
-  document.getElementById("sort-sponsorblock").checked =
-    settings.sort_sponsorblock;
+  document.getElementById("ignore-playlists").checked = settings.ignore_playlists;
+  document.getElementById("sort-sponsorblock").checked = settings.sort_sponsorblock;
   document.getElementById("sort-to-start").checked = settings.sort_to_start;
   document.getElementById("current-window-only").checked = settings.current_window_only;
   document.getElementById("force-reload").checked = settings.force_reload;
   const tabs = await prefilterTabs();
   if (tabs.some((tab) => tab.skipped)) {
-    document.getElementById("sort-sponsorblock").parentNode.style.display =
-      "initial";
+    document.getElementById("sort-sponsorblock").parentNode.style.display = "initial";
   } else {
-    document.getElementById("sort-sponsorblock").parentNode.style.display =
-      "none";
+    document.getElementById("sort-sponsorblock").parentNode.style.display = "none";
   }
 }
 
@@ -456,30 +60,9 @@ async function changeSetting(setting, e) {
   await updateSettings();
 }
 
-async function closeTip() {
-  settings.tip_index += 1;
-  if (settings.tip_index < TIPS.length) {
-    document.getElementById("tip-text").textContent = TIPS[settings.tip_index];
-  } else {
-    document.getElementById("tips").classList.add("hidden");
-    document.getElementById("reset-tip").classList.remove("hidden");
-  }
-  renderSettings();
-  await updateSettings();
-}
-
-async function resetTip() {
-  settings.tip_index = 0;
-  document.getElementById("tip-text").textContent = TIPS[0];
-  document.getElementById("tips").classList.remove("hidden");
-  document.getElementById("reset-tip").classList.add("hidden");
-  await updateSettings();
-}
-
 async function init() {
   await getSettings();
 
-  // show the correct menu tab
   document
     .getElementById("tab-button-settings")
     .addEventListener("click", () => setActiveMenu(0));
@@ -488,24 +71,15 @@ async function init() {
     .addEventListener("click", () => setActiveMenu(1));
   renderMenu();
 
-  // show/hide tip
-  if (settings.tip_index < TIPS.length) {
-    document.getElementById("tip-text").textContent = TIPS[settings.tip_index];
-    document.getElementById("reset-tip").classList.add("hidden");
-  } else {
-    document.getElementById("tips").classList.add("hidden");
-  }
+  initTips();
 
-  // update version
   document.getElementById("version-number").innerText =
     browser.runtime.getManifest().version || "Unknown";
 
-  // render sort options and other settings
   renderSortOptions();
   await renderSettings();
 
-  // set events
-  document.getElementById("close-button").addEventListener("click", (e) => closeTip(e));
+  document.getElementById("close-button").addEventListener("click", closeTip);
   document.getElementById("reset-tip").addEventListener("click", resetTip);
 
   for (const [id, key] of [
