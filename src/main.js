@@ -68,7 +68,8 @@ async function getSettings() {
 function extractYouTubeID(url) {
   const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
   if (shortsMatch) return shortsMatch[1];
-  return regex.test(url) && regex.exec(url)[7];
+  const match = regex.exec(url);
+  return match ? match[7] : false;
 }
 
 /** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected.
@@ -183,7 +184,7 @@ async function sortTabs() {
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);
-    document.getElementById("alert-error").innerText = "Error: " + error;
+    document.getElementById("alert-error").innerText = "Error: " + (error?.message || error);
   } finally {
     document.getElementById("tab-button-sort").classList.remove("loading");
   }
@@ -433,7 +434,7 @@ async function renderSettings() {
 }
 
 async function changeSetting(setting, e) {
-  settings[setting] = e.target.checked === true ? true : false;
+  settings[setting] = e.target.checked;
   renderSettings();
   await updateSettings();
 }
