@@ -122,11 +122,11 @@ async function prefilterTabs() {
   });
 
   // removes entries from storage that can not be found anymore
-  filteredTabs.forEach(async (tab) => {
-    if (!tab.title || !tab.id) {
-      await browser.storage.local.remove(tab.youtubeID);
-    }
-  });
+  await Promise.all(
+    filteredTabs
+      .filter((tab) => !tab.title || !tab.id)
+      .map((tab) => browser.storage.local.remove(tab.youtubeID))
+  );
 
   // filters other tabs if at least two have been selected, and return them
   const selectedTabs = filteredTabs.filter((tab) => tab.selected);
