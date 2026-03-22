@@ -4,8 +4,8 @@
   --color-border: #ccc;
   --color-surface: rgba(128, 128, 128, 0.1);
   --color-hover: rgba(0, 0, 0, 0.1);
-  --color-muted: rgb(144, 144, 144);
-  --color-inactive: #ccc;
+  --color-muted: #767676;
+  --color-inactive: #767676;
   color-scheme: light;
 }
 
@@ -17,7 +17,7 @@
     --color-surface: rgba(255, 255, 255, 0.05);
     --color-hover: rgba(255, 255, 255, 0.1);
     --color-muted: rgb(144, 144, 144);
-    --color-inactive: #555;
+    --color-inactive: #909090;
     color-scheme: dark;
   }
 }

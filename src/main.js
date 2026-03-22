@@ -338,6 +338,8 @@ function renderSortOptions() {
     el.id = sortRule.attr;
     el.classList.add("item");
     el.draggable = true;
+    el.tabIndex = 0;
+    el.setAttribute("aria-label", `${sortRule.title}, position ${index + 1} of ${settings.sorting.length}. Use Arrow Up and Arrow Down to reorder.`);
 
     const spanElement = document.createElement("span");
     spanElement.className = "title";
@@ -347,6 +349,24 @@ function renderSortOptions() {
     el.appendChild(spanElement);
     el.appendChild(buttons);
     container.appendChild(el);
+
+    el.addEventListener("keydown", async (e) => {
+      if (e.key === "ArrowUp" && index > 0) {
+        e.preventDefault();
+        const [moved] = settings.sorting.splice(index, 1);
+        settings.sorting.splice(index - 1, 0, moved);
+        renderSortOptions();
+        await updateSettings();
+        container.children[index - 1].focus();
+      } else if (e.key === "ArrowDown" && index < settings.sorting.length - 1) {
+        e.preventDefault();
+        const [moved] = settings.sorting.splice(index, 1);
+        settings.sorting.splice(index + 1, 0, moved);
+        renderSortOptions();
+        await updateSettings();
+        container.children[index + 1].focus();
+      }
+    });
 
     el.addEventListener("dragstart", (e) => {
       dragSrcIndex = index;
