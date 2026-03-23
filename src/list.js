@@ -42,6 +42,7 @@ function getDuration(seconds) {
 function updateStats(tabs, isSelection) {
   let totalDuration = 0;
   let totalViews = 0;
+  const uniqueChannels = new Set(tabs.map((t) => t.author).filter(Boolean)).size;
   for (const tab of tabs) {
     totalDuration += settings.sort_sponsorblock
       ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? /** @type {number} */ (tab.duration) : 0))
@@ -52,6 +53,7 @@ function updateStats(tabs, isSelection) {
   }
   el("stat_tabs").innerText = String(tabs.length);
   el("stat_tabs_label").innerText = isSelection ? "selected" : "videos";
+  el("stat_channels").innerText = String(uniqueChannels);
   el("stat_duration").innerText = getDuration(totalDuration);
   el("stat_views").innerText = getViews(totalViews);
 }

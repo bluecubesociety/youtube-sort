@@ -72,6 +72,12 @@ async function updateSponsorBlockVisibility() {
     : "none";
 }
 
+async function updateCurrentWindowOnlyVisibility() {
+  const windows = await browser.windows.getAll();
+  /** @type {HTMLElement} */ (el("current-window-only").parentNode).style.display =
+    windows.length <= 1 ? "none" : "";
+}
+
 /** @param {BoolSetting} setting @param {Event} e */
 async function changeSetting(setting, e) {
   settings[setting] = /** @type {HTMLInputElement} */ (e.target).checked;
@@ -93,6 +99,7 @@ async function init() {
   renderSortOptions();
   renderSettings();
   await updateSponsorBlockVisibility();
+  await updateCurrentWindowOnlyVisibility();
 
   el("close-button").addEventListener("click", closeTip);
   el("reset-tip").addEventListener("click", resetTip);
