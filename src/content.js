@@ -3,6 +3,7 @@
 // It also marks the video as being detected which helps identifying issues in the future.
 console.debug("[YouTube Sort] Content File loaded.");
 
+
 let observerActive = false;
 let foundSponsorBlock = false;
 
@@ -42,6 +43,7 @@ function getVideoID() {
   return new URLSearchParams(window.location.search).get("v");
 }
 
+/** @param {MutationObserver | null} observer */
 function fetchVideoData(observer) {
   // collects data for the storage (via meta tags)
   /** @param {string} sel @returns {HTMLMetaElement | null} */
@@ -67,6 +69,7 @@ function fetchVideoData(observer) {
   const tabUrl = window.location.href;
   const isLive = publication && !endDate;
 
+  /** @param {string} timeString @returns {string} */
   function convertTimeFormat(timeString) {
     // Regular expression to capture hours (optional), minutes, and seconds
     const regex = /\((?:(\d+):)?(\d+):(\d+)\)/;
@@ -88,7 +91,7 @@ function fetchVideoData(observer) {
   if (videoID) {
     const videoData = {
       title: title,
-      duration: calcDuration(duration),
+      duration: calcDuration(duration ?? ""),
       ...(skipDuration
         ? {
             skipped: calcDuration(convertTimeFormat(skipDuration)),
@@ -96,8 +99,8 @@ function fetchVideoData(observer) {
         : {}),
       uploadDate: uploadDate,
       author: author,
-      views: parseInt(interactionCount) || undefined,
-      ...(isLive ? { live: new Date(startDate).getTime() } : {}),
+      views: interactionCount !== undefined ? parseInt(interactionCount) || undefined : undefined,
+      ...(isLive ? { live: new Date(startDate ?? "").getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
 
@@ -153,6 +156,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
 });
 
 // sponsorBlock specific: fetch and submit video data (again), if the observer finds the sponsorBlock-add on
+/** @type {ReturnType<typeof setTimeout> | null} */
 let sponsorBlockDebounceTimer = null;
 const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
   try {
@@ -162,7 +166,7 @@ const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
         mutation.target.id?.includes("sponsorBlockDurationAfterSkips")
     );
     if (relevant) {
-      clearTimeout(sponsorBlockDebounceTimer);
+      clearTimeout(sponsorBlockDebounceTimer ?? undefined);
       sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer), 300);
     }
   } catch (error) {

@@ -1,8 +1,12 @@
 // @ts-check
+/** @import { TabEntry } from './types.js' */
 import { settings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 
-/** returns views as a string */
+/** @param {string} id @returns {HTMLElement} */
+const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+
+/** @param {number} views @returns {string} */
 function getViews(views) {
   const SI_SYMBOL = ["", "K", "M", "B", "T"];
   const tier = (Math.log10(Math.abs(views)) / 3) | 0;
@@ -11,7 +15,7 @@ function getViews(views) {
   return (views / divisor).toFixed(1) + SI_SYMBOL[tier];
 }
 
-/** returns relative premiere time */
+/** @param {number} timestamp @returns {string} */
 function getPremiereTime(timestamp) {
   const today = new Date();
   const premiere = new Date(timestamp);
@@ -19,7 +23,7 @@ function getPremiereTime(timestamp) {
   return getDuration(diff / 1000);
 }
 
-/** returns duration as a string */
+/** @param {number} seconds @returns {string} */
 function getDuration(seconds) {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
@@ -34,26 +38,27 @@ function getDuration(seconds) {
   return `${formattedDays}${formattedHours}${formattedMinutes}:${formattedSeconds}`;
 }
 
+/** @param {TabEntry[]} tabs @param {boolean} isSelection */
 function updateStats(tabs, isSelection) {
   let totalDuration = 0;
   let totalViews = 0;
   for (const tab of tabs) {
     totalDuration += settings.sort_sponsorblock
-      ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? tab.duration : 0))
+      ? (tab?.skipped ?? (Number.isFinite(tab.duration) ? /** @type {number} */ (tab.duration) : 0))
       : Number.isFinite(tab.duration)
-        ? tab.duration
+        ? /** @type {number} */ (tab.duration)
         : 0;
-    totalViews += Number.isFinite(tab.views) ? tab.views : 0;
+    totalViews += Number.isFinite(tab.views) ? /** @type {number} */ (tab.views) : 0;
   }
-  document.getElementById("stat_tabs").innerText = tabs.length;
-  document.getElementById("stat_tabs_label").innerText = isSelection ? "selected" : "videos";
-  document.getElementById("stat_duration").innerText = getDuration(totalDuration);
-  document.getElementById("stat_views").innerText = getViews(totalViews);
+  el("stat_tabs").innerText = String(tabs.length);
+  el("stat_tabs_label").innerText = isSelection ? "selected" : "videos";
+  el("stat_duration").innerText = getDuration(totalDuration);
+  el("stat_views").innerText = getViews(totalViews);
 }
 
 /** renders the list of detected tabs. */
 export async function renderList() {
-  const tabList = document.getElementById("video-list");
+  const tabList = el("video-list");
   tabList.innerHTML = '<div class="spinner" role="status" aria-label="Loading"></div>';
 
   const tabs = await prefilterTabs();
@@ -62,49 +67,55 @@ export async function renderList() {
   updateStats(tabs, isSelection);
 
   for (const tab of tabs) {
-    const el = document.createElement("button");
-    el.onclick = () => {
+    const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (tab));
+    const btnEl = document.createElement("button");
+    btnEl.onclick = () => {
       browser.tabs.update(tab.id, { active: true });
     };
-    el.id = tab.youtubeID;
-    el.classList.add("item");
+    btnEl.id = tab.youtubeID ?? "";
+    btnEl.classList.add("item");
 
     const titleElement = document.createElement("p");
     titleElement.className = "title";
-    titleElement.textContent = tab.title;
-    el.appendChild(titleElement);
+    titleElement.textContent = tab.title ?? null;
+    btnEl.appendChild(titleElement);
 
     const smallElement = document.createElement("small");
+    /** @typedef {{ prop: string, textFunc?: (val: string | number | boolean | undefined) => string, className?: string }} TabPropDef */
+    /** @type {TabPropDef[]} */
     const properties = [
       { prop: "live", textFunc: () => "Live", className: "badge" },
       { prop: "playlist", textFunc: () => "Playlist", className: "badge" },
       {
         prop: "duration",
         textFunc: (duration) =>
-          tab.live > 0 ? `Live in ${getPremiereTime(tab.live)}` : getDuration(duration),
+          (tab.live ?? 0) > 0
+            ? `Live in ${getPremiereTime(tab.live ?? 0)}`
+            : getDuration(/** @type {number} */ (duration)),
       },
       {
         prop: "uploadDate",
-        textFunc: (date) => new Date(date).toLocaleDateString(),
+        textFunc: (date) => new Date(/** @type {string} */ (date)).toLocaleDateString(),
       },
-      { prop: "views", textFunc: (views) => `${getViews(views)} Views` },
+      { prop: "views", textFunc: (views) => `${getViews(/** @type {number} */ (views))} Views` },
       { prop: "author" },
     ];
     properties.forEach(({ prop, textFunc, className }) => {
-      if (prop === "duration" ? Number.isFinite(tab[prop]) : tab[prop]) {
+      if (prop === "duration" ? Number.isFinite(tabData[prop]) : tabData[prop]) {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
         if (settings.sort_sponsorblock && prop === "duration") {
-          spanElement.textContent = textFunc(tab["skipped"] ?? tab["duration"]);
+          spanElement.textContent =
+            textFunc?.(tabData["skipped"] ?? tabData["duration"]) ?? "";
         } else {
-          spanElement.textContent = textFunc ? textFunc(tab[prop]) : tab[prop];
+          spanElement.textContent = textFunc ? textFunc(tabData[prop]) : String(tabData[prop]);
         }
         smallElement.appendChild(spanElement);
       }
     });
-    if (smallElement.childElementCount === 0) el.classList.add("no-data");
-    el.appendChild(smallElement);
-    tabList.appendChild(el);
+    if (smallElement.childElementCount === 0) btnEl.classList.add("no-data");
+    btnEl.appendChild(smallElement);
+    tabList.appendChild(btnEl);
   }
 }
 
