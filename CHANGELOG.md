@@ -2,11 +2,11 @@
 
 ## Version 2.0.0 – Mar 22, 2026
 
-After one and a half years, finally an update. Things were actually pretty stable, considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to at least extend the sorting rules due to personal change in use.
+After one and a half years, finally an update. Things were actually pretty stable (for the most part), considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to at least extend the sorting rules due to personal change in use.
 
 **New Features**
 - Added dark mode support
-- Added support for YouTube Shorts (and option to ignore it)
+- Added support for YouTube Shorts (and option to ignore it) (to some extend. Channel names seem to have issues, and scrolling around isn't recognized well)
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens
@@ -14,6 +14,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Now also available for Chromium!
 
 **Fixes**
+- Fixed views, after YouTube changed something again with the layout
 - Fixed observer issue staying alive forever
 - Added fallbacks to stats
 - Sorting awaits to avoid incorrect order
