@@ -6,7 +6,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 
 **New Features**
 - Added dark mode support
-- Added support for YouTube Shorts
+- Added support for YouTube Shorts (and option to ignore it)
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens

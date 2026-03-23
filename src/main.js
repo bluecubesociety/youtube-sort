@@ -13,7 +13,7 @@ const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id))
 
 /**
  * Boolean settings keys, used by changeSetting to keep assignment type-safe.
- * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload'} BoolSetting
+ * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload'} BoolSetting
  */
 
 /** changes the active menu in the settings and saves it */
@@ -55,6 +55,7 @@ function renderSettings() {
   cb("ignore-inactive").checked = settings.ignore_inactive;
   cb("ignore-live").checked = settings.ignore_live;
   cb("ignore-playlists").checked = settings.ignore_playlists;
+  cb("ignore-shorts").checked = settings.ignore_shorts;
   cb("sort-sponsorblock").checked = settings.sort_sponsorblock;
   cb("sort-to-start").checked = settings.sort_to_start;
   cb("current-window-only").checked = settings.current_window_only;
@@ -100,6 +101,7 @@ async function init() {
     ["ignore-inactive", "ignore_inactive"],
     ["ignore-live", "ignore_live"],
     ["ignore-playlists", "ignore_playlists"],
+    ["ignore-shorts", "ignore_shorts"],
     ["sort-sponsorblock", "sort_sponsorblock"],
     ["sort-to-start", "sort_to_start"],
     ["current-window-only", "current_window_only"],
