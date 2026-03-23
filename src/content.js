@@ -50,8 +50,20 @@ function fetchVideoData(observer) {
   const meta = (sel) => /** @type {HTMLMetaElement | null} */ (document.querySelector(sel));
   const uploadDate = meta("meta[itemprop='uploadDate']")?.content;
   const title = meta("meta[itemprop='name']")?.content;
-  const author = /** @type {HTMLElement | null} */ (document.querySelector(".ytd-channel-name"))?.innerText;
-  const interactionCount = meta("meta[itemprop='interactionCount']")?.content;
+  const author = isShorts()
+    ? /** @type {HTMLElement | null} */ (document.querySelector(".ytReelChannelBarViewModelChannelName"))?.innerText.trim()
+    : Array.from(/** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ytd-channel-name"))).find((el) => el.innerText.trim())?.innerText.trim();
+  const interactionCount = (() => {
+    try {
+      for (const script of document.querySelectorAll("script:not([src])")) {
+        const text = script.textContent || "";
+        if (!text.includes('"viewCount"')) continue;
+        const match = text.match(/"viewCount"\s*:\s*"(\d+)"/);
+        if (match) return match[1];
+      }
+    } catch {}
+    return undefined;
+  })();
   const publication = meta("meta[itemprop='isLiveBroadcast'][content='True']")?.content;
   const startDate = meta("meta[itemprop='startDate']")?.content;
   const endDate = meta("meta[itemprop='endDate']")?.content;
@@ -184,5 +196,5 @@ fetchVideoData(observer);
 // on shorts, YouTube uses SPA navigation when scrolling between videos.
 // yt-navigate-finish fires after each navigation, allowing us to re-fetch.
 if (isShorts()) {
-  window.addEventListener("yt-navigate-finish", () => fetchVideoData(null));
+  window.addEventListener("yt-navigate-finish", () => setTimeout(() => fetchVideoData(null), 600));
 }
