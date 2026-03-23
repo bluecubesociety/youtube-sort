@@ -56,7 +56,7 @@ body {
 }
 
 #menu {
-  height: 48px;
+  height: 56px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -69,7 +69,10 @@ body {
   background: none;
   color: var(--color-text);
   fill: var(--color-text);
-  font: 400 14px/20px "Roboto", "Arial", sans-serif;
+  font:
+    400 14px/20px "Roboto",
+    "Arial",
+    sans-serif;
   height: 40px;
   min-width: 40px;
   margin: 8px;
@@ -79,7 +82,11 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  transition: background-color 0.3s ease, color 0.3s ease, width 0.1s ease, fill 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    width 0.1s ease,
+    fill 0.3s ease;
 }
 #menu .tab-button:hover {
   fill: currentColor;
@@ -138,6 +145,7 @@ body {
 }
 #main .tab-content {
   padding: 8px;
+  padding-top: 0;
 }
 #main .tab-content .item {
   width: 100%;
@@ -178,7 +186,10 @@ body {
 .segment {
   position: relative;
   color: var(--color-text);
-  font: 400 14px/20px "Roboto", "Arial", sans-serif;
+  font:
+    400 14px/20px "Roboto",
+    "Arial",
+    sans-serif;
   background-color: var(--color-surface);
   padding: 12px;
   margin-bottom: 8px;
@@ -201,6 +212,7 @@ body {
 #stats .stat small {
   color: var(--color-muted);
   text-align: center;
+  line-height: 1.1;
 }
 .segment #close-button {
   border: none;
@@ -225,11 +237,18 @@ body {
 
 #tab-list {
   color: var(--color-text);
-  font: 400 14px/16px "Roboto", "Arial", sans-serif;
+  font:
+    400 14px/16px "Roboto",
+    "Arial",
+    sans-serif;
 }
 #tab-list #video-list {
   max-height: 400px;
   overflow: auto;
+}
+#tab-settings {
+  max-height: 490px;
+  overflow-y: auto;
 }
 #tab-list #video-list .badge {
   padding: 0px 4px;
@@ -247,7 +266,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  transition: color 0.3s ease, fill 0.3s ease;
+  transition:
+    color 0.3s ease,
+    fill 0.3s ease;
   color: var(--color-inactive);
 }
 #sorting-rules #sortable-list li .title {
@@ -320,7 +341,7 @@ body {
   width: 100%;
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
   accent-color: var(--color-text);
   cursor: pointer;
 }
@@ -383,7 +404,9 @@ input[type=checkbox] {
   max-width: 50%;
   height: 24px;
   background-color: var(--color-hover);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 #delete-storage:hover {
   background-color: rgba(255, 1, 1, 0.1);
