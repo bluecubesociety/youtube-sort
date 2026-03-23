@@ -4,6 +4,7 @@ export const settings = {
   ignore_inactive: false,
   ignore_playlists: false,
   ignore_live: false,
+  ignore_shorts: false,
   sort_sponsorblock: false,
   sort_to_start: false,
   current_window_only: false,

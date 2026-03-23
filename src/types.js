@@ -7,7 +7,7 @@
 
 /**
  * Merged tab entry combining chrome.tabs.Tab with VideoData and custom aliases.
- * @typedef {chrome.tabs.Tab & VideoData & { sleepy?: boolean, tabTitle?: string, youtubeID?: string, liveDuration?: number }} MergedTabData
+ * @typedef {chrome.tabs.Tab & VideoData & { sleepy?: boolean, tabTitle?: string, youtubeID?: string, liveDuration?: number, shorts?: boolean }} MergedTabData
  */
 
 /**

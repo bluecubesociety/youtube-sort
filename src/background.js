@@ -42,6 +42,7 @@ async function autoSort(windowId) {
         ...videoTabs[youtubeID],
         sleepy: tab.discarded,
         selected: tab.highlighted,
+        shorts: tab.url?.includes("/shorts/") ?? false,
       });
     }
   });
@@ -56,7 +57,8 @@ async function autoSort(windowId) {
       tab.title &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
-      (!settings.ignore_inactive || !tab.sleepy)
+      (!settings.ignore_inactive || !tab.sleepy) &&
+      (!settings.ignore_shorts || !tab.shorts)
   );
 
   const sortedTabs = filteredTabs.sort((a, b) => {

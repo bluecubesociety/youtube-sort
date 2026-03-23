@@ -40,6 +40,7 @@ export async function prefilterTabs() {
         sleepy: tab.discarded,
         selected: tab.highlighted,
         tabTitle: tab.title,
+        shorts: tab.url?.includes("/shorts/") ?? false,
       });
     }
   });
@@ -59,7 +60,8 @@ export async function prefilterTabs() {
       tab.title &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
-      (!settings.ignore_inactive || !tab.sleepy)
+      (!settings.ignore_inactive || !tab.sleepy) &&
+      (!settings.ignore_shorts || !tab.shorts)
     );
   });
 
