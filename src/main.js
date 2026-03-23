@@ -12,7 +12,7 @@ const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
 const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id));
 
 /**
- * Boolean settings keys — used by changeSetting to keep assignment type-safe.
+ * Boolean settings keys, used by changeSetting to keep assignment type-safe.
  * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload'} BoolSetting
  */
 
