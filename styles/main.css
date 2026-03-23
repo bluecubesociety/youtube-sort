@@ -199,20 +199,17 @@ body {
   gap: 6px;
 }
 #stats {
-  flex-direction: row;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 #stats .stat {
-  flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 4px;
 }
 #stats .stat small {
   color: var(--color-muted);
-  text-align: center;
-  line-height: 1.1;
 }
 .segment #close-button {
   border: none;
