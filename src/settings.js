@@ -10,6 +10,7 @@ export const settings = {
   current_window_only: false,
   auto_sort: false,
   force_reload: false,
+  unload_after_reload: false,
   sorting: [
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
     {

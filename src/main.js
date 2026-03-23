@@ -13,7 +13,7 @@ const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id))
 
 /**
  * Boolean settings keys, used by changeSetting to keep assignment type-safe.
- * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload'} BoolSetting
+ * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload' | 'unload_after_reload'} BoolSetting
  */
 
 /** changes the active menu in the settings and saves it */
@@ -61,6 +61,7 @@ function renderSettings() {
   cb("current-window-only").checked = settings.current_window_only;
   cb("auto-sort").checked = settings.auto_sort;
   cb("force-reload").checked = settings.force_reload;
+  cb("unload-after-reload").checked = settings.unload_after_reload;
 }
 
 async function updateSponsorBlockVisibility() {
@@ -78,10 +79,17 @@ async function updateCurrentWindowOnlyVisibility() {
     windows.length <= 1 ? "none" : "";
 }
 
+function updateUnloadAfterReloadVisibility() {
+  const show = settings.force_reload ? "" : "none";
+  el("unload-after-reload-label").style.display = show;
+  el("force-reload-note").style.display = show;
+}
+
 /** @param {BoolSetting} setting @param {Event} e */
 async function changeSetting(setting, e) {
   settings[setting] = /** @type {HTMLInputElement} */ (e.target).checked;
   renderSettings();
+  if (setting === "force_reload") updateUnloadAfterReloadVisibility();
   await updateSettings();
 }
 
@@ -100,6 +108,7 @@ async function init() {
   renderSettings();
   await updateSponsorBlockVisibility();
   await updateCurrentWindowOnlyVisibility();
+  updateUnloadAfterReloadVisibility();
 
   el("close-button").addEventListener("click", closeTip);
   el("reset-tip").addEventListener("click", resetTip);
@@ -114,12 +123,20 @@ async function init() {
     ["current-window-only", "current_window_only"],
     ["auto-sort", "auto_sort"],
     ["force-reload", "force_reload"],
+    ["unload-after-reload", "unload_after_reload"],
   ])) {
     el(id).addEventListener("click", (e) => changeSetting(key, e));
   }
 
   el("delete-storage").addEventListener("click", deleteStorage);
   el("tab-button-sort").addEventListener("click", sortTabs);
+
+  // Advanced section toggle
+  el("advanced-toggle").addEventListener("click", () => {
+    const btn = el("advanced-toggle");
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!isOpen));
+  });
 }
 
 document.addEventListener("DOMContentLoaded", init);

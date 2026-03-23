@@ -16,11 +16,24 @@ export async function sortTabs() {
   try {
     const tabs = await prefilterTabs();
 
-    // wake them up, if wanted
+    // reload tabs sequentially to avoid overwhelming the system
     if (settings.force_reload) {
-      tabs.forEach((tab) => {
-        if (tab.id !== undefined) browser.tabs.reload(tab.id);
-      });
+      for (const tab of tabs) {
+        if (tab.id === undefined) continue;
+        await new Promise((resolve) => {
+          const listener = (/** @type {number} */ tabId, /** @type {{ status?: string }} */ changeInfo) => {
+            if (tabId === tab.id && changeInfo.status === "complete") {
+              browser.tabs.onUpdated.removeListener(listener);
+              resolve(undefined);
+            }
+          };
+          browser.tabs.onUpdated.addListener(listener);
+          browser.tabs.reload(tab.id);
+        });
+        if (settings.unload_after_reload) {
+          await browser.tabs.discard(tab.id);
+        }
+      }
     }
 
     const sortedTabs = tabs.sort((a, b) => {
