@@ -1,7 +1,7 @@
 // @ts-check
 /** @import { TabEntry } from './types.js' */
 import { settings } from "./settings.js";
-import { prefilterTabs } from "./tabs.js";
+import { prefilterTabs, hideVideo } from "./tabs.js";
 
 /** @param {string} id @returns {HTMLElement} */
 const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
@@ -52,10 +52,20 @@ function updateStats(tabs, isSelection) {
     totalViews += Number.isFinite(tab.views) ? /** @type {number} */ (tab.views) : 0;
   }
   el("stat_tabs").innerText = String(tabs.length);
-  el("stat_tabs_label").innerText = isSelection ? "selected" : "videos";
+  el("stat_tabs_label").innerText = isSelection ? "selected videos" : "detected videos";
   el("stat_channels").innerText = String(uniqueChannels);
   el("stat_duration").innerText = getDuration(totalDuration);
   el("stat_views").innerText = getViews(totalViews);
+}
+
+/** @type {HTMLElement | null} */
+let openMenu = null;
+
+function closeOpenMenu() {
+  if (openMenu) {
+    openMenu.classList.remove("item-menu--open");
+    openMenu = null;
+  }
 }
 
 /** renders the list of detected tabs. */
@@ -65,22 +75,44 @@ export async function renderList() {
 
   const tabs = await prefilterTabs();
   tabList.innerHTML = "";
+  openMenu = null;
   const isSelection = tabs.length > 1 && tabs.every((t) => t.selected);
   updateStats(tabs, isSelection);
 
   for (const tab of tabs) {
-    const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (tab));
-    const btnEl = document.createElement("button");
-    btnEl.onclick = () => {
+    const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (
+      /** @type {unknown} */ (tab)
+    );
+
+    // Use a div so inner buttons are valid HTML
+    const itemEl = document.createElement("div");
+    itemEl.id = tab.youtubeID ?? "";
+    itemEl.classList.add("item");
+    itemEl.setAttribute("role", "button");
+    itemEl.setAttribute("tabindex", "0");
+    if (tab.sleepy) itemEl.classList.add("item--sleepy");
+
+    const activate = () => {
       browser.tabs.update(tab.id, { active: true });
     };
-    btnEl.id = tab.youtubeID ?? "";
-    btnEl.classList.add("item");
+    itemEl.addEventListener("click", (e) => {
+      if (/** @type {HTMLElement} */ (e.target).closest(".item-menu-btn, .item-menu")) return;
+      activate();
+    });
+    itemEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        activate();
+      }
+    });
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "item-content";
 
     const titleElement = document.createElement("p");
     titleElement.className = "title";
     titleElement.textContent = tab.title ?? null;
-    btnEl.appendChild(titleElement);
+    contentEl.appendChild(titleElement);
 
     const smallElement = document.createElement("small");
     /** @typedef {{ prop: string, textFunc?: (val: string | number | boolean | undefined) => string, className?: string }} TabPropDef */
@@ -107,18 +139,78 @@ export async function renderList() {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
         if (settings.sort_sponsorblock && prop === "duration") {
-          spanElement.textContent =
-            textFunc?.(tabData["skipped"] ?? tabData["duration"]) ?? "";
+          spanElement.textContent = textFunc?.(tabData["skipped"] ?? tabData["duration"]) ?? "";
         } else {
           spanElement.textContent = textFunc ? textFunc(tabData[prop]) : String(tabData[prop]);
         }
         smallElement.appendChild(spanElement);
       }
     });
-    if (smallElement.childElementCount === 0) btnEl.classList.add("no-data");
-    btnEl.appendChild(smallElement);
-    tabList.appendChild(btnEl);
+    if (smallElement.childElementCount === 0) itemEl.classList.add("no-data");
+    contentEl.appendChild(smallElement);
+    itemEl.appendChild(contentEl);
+
+    // Three-dots menu button (shown on hover via CSS)
+    const menuBtn = document.createElement("button");
+    menuBtn.className = "item-menu-btn";
+    menuBtn.setAttribute("aria-label", "More options");
+    menuBtn.textContent = "⋮";
+    menuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const menu = /** @type {HTMLElement} */ (itemEl.querySelector(".item-menu"));
+      if (menu.classList.contains("item-menu--open")) {
+        closeOpenMenu();
+      } else {
+        closeOpenMenu();
+        menu.classList.add("item-menu--open");
+        openMenu = menu;
+      }
+    });
+    itemEl.appendChild(menuBtn);
+
+    // Dropdown menu
+    const menuEl = document.createElement("div");
+    menuEl.className = "item-menu";
+
+    const reloadBtn = document.createElement("button");
+    reloadBtn.className = "item-menu-action";
+    reloadBtn.textContent = "Reload tab";
+    reloadBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      closeOpenMenu();
+      await browser.tabs.reload(tab.id);
+      renderList();
+    });
+    menuEl.appendChild(reloadBtn);
+
+    const clearBtn = document.createElement("button");
+    clearBtn.className = "item-menu-action";
+    clearBtn.textContent = "Clear cached data";
+    clearBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      closeOpenMenu();
+      if (tab.youtubeID) await browser.storage.local.remove(tab.youtubeID);
+      renderList();
+    });
+    menuEl.appendChild(clearBtn);
+
+    const hideBtn = document.createElement("button");
+    hideBtn.className = "item-menu-action item-menu-action--danger";
+    hideBtn.textContent = "Remove from list";
+    hideBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      closeOpenMenu();
+      if (tab.youtubeID) await hideVideo(tab.youtubeID);
+      renderList();
+    });
+    menuEl.appendChild(hideBtn);
+    itemEl.appendChild(menuEl);
+
+    tabList.appendChild(itemEl);
   }
+
+  // Close open menu when clicking outside
+  document.addEventListener("click", closeOpenMenu, { once: true });
 }
 
 /** hard reset in storage if needed. */

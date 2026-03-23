@@ -10,12 +10,14 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens
+- Added options to clear cache/data on indivual items
 - Design Overhaul: Added DnD for sorting rules, better visual feedback, layout/spacing adjustments
 - Now also available for Chromium!
 
 **Fixes**
 - Fixed views, after YouTube changed something again with the layout
 - Fixed observer issue staying alive forever
+- Made force-reload deliberately slower, to avoid huge performance drain
 - Added fallbacks to stats
 - Sorting awaits to avoid incorrect order
 - Removals now run in parallel

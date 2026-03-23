@@ -99,10 +99,6 @@
             <input type="checkbox" id="current-window-only" />
             Current window only
           </label>
-          <label>
-            <input type="checkbox" id="auto-sort" />
-            Sort automatically when a new tab opens
-          </label>
         </div>
 
         <div class="segment" id="filter-rules">
@@ -123,21 +119,49 @@
             <input type="checkbox" id="ignore-shorts" />
             Ignore shorts
           </label>
-          <label>
-            <input type="checkbox" id="sort-sponsorblock" />
-            Sort Duration based on SponsorBlock
-          </label>
-          <button id="reset-tip">Show tip again</button>
         </div>
 
-        <div class="segment" id="danger-zone">
-          <b>Danger Zone</b>
-          <label>
-            <input type="checkbox" id="force-reload" />
-            Force Reload on sort
-          </label>
-          <button id="delete-storage">Delete entire storage</button>
-          <p><small>This may require a restart.</small></p>
+        <div class="segment" id="advanced-settings">
+          <button id="advanced-toggle" aria-expanded="false">
+            <b>Advanced</b>
+            <svg
+              class="advanced-arrow"
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <polyline points="2,3 5,7 8,3" />
+            </svg>
+          </button>
+          <div id="advanced-content">
+            <label>
+              <input type="checkbox" id="auto-sort" />
+              Sort automatically when a new tab opens
+            </label>
+            <label>
+              <input type="checkbox" id="sort-sponsorblock" />
+              Sort duration based on SponsorBlock
+            </label>
+            <label>
+              <input type="checkbox" id="force-reload" />
+              Force Reload on sort
+            </label>
+            <p id="force-reload-note">
+              <small>Will be slow; tabs reload one at a time to avoid stress</small>
+            </p>
+            <label id="unload-after-reload-label">
+              <input type="checkbox" id="unload-after-reload" />
+              Unload tabs after reloading
+            </label>
+            <button id="delete-storage">Delete entire storage</button>
+            <p><small>This may require a restart.</small></p>
+            <button id="reset-tip">Show tips again</button>
+          </div>
         </div>
 
         <div id="version">
