@@ -5,7 +5,19 @@ import { renderList, deleteStorage } from "./list.js";
 import { sortTabs, renderSortOptions } from "./sort.js";
 import { initTips, closeTip, resetTip } from "./tips.js";
 
+/** @param {string} id @returns {HTMLElement} */
+const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+
+/** @param {string} id @returns {HTMLInputElement} */
+const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id));
+
+/**
+ * Boolean settings keys — used by changeSetting to keep assignment type-safe.
+ * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload'} BoolSetting
+ */
+
 /** changes the active menu in the settings and saves it */
+/** @param {number} menu */
 async function setActiveMenu(menu) {
   settings.menu = menu;
   renderMenu();
@@ -14,19 +26,19 @@ async function setActiveMenu(menu) {
 
 /** hides the list menu and shows the settings menu. */
 function showSettings() {
-  document.getElementById("tab-list").classList.add("hidden");
-  document.getElementById("tab-settings").classList.remove("hidden");
-  document.getElementById("tab-button-list").classList.remove("active");
-  document.getElementById("tab-button-settings").classList.add("active");
+  el("tab-list").classList.add("hidden");
+  el("tab-settings").classList.remove("hidden");
+  el("tab-button-list").classList.remove("active");
+  el("tab-button-settings").classList.add("active");
   renderList();
 }
 
 /** hides the settings menu and shows the list menu. */
 function showList() {
-  document.getElementById("tab-settings").classList.add("hidden");
-  document.getElementById("tab-list").classList.remove("hidden");
-  document.getElementById("tab-button-settings").classList.remove("active");
-  document.getElementById("tab-button-list").classList.add("active");
+  el("tab-settings").classList.add("hidden");
+  el("tab-list").classList.remove("hidden");
+  el("tab-button-settings").classList.remove("active");
+  el("tab-button-list").classList.add("active");
   renderList();
 }
 
@@ -40,8 +52,6 @@ function renderMenu() {
 }
 
 function renderSettings() {
-  /** @param {string} id @returns {HTMLInputElement} */
-  const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id));
   cb("ignore-inactive").checked = settings.ignore_inactive;
   cb("ignore-live").checked = settings.ignore_live;
   cb("ignore-playlists").checked = settings.ignore_playlists;
@@ -54,15 +64,16 @@ function renderSettings() {
 
 async function updateSponsorBlockVisibility() {
   const tabs = await prefilterTabs();
-  /** @type {HTMLElement} */ (document.getElementById("sort-sponsorblock").parentNode).style.display = tabs.some(
+  /** @type {HTMLElement} */ (el("sort-sponsorblock").parentNode).style.display = tabs.some(
     (tab) => tab.skipped
   )
     ? "initial"
     : "none";
 }
 
+/** @param {BoolSetting} setting @param {Event} e */
 async function changeSetting(setting, e) {
-  settings[setting] = e.target.checked;
+  settings[setting] = /** @type {HTMLInputElement} */ (e.target).checked;
   renderSettings();
   await updateSettings();
 }
@@ -70,23 +81,22 @@ async function changeSetting(setting, e) {
 async function init() {
   await getSettings();
 
-  document.getElementById("tab-button-settings").addEventListener("click", () => setActiveMenu(0));
-  document.getElementById("tab-button-list").addEventListener("click", () => setActiveMenu(1));
+  el("tab-button-settings").addEventListener("click", () => setActiveMenu(0));
+  el("tab-button-list").addEventListener("click", () => setActiveMenu(1));
   renderMenu();
 
   initTips();
 
-  document.getElementById("version-number").innerText =
-    browser.runtime.getManifest().version || "Unknown";
+  el("version-number").innerText = browser.runtime.getManifest().version || "Unknown";
 
   renderSortOptions();
   renderSettings();
   await updateSponsorBlockVisibility();
 
-  document.getElementById("close-button").addEventListener("click", closeTip);
-  document.getElementById("reset-tip").addEventListener("click", resetTip);
+  el("close-button").addEventListener("click", closeTip);
+  el("reset-tip").addEventListener("click", resetTip);
 
-  for (const [id, key] of [
+  for (const [id, key] of /** @type {[string, BoolSetting][]} */ ([
     ["ignore-inactive", "ignore_inactive"],
     ["ignore-live", "ignore_live"],
     ["ignore-playlists", "ignore_playlists"],
@@ -95,12 +105,12 @@ async function init() {
     ["current-window-only", "current_window_only"],
     ["auto-sort", "auto_sort"],
     ["force-reload", "force_reload"],
-  ]) {
-    document.getElementById(id).addEventListener("click", (e) => changeSetting(key, e));
+  ])) {
+    el(id).addEventListener("click", (e) => changeSetting(key, e));
   }
 
-  document.getElementById("delete-storage").addEventListener("click", deleteStorage);
-  document.getElementById("tab-button-sort").addEventListener("click", sortTabs);
+  el("delete-storage").addEventListener("click", deleteStorage);
+  el("tab-button-sort").addEventListener("click", sortTabs);
 }
 
 document.addEventListener("DOMContentLoaded", init);

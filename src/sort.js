@@ -3,11 +3,14 @@ import { settings, updateSettings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 import { renderList } from "./list.js";
 
+/** @param {string} id @returns {HTMLElement} */
+const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+
 /** sorts tabs based on settings. */
 export async function sortTabs() {
-  const sortBtn = document.getElementById("tab-button-sort");
+  const sortBtn = el("tab-button-sort");
   sortBtn.classList.add("loading");
-  document.getElementById("alert-error").innerText = "";
+  el("alert-error").innerText = "";
   let success = false;
 
   try {
@@ -16,21 +19,28 @@ export async function sortTabs() {
     // wake them up, if wanted
     if (settings.force_reload) {
       tabs.forEach((tab) => {
-        browser.tabs.reload(tab.id);
+        if (tab.id !== undefined) browser.tabs.reload(tab.id);
       });
     }
 
     const sortedTabs = tabs.sort((a, b) => {
+      const tabA = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (a));
+      const tabB = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (b));
       for (const sorting of settings.sorting) {
         const criteria = sorting.attr;
-        const critA = typeof a[criteria] === "string" ? a[criteria].toLowerCase() : a[criteria];
-        const critB = typeof b[criteria] === "string" ? b[criteria].toLowerCase() : b[criteria];
-        let res = String(critA).localeCompare(critB, undefined, {
-          numeric: true,
-        });
+        const critA =
+          typeof tabA[criteria] === "string"
+            ? /** @type {string} */ (tabA[criteria]).toLowerCase()
+            : tabA[criteria];
+        const critB =
+          typeof tabB[criteria] === "string"
+            ? /** @type {string} */ (tabB[criteria]).toLowerCase()
+            : tabB[criteria];
+        let res = String(critA).localeCompare(String(critB), undefined, { numeric: true });
         if (sorting.asc === true && res !== 0) res = -res;
         if (res !== 0) return res;
       }
+      return 0;
     });
 
     const windowGroups = new Map();
@@ -56,13 +66,14 @@ export async function sortTabs() {
     // wake them up, if wanted
     if (settings.ignore_inactive !== true) {
       sortedTabs.forEach((tab) => {
-        if (tab.sleepy) browser.tabs.reload(tab.id);
+        if (tab.sleepy && tab.id !== undefined) browser.tabs.reload(tab.id);
       });
     }
     success = true;
   } catch (error) {
     console.debug("[YouTube Sort]", error);
-    document.getElementById("alert-error").innerText = "Error: " + (error?.message || error);
+    el("alert-error").innerText =
+      "Error: " + (error instanceof Error ? error.message : String(error));
   } finally {
     sortBtn.classList.remove("loading");
     if (success) {
@@ -72,6 +83,7 @@ export async function sortTabs() {
   }
 }
 
+/** @param {string} attr */
 export async function toggleSortAsc(attr) {
   const index = settings.sorting.findIndex((item) => item.attr === attr);
   settings.sorting[index].asc = !settings.sorting[index].asc;
@@ -81,8 +93,9 @@ export async function toggleSortAsc(attr) {
 
 /** renders the sort options incl the dropdown and drag handles */
 export function renderSortOptions() {
-  const container = document.getElementById("sortable-list");
+  const container = el("sortable-list");
   container.innerHTML = "";
+  /** @type {number | null} */
   let dragSrcIndex = null;
   const clearDragOver = () =>
     container.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
@@ -108,12 +121,12 @@ export function renderSortOptions() {
     buttons.classList.add("buttons");
     buttons.appendChild(toggleBtn);
 
-    const el = document.createElement("li");
-    el.id = sortRule.attr;
-    el.classList.add("item");
-    el.draggable = true;
-    el.tabIndex = 0;
-    el.setAttribute(
+    const listItem = document.createElement("li");
+    listItem.id = sortRule.attr;
+    listItem.classList.add("item");
+    listItem.draggable = true;
+    listItem.tabIndex = 0;
+    listItem.setAttribute(
       "aria-label",
       `${sortRule.title}, position ${index + 1} of ${settings.sorting.length}. Use Arrow Up and Arrow Down to reorder.`
     );
@@ -122,12 +135,12 @@ export function renderSortOptions() {
     spanElement.className = "title";
     spanElement.textContent = sortRule.title;
 
-    el.appendChild(handle);
-    el.appendChild(spanElement);
-    el.appendChild(buttons);
-    container.appendChild(el);
+    listItem.appendChild(handle);
+    listItem.appendChild(spanElement);
+    listItem.appendChild(buttons);
+    container.appendChild(listItem);
 
-    el.addEventListener("keydown", async (e) => {
+    listItem.addEventListener("keydown", async (e) => {
       if (e.key === "ArrowUp" && index > 0) {
         e.preventDefault();
         const [moved] = settings.sorting.splice(index, 1);
@@ -145,22 +158,22 @@ export function renderSortOptions() {
       }
     });
 
-    el.addEventListener("dragstart", (e) => {
+    listItem.addEventListener("dragstart", (e) => {
       dragSrcIndex = index;
-      e.dataTransfer.effectAllowed = "move";
-      setTimeout(() => el.classList.add("dragging"), 0);
+      /** @type {DataTransfer} */ (e.dataTransfer).effectAllowed = "move";
+      setTimeout(() => listItem.classList.add("dragging"), 0);
     });
-    el.addEventListener("dragend", () => {
-      el.classList.remove("dragging");
+    listItem.addEventListener("dragend", () => {
+      listItem.classList.remove("dragging");
       clearDragOver();
     });
-    el.addEventListener("dragover", (e) => {
+    listItem.addEventListener("dragover", (e) => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
+      /** @type {DataTransfer} */ (e.dataTransfer).dropEffect = "move";
       clearDragOver();
-      el.classList.add("drag-over");
+      listItem.classList.add("drag-over");
     });
-    el.addEventListener("drop", async (e) => {
+    listItem.addEventListener("drop", async (e) => {
       e.preventDefault();
       if (dragSrcIndex !== null && dragSrcIndex !== index) {
         const [moved] = settings.sorting.splice(dragSrcIndex, 1);

@@ -1,6 +1,9 @@
 // @ts-check
 import { settings, updateSettings } from "./settings.js";
 
+/** @param {string} id @returns {HTMLElement} */
+const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+
 const TIPS = [
   "You can sort selected tabs only — highlight a few tabs first, then sort!",
   "Use Arrow Up / Arrow Down on a focused sort rule to reorder without a mouse.",
@@ -12,28 +15,28 @@ const TIPS = [
 
 export function initTips() {
   if (settings.tip_index < TIPS.length) {
-    document.getElementById("tip-text").textContent = TIPS[settings.tip_index];
-    document.getElementById("reset-tip").classList.add("hidden");
+    el("tip-text").textContent = TIPS[settings.tip_index];
+    el("reset-tip").classList.add("hidden");
   } else {
-    document.getElementById("tips").classList.add("hidden");
+    el("tips").classList.add("hidden");
   }
 }
 
 export async function closeTip() {
   settings.tip_index += 1;
   if (settings.tip_index < TIPS.length) {
-    document.getElementById("tip-text").textContent = TIPS[settings.tip_index];
+    el("tip-text").textContent = TIPS[settings.tip_index];
   } else {
-    document.getElementById("tips").classList.add("hidden");
-    document.getElementById("reset-tip").classList.remove("hidden");
+    el("tips").classList.add("hidden");
+    el("reset-tip").classList.remove("hidden");
   }
   await updateSettings();
 }
 
 export async function resetTip() {
   settings.tip_index = 0;
-  document.getElementById("tip-text").textContent = TIPS[0];
-  document.getElementById("tips").classList.remove("hidden");
-  document.getElementById("reset-tip").classList.add("hidden");
+  el("tip-text").textContent = TIPS[0];
+  el("tips").classList.remove("hidden");
+  el("reset-tip").classList.add("hidden");
   await updateSettings();
 }
