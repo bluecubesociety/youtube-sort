@@ -35,7 +35,7 @@
 
 html {
   width: 320px;
-  height: 570px;
+  height: 546px;
   font-size: 16px;
   font-family: sans-serif;
   background-color: var(--color-bg);
@@ -44,7 +44,7 @@ html {
 
 body {
   width: 320px;
-  height: 570px;
+  height: 546px;
   display: flex;
   flex-direction: column;
   text-rendering: optimizeLegibility;
@@ -69,6 +69,7 @@ body {
 #menu .tab-button {
   border: none;
   background: none;
+  cursor: pointer;
   color: var(--color-text);
   fill: var(--color-text);
   font:
@@ -191,6 +192,11 @@ body {
 #main .tab-content .item small span:not(.badge):not(:last-of-type):after {
   content: " | ";
 }
+#main .tab-content .item small span svg {
+  vertical-align: middle;
+  margin-right: 2px;
+  margin-bottom: 1px;
+}
 
 /* Three-dots menu */
 .item-menu-btn {
@@ -279,6 +285,9 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+#stats .stat:last-child:nth-child(odd) {
+  grid-column: span 2;
+}
 #stats .stat {
   display: flex;
   flex-direction: row;
@@ -317,7 +326,7 @@ body {
     sans-serif;
 }
 #tab-list #video-list {
-  max-height: 400px;
+  max-height: 374px;
   overflow: auto;
 }
 #tab-settings {
@@ -411,9 +420,22 @@ body {
   cursor: grabbing;
 }
 
-#filter-rules label {
+#filter-rules label,
+#advanced-content label,
+#sorting-rules > label {
   display: inline-block;
   width: 100%;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 1px 4px;
+  margin: 0 -4px;
+  width: calc(100% + 8px);
+  transition: background-color 0.15s ease;
+}
+#filter-rules label:hover,
+#advanced-content label:hover,
+#sorting-rules > label:hover {
+  background-color: var(--color-hover);
 }
 
 /* Advanced settings toggle */
@@ -531,6 +553,68 @@ input[type="checkbox"] {
 #delete-storage:hover {
   background-color: rgba(255, 1, 1, 0.1);
   color: red;
+}
+
+/* Split delete confirmation */
+#delete-storage-wrap {
+  display: contents;
+}
+#delete-storage-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+#delete-storage-confirm span {
+  flex: 1;
+}
+#delete-storage-yes,
+#delete-storage-no {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--color-hover);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+#delete-storage-yes:hover {
+  background-color: rgba(0, 180, 0, 0.15);
+  color: green;
+}
+#delete-storage-no:hover {
+  background-color: rgba(255, 1, 1, 0.1);
+  color: red;
+}
+
+/* Force-reload note */
+#force-reload-note {
+  padding-left: 20px;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Cog rotation on hover */
+#tab-button-settings svg {
+  transition: transform 0.5s ease;
+}
+#tab-button-settings:hover svg {
+  transform: rotate(60deg);
+}
+
+/* List lines spread apart and pull in from sides on hover */
+#tab-button-list svg {
+  transition: transform 0.2s ease;
+}
+#tab-button-list:hover svg {
+  transform: scaleY(1.3) scaleX(0.88);
 }
 
 /*# sourceMappingURL=main.css.map */

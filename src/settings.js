@@ -27,6 +27,7 @@ export const settings = {
     },
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "title", title: "Video Title" },
     { dropdown: ["Least first", "Most first"], asc: false, attr: "views", title: "Views" },
+    { dropdown: ["Least first", "Most first"], asc: false, attr: "likes", title: "Likes" },
   ],
   menu: 0,
 };
@@ -37,5 +38,13 @@ export async function updateSettings() {
 
 export async function getSettings() {
   const { settings: loadedSettings } = await browser.storage.sync.get("settings");
-  if (loadedSettings) Object.assign(settings, loadedSettings);
+  if (loadedSettings) {
+    const defaultSorting = [...settings.sorting]; // capture defaults before overwrite
+    const savedSorting = loadedSettings.sorting ?? [];
+    Object.assign(settings, loadedSettings);
+    // Append any new default rules not present in saved settings
+    const savedAttrs = new Set(savedSorting.map((/** @type {{ attr: string }} */ s) => s.attr));
+    const newRules = defaultSorting.filter((s) => !savedAttrs.has(s.attr));
+    settings.sorting = [...savedSorting, ...newRules];
+  }
 }
