@@ -138,6 +138,7 @@ async function init() {
     await deleteStorage();
     el("delete-storage-confirm").classList.add("hidden");
     el("delete-storage").classList.remove("hidden");
+    renderList();
   });
   el("delete-storage-no").addEventListener("click", () => {
     el("delete-storage-confirm").classList.add("hidden");
