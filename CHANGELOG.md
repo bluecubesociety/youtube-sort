@@ -11,6 +11,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens
 - Added options to clear cache/data on indivual items
+- Tab icon changes now, if video is detected
 - Design Overhaul:
   - Added DnD for sorting rules,
   - Better visual feedback in the list,
