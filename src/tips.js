@@ -1,8 +1,6 @@
 // @ts-check
 import { settings, updateSettings } from "./settings.js";
-
-/** @param {string} id @returns {HTMLElement} */
-const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+import { el } from "./types.js";
 
 const TIPS = [
   "You can sort selected tabs only — highlight a few tabs first, then sort!",

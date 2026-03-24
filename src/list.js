@@ -2,9 +2,7 @@
 /** @import { TabEntry } from './types.js' */
 import { settings } from "./settings.js";
 import { prefilterTabs, hideVideo } from "./tabs.js";
-
-/** @param {string} id @returns {HTMLElement} */
-const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+import { el } from "./types.js";
 
 /** @param {number} views @returns {string} */
 function getViews(views) {
@@ -71,6 +69,9 @@ function closeOpenMenu() {
   }
 }
 
+// Close any open menu when the user clicks outside of it
+document.addEventListener("click", closeOpenMenu);
+
 /** renders the list of detected tabs. */
 export async function renderList() {
   const tabList = el("video-list");
@@ -81,7 +82,9 @@ export async function renderList() {
   openMenu = null;
   const isSelection = tabs.length > 1 && tabs.every((t) => t.selected);
   updateStats(tabs, isSelection);
+  el("stats").classList.toggle("hidden", !settings.show_stats);
 
+  const fragment = document.createDocumentFragment();
   for (const tab of tabs) {
     const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (
       /** @type {unknown} */ (tab)
@@ -225,11 +228,9 @@ export async function renderList() {
     menuEl.appendChild(hideBtn);
     itemEl.appendChild(menuEl);
 
-    tabList.appendChild(itemEl);
+    fragment.appendChild(itemEl);
   }
-
-  // Close open menu when clicking outside
-  document.addEventListener("click", closeOpenMenu, { once: true });
+  tabList.appendChild(fragment);
 }
 
 /** hard reset in storage if needed. */

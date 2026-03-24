@@ -330,9 +330,13 @@ body {
     400 14px/16px "Roboto",
     "Arial",
     sans-serif;
+  max-height: 490px;
+  display: flex;
+  flex-direction: column;
 }
 #tab-list #video-list {
-  max-height: 374px;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 }
 #tab-settings {

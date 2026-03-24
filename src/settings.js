@@ -11,6 +11,8 @@ export const settings = {
   auto_sort: false,
   force_reload: false,
   unload_after_reload: false,
+  show_tab_icon: true,
+  show_stats: true,
   sorting: [
     { dropdown: ["A-Z", "Z-A"], asc: false, attr: "author", title: "Channel Name" },
     {

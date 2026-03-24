@@ -1,7 +1,5 @@
 // @ts-check
 // This file is being loaded on ever YouTube tab to read out the video information and pass them to the storage.
-// It also marks the video as being detected which helps identifying issues in the future.
-console.debug("[YouTube Sort] Content File loaded.");
 
 let observerActive = false;
 let foundSponsorBlock = false;
@@ -42,8 +40,11 @@ function getVideoID() {
   return new URLSearchParams(window.location.search).get("v");
 }
 
-/** @param {MutationObserver | null} observer */
-function fetchVideoData(observer) {
+/**
+ * @param {MutationObserver | null} observer
+ * @param {boolean} [showTabIcon]
+ */
+function fetchVideoData(observer, showTabIcon = true) {
   // collects data for the storage (via meta tags)
   /** @param {string} sel @returns {HTMLMetaElement | null} */
   const meta = (sel) => /** @type {HTMLMetaElement | null} */ (document.querySelector(sel));
@@ -144,48 +145,31 @@ function fetchVideoData(observer) {
       setTimeout(() => {
         const retryAuthor = /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))
           ?.innerText.replace(/\s+/g, " ").trim();
-        if (retryAuthor) fetchVideoData(null);
+        if (retryAuthor) fetchVideoData(null, showTabIcon);
       }, 3000);
     }
 
     browser.storage.local.set({ [videoID]: videoData }).then(() => {
-      applyFavicon();
+      if (showTabIcon) {
+        applyFavicon();
 
-      // reapply favicon if YouTube resets it
-      const faviconObserver = new MutationObserver(() => applyFavicon());
-      faviconObserver.observe(document.head, { childList: true });
+        // reapply favicon if YouTube resets it
+        const faviconObserver = new MutationObserver(() => applyFavicon());
+        faviconObserver.observe(document.head, { childList: true });
+      }
 
-      // create an indicator and append it to the page at targetNode.
-      // (unless the extension is reloading)
-      const targetNode = document.querySelector("#description-inner");
-      const previousIndicator = document.querySelector("#youtube-sort-indicator");
+      
+      
 
-      console.debug("targetNode", targetNode);
       console.debug("[YouTube Sort] submitted.");
       observer?.disconnect();
       observerActive = false;
-
-      if (targetNode) {
-        if (previousIndicator == null) {
-          const indicator = document.createElement("img");
-          indicator.id = "youtube-sort-indicator";
-          indicator.src = `${browser.runtime.getURL("icons/icon-trans.svg")}`;
-          indicator.style.width = "100%";
-
-          const indicatorWrapper = document.createElement("div");
-          indicatorWrapper.style.cssText =
-            "opacity: 0.3; display: flex; justify-content: center; align-items: center; right: 12px; position: absolute; height: 2rem; aspect-ratio: 1;";
-          indicatorWrapper.dataset.titleNoTooltip = "Tab detected by YouTube Sort";
-          indicatorWrapper.title = "Tab detected by YouTube Sort";
-          indicatorWrapper.ariaLabel = "Tab detected by YouTube Sort";
-
-          indicatorWrapper.prepend(indicator);
-          targetNode.prepend(indicatorWrapper);
-        }
-      }
     });
   }
 }
+
+/** @type {boolean} */
+let showTabIcon = true;
 
 const observer = new MutationObserver((mutationsList, observer) => {
   try {
@@ -197,7 +181,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
             (addedNode.classList.contains("ytp-right-controls") ||
               addedNode.tagName === "YTD-REEL-PLAYER-RENDERER")
         );
-        if (loaded && observerActive) fetchVideoData(observer);
+        if (loaded && observerActive) fetchVideoData(observer, showTabIcon);
       }
     }
   } catch (error) {
@@ -217,22 +201,29 @@ const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
     );
     if (relevant) {
       clearTimeout(sponsorBlockDebounceTimer ?? undefined);
-      sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer), 300);
+      sponsorBlockDebounceTimer = setTimeout(() => fetchVideoData(observer, showTabIcon), 300);
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);
   }
 });
 
-if (!foundSponsorBlock) {
-  sponsorBlockObserver.observe(document, { childList: true, subtree: true });
-  setTimeout(() => sponsorBlockObserver.disconnect(), 10000);
-}
-observer.observe(document, { childList: true, subtree: true });
-fetchVideoData(observer);
+async function init() {
+  const { settings: s } = await browser.storage.sync.get("settings");
+  showTabIcon = s?.show_tab_icon !== false; // default true
 
-// on shorts, YouTube uses SPA navigation when scrolling between videos.
-// yt-navigate-finish fires after each navigation, allowing us to re-fetch.
-if (isShorts()) {
-  window.addEventListener("yt-navigate-finish", () => setTimeout(() => fetchVideoData(null), 600));
+  if (!foundSponsorBlock) {
+    sponsorBlockObserver.observe(document, { childList: true, subtree: true });
+    setTimeout(() => sponsorBlockObserver.disconnect(), 10000);
+  }
+  observer.observe(document, { childList: true, subtree: true });
+  fetchVideoData(observer, showTabIcon);
+
+  // on shorts, YouTube uses SPA navigation when scrolling between videos.
+  // yt-navigate-finish fires after each navigation, allowing us to re-fetch.
+  if (isShorts()) {
+    window.addEventListener("yt-navigate-finish", () => setTimeout(() => fetchVideoData(null, showTabIcon), 600));
+  }
 }
+
+init();

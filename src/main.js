@@ -4,16 +4,14 @@ import { prefilterTabs } from "./tabs.js";
 import { renderList, deleteStorage } from "./list.js";
 import { sortTabs, renderSortOptions } from "./sort.js";
 import { initTips, closeTip, resetTip, navigateTip } from "./tips.js";
-
-/** @param {string} id @returns {HTMLElement} */
-const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+import { el } from "./types.js";
 
 /** @param {string} id @returns {HTMLInputElement} */
 const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id));
 
 /**
  * Boolean settings keys, used by changeSetting to keep assignment type-safe.
- * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload' | 'unload_after_reload'} BoolSetting
+ * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload' | 'unload_after_reload' | 'show_tab_icon' | 'show_stats'} BoolSetting
  */
 
 /** changes the active menu in the settings and saves it */
@@ -62,6 +60,8 @@ function renderSettings() {
   cb("auto-sort").checked = settings.auto_sort;
   cb("force-reload").checked = settings.force_reload;
   cb("unload-after-reload").checked = settings.unload_after_reload;
+  cb("show-tab-icon").checked = settings.show_tab_icon;
+  cb("show-stats").checked = settings.show_stats;
 }
 
 async function updateSponsorBlockVisibility() {
@@ -126,6 +126,8 @@ async function init() {
     ["auto-sort", "auto_sort"],
     ["force-reload", "force_reload"],
     ["unload-after-reload", "unload_after_reload"],
+    ["show-tab-icon", "show_tab_icon"],
+    ["show-stats", "show_stats"],
   ])) {
     el(id).addEventListener("click", (e) => changeSetting(key, e));
   }
