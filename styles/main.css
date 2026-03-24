@@ -695,6 +695,9 @@ input[type="checkbox"]:checked {
 #tip-counter {
   color: var(--color-muted);
 }
+#tip-text a {
+  color: var(--color-muted);
+}
 
 /* Force-reload note */
 #force-reload-note {

@@ -34,3 +34,10 @@ A content script runs on every YouTube tab and reads video metadata (title, chan
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+
+---
+
+## Disclaimer
+
+YouTube Sort is an independent browser extension and is not affiliated with, endorsed by, or associated with YouTube or Google LLC. "YouTube" is a trademark of Google LLC.
