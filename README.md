@@ -38,6 +38,18 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
+## Privacy
+
+This extension does not collect, transmit, or share any data. All video metadata is stored locally in your browser. See [PRIVACY.md](PRIVACY.md) for details.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
 ## Disclaimer
 
 YouTube Sort is an independent browser extension and is not affiliated with, endorsed by, or associated with YouTube or Google LLC. "YouTube" is a trademark of Google LLC.
