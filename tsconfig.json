@@ -7,7 +7,7 @@
     "checkJs": true,
     "noEmit": true,
     "strict": true,
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true
   },
   "include": ["src"]

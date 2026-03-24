@@ -5,7 +5,7 @@ import { extractYouTubeID } from "./types.js";
 
 /** @param {string} youtubeID */
 export async function hideVideo(youtubeID) {
-  const { _hidden = [] } = await browser.storage.local.get("_hidden");
+  const { _hidden = [] } = /** @type {{ _hidden?: string[] }} */ (await browser.storage.local.get("_hidden"));
   if (!_hidden.includes(youtubeID)) {
     await browser.storage.local.set({ _hidden: [..._hidden, youtubeID] });
   }

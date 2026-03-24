@@ -128,7 +128,8 @@ body {
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
-#menu #tab-button-sort .sort-done-check {
+#menu #tab-button-sort .sort-done-check,
+#menu #tab-button-sort .sort-error-x {
   display: none;
 }
 #menu #tab-button-sort.done {
@@ -139,6 +140,13 @@ body {
 }
 #menu #tab-button-sort.done .sort-done-check {
   display: block;
+}
+#menu #tab-button-sort.error p {
+  display: none;
+}
+#menu #tab-button-sort.error .sort-error-x {
+  display: block;
+  color: red;
 }
 
 @keyframes spin {

@@ -157,9 +157,12 @@ export async function renderList() {
       if (prop === "duration" ? Number.isFinite(tabData[prop]) : tabData[prop]) {
         const spanElement = document.createElement("span");
         if (className) spanElement.className = className;
-        const text = settings.sort_sponsorblock && prop === "duration"
-          ? textFunc?.(tabData["skipped"] ?? tabData["duration"]) ?? ""
-          : textFunc ? textFunc(tabData[prop]) : String(tabData[prop]);
+        const text =
+          settings.sort_sponsorblock && prop === "duration"
+            ? (textFunc?.(tabData["skipped"] ?? tabData["duration"]) ?? "")
+            : textFunc
+              ? textFunc(tabData[prop])
+              : String(tabData[prop]);
         if (icon) {
           spanElement.innerHTML = icon + text;
         } else {
@@ -200,7 +203,7 @@ export async function renderList() {
     reloadBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
       closeOpenMenu();
-      await browser.tabs.reload(tab.id);
+      if (tab.id !== undefined) await browser.tabs.reload(tab.id);
       renderList();
     });
     menuEl.appendChild(reloadBtn);
