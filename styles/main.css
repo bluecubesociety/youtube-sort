@@ -235,7 +235,7 @@ body {
   display: none;
   position: absolute;
   right: 0;
-  top: calc(100% - 2px);
+  bottom: calc(100% - 2px);
   z-index: 10;
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
