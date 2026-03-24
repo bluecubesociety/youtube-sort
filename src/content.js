@@ -139,6 +139,15 @@ function fetchVideoData(observer) {
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
 
+    // if author wasn't available yet, retry once specifically for #attributed-channel-name (collab videos)
+    if (!author) {
+      setTimeout(() => {
+        const retryAuthor = /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))
+          ?.innerText.replace(/\s+/g, " ").trim();
+        if (retryAuthor) fetchVideoData(null);
+      }, 3000);
+    }
+
     browser.storage.local.set({ [videoID]: videoData }).then(() => {
       applyFavicon();
 
