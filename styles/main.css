@@ -184,7 +184,7 @@ body {
   color: var(--color-muted);
   display: flex;
   gap: 4px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   min-width: 0;
 }
 #main .tab-content .item.no-data .item-content {
@@ -201,7 +201,7 @@ body {
   text-overflow: ellipsis;
 }
 #main .tab-content .item small .meta-author {
-  flex: 1.5 0 0;
+  flex: 0 0 100%;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -638,14 +638,14 @@ input[type="checkbox"]:checked {
 }
 #delete-storage-yes,
 #delete-storage-no {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   border: none;
   border-radius: 6px;
   background-color: var(--color-hover);
   color: var(--color-text);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
