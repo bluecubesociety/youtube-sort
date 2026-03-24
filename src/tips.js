@@ -2,18 +2,44 @@
 import { settings, updateSettings } from "./settings.js";
 import { el } from "./types.js";
 
+/** @typedef {{ text: string, linkText?: string, href?: string }} Tip */
+
+/** @type {Tip[]} */
 const TIPS = [
-  "Highlighting tabs lets you sort them exclusively.",
-  "Unloaded tabs are still sorted using their cached metadata from the last time they were open.",
-  "We support SponsorBlock, which adjusts the duration used for sorting.",
-  "(bug message)",
-  "(website link)",
+  { text: "Highlighting tabs lets you sort them exclusively." },
+  {
+    text: "Unloaded tabs are still sorted using their cached metadata from the last time they were open.",
+  },
+  { text: "We support SponsorBlock, which adjusts the duration used for sorting." },
+  {
+    text: "Found a bug or have a suggestion? ",
+    linkText: "Report it here.",
+    href: "https://github.com/bluecubesociety/youtube-sort/issues",
+  },
+  {
+    text: "Thanks for using YouTube Sort! Support our future projects ",
+    linkText: "on our website.",
+    href: "https://bluecubesociety.com/",
+  },
 ];
 
 /** @param {number} index */
 function showTip(index) {
   settings.tip_index = index;
-  el("tip-text").textContent = TIPS[index];
+  const tip = TIPS[index];
+  const tipEl = el("tip-text");
+  if (tip.href && tip.linkText) {
+    tipEl.innerHTML = "";
+    tipEl.appendChild(document.createTextNode(tip.text));
+    const a = document.createElement("a");
+    a.href = tip.href;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = tip.linkText;
+    tipEl.appendChild(a);
+  } else {
+    tipEl.textContent = tip.text;
+  }
   el("tip-counter").textContent = `${index + 1} / ${TIPS.length}`;
   /** @type {HTMLButtonElement} */ (el("tip-prev")).disabled = index === 0;
   /** @type {HTMLButtonElement} */ (el("tip-next")).disabled = index === TIPS.length - 1;
