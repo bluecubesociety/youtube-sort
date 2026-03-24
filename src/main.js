@@ -128,7 +128,19 @@ async function init() {
     el(id).addEventListener("click", (e) => changeSetting(key, e));
   }
 
-  el("delete-storage").addEventListener("click", deleteStorage);
+  el("delete-storage").addEventListener("click", () => {
+    el("delete-storage").classList.add("hidden");
+    el("delete-storage-confirm").classList.remove("hidden");
+  });
+  el("delete-storage-yes").addEventListener("click", async () => {
+    await deleteStorage();
+    el("delete-storage-confirm").classList.add("hidden");
+    el("delete-storage").classList.remove("hidden");
+  });
+  el("delete-storage-no").addEventListener("click", () => {
+    el("delete-storage-confirm").classList.add("hidden");
+    el("delete-storage").classList.remove("hidden");
+  });
   el("tab-button-sort").addEventListener("click", sortTabs);
 
   // Advanced section toggle

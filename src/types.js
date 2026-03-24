@@ -2,7 +2,7 @@
 
 /**
  * Video metadata stored in browser.storage.local, keyed by YouTube video ID.
- * @typedef {{ title?: string, duration?: number, skipped?: number, uploadDate?: string, author?: string, views?: number, live?: number, playlist?: boolean }} VideoData
+ * @typedef {{ title?: string, duration?: number, skipped?: number, uploadDate?: string, author?: string, views?: number, likes?: number, live?: number, playlist?: boolean }} VideoData
  */
 
 /**

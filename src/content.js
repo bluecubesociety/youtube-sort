@@ -78,6 +78,10 @@ function fetchVideoData(observer) {
 
   const videoID = getVideoID();
 
+  const likesBtn = document.querySelector("like-button-view-model button[aria-label]");
+  const likesMatch = (likesBtn?.getAttribute("aria-label") ?? "").match(/[\d,]+/);
+  const likes = likesMatch ? parseInt(likesMatch[0].replace(/,/g, ""), 10) : undefined;
+
   const tabUrl = window.location.href;
   const isLive = publication && !endDate;
 
@@ -112,6 +116,7 @@ function fetchVideoData(observer) {
       uploadDate: uploadDate,
       author: author,
       views: interactionCount !== undefined ? parseInt(interactionCount) || undefined : undefined,
+      likes: likes,
       ...(isLive ? { live: new Date(startDate ?? "").getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
