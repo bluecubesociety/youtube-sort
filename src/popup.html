@@ -102,7 +102,11 @@
         </div>
 
         <div class="segment" id="sorting-rules">
-          <b>Sorting Rules</b>
+          <div class="segment-header">
+            <b>Sorting Rules</b>
+            <button id="sort-info-btn" class="info-btn" aria-label="How sorting rules work" aria-expanded="false">i</button>
+          </div>
+          <div id="sort-info-tip" class="info-tip hidden">Rules are applied top to bottom. A lower rule only breaks ties from the rule above it — drag to reorder.</div>
           <ul id="sortable-list"></ul>
           <label>
             <input type="checkbox" id="sort-to-start" />

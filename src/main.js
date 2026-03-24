@@ -145,6 +145,15 @@ async function init() {
   });
   el("tab-button-sort").addEventListener("click", sortTabs);
 
+  // Sort info toggle
+  el("sort-info-btn").addEventListener("click", () => {
+    const btn = el("sort-info-btn");
+    const tip = el("sort-info-tip");
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!isOpen));
+    tip.classList.toggle("hidden", isOpen);
+  });
+
   // Advanced section toggle
   el("advanced-toggle").addEventListener("click", () => {
     const btn = el("advanced-toggle");
