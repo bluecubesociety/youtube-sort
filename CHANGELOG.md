@@ -11,7 +11,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens
 - Added options to clear cache/data on indivual items
-- Tab icon changes now, if video is detected
+- Tab favicon changes now, if video is detected
 - Design Overhaul:
   - Added DnD for sorting rules,
   - Better visual feedback in the list,
@@ -21,7 +21,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 
 **Fixes**
 - Fixed views, after YouTube changed something again with the layout
-- Fixed channel names, since they added collab names now
+- Fixed channel names, since they added collab names now (names actually tend to be a bit buggy, at least don't show up immediately)
 - Fixed observer issue staying alive forever
 - Made force-reload deliberately slower, to avoid huge performance drain
 - Added fallbacks to stats

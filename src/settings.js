@@ -39,7 +39,9 @@ export async function updateSettings() {
 }
 
 export async function getSettings() {
-  const { settings: loadedSettings } = await browser.storage.sync.get("settings");
+  const { settings: loadedSettings } = /** @type {{ settings: typeof settings | undefined }} */ (
+    await browser.storage.sync.get("settings")
+  );
   if (loadedSettings) {
     const defaultSorting = [...settings.sorting]; // capture defaults before overwrite
     const savedSorting = loadedSettings.sorting ?? [];

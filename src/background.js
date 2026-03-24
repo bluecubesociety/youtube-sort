@@ -58,7 +58,7 @@ async function autoSort(windowId) {
 /** @type {ReturnType<typeof setTimeout> | null} */
 let debounceTimer = null;
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete" && extractYouTubeID(tab.url || "")) {
+  if (changeInfo.url && extractYouTubeID(changeInfo.url)) {
     clearTimeout(debounceTimer ?? undefined);
     debounceTimer = setTimeout(() => autoSort(tab.windowId), 1500);
   }

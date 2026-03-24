@@ -51,11 +51,17 @@ function fetchVideoData(observer, showTabIcon = true) {
   const uploadDate = meta("meta[itemprop='uploadDate']")?.content;
   const title = meta("meta[itemprop='name']")?.content;
   const author = isShorts()
-    ? /** @type {HTMLElement | null} */ (document.querySelector(".ytReelChannelBarViewModelChannelName"))?.innerText.trim()
-    : (Array.from(/** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ytd-channel-name")))
+    ? /** @type {HTMLElement | null} */ (
+        document.querySelector(".ytReelChannelBarViewModelChannelName")
+      )?.innerText.trim()
+    : (Array.from(
+        /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ytd-channel-name"))
+      )
         .find((el) => el.innerText.trim())
         ?.innerText.trim() ??
-      /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))?.innerText
+      /** @type {HTMLElement | null} */ (
+        document.querySelector("#attributed-channel-name")
+      )?.innerText
         .replace(/\s+/g, " ")
         .trim());
   const interactionCount = (() => {
@@ -66,7 +72,9 @@ function fetchVideoData(observer, showTabIcon = true) {
         const match = text.match(/"viewCount"\s*:\s*"(\d+)"/);
         if (match) return match[1];
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     return undefined;
   })();
   const publication = meta("meta[itemprop='isLiveBroadcast'][content='True']")?.content;
@@ -113,7 +121,9 @@ function fetchVideoData(observer, showTabIcon = true) {
   // overrides the tab favicon with the extension icon once detected
   const faviconUrl = browser.runtime.getURL("icons/icon-48.png");
   function applyFavicon() {
-    const links = /** @type {NodeListOf<HTMLLinkElement>} */ (document.querySelectorAll('link[rel*="icon"]'));
+    const links = /** @type {NodeListOf<HTMLLinkElement>} */ (
+      document.querySelectorAll('link[rel*="icon"]')
+    );
     if (links.length === 1 && links[0].href === faviconUrl) return;
     links.forEach((el) => el.remove());
     const link = document.createElement("link");
@@ -143,8 +153,11 @@ function fetchVideoData(observer, showTabIcon = true) {
     // if author wasn't available yet, retry once specifically for #attributed-channel-name (collab videos)
     if (!author) {
       setTimeout(() => {
-        const retryAuthor = /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))
-          ?.innerText.replace(/\s+/g, " ").trim();
+        const retryAuthor = /** @type {HTMLElement | null} */ (
+          document.querySelector("#attributed-channel-name")
+        )?.innerText
+          .replace(/\s+/g, " ")
+          .trim();
         if (retryAuthor) fetchVideoData(null, showTabIcon);
       }, 3000);
     }
@@ -163,10 +176,6 @@ function fetchVideoData(observer, showTabIcon = true) {
         faviconObserver.observe(document.head, { childList: true });
       }
 
-      
-      
-
-      console.debug("[YouTube Sort] submitted.");
       observer?.disconnect();
       observerActive = false;
     });
@@ -216,7 +225,10 @@ const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
 });
 
 async function init() {
-  const { settings: s } = await browser.storage.sync.get("settings");
+  const { settings: s } =
+    /** @type {{ settings: typeof import('./settings.js').settings | undefined }} */ (
+      await browser.storage.sync.get("settings")
+    );
   showTabIcon = s?.show_tab_icon !== false; // default true
   filterSettings = {
     ignore_live: s?.ignore_live ?? false,
@@ -234,7 +246,9 @@ async function init() {
   // on shorts, YouTube uses SPA navigation when scrolling between videos.
   // yt-navigate-finish fires after each navigation, allowing us to re-fetch.
   if (isShorts()) {
-    window.addEventListener("yt-navigate-finish", () => setTimeout(() => fetchVideoData(null, showTabIcon), 600));
+    window.addEventListener("yt-navigate-finish", () =>
+      setTimeout(() => fetchVideoData(null, showTabIcon), 600)
+    );
   }
 }
 

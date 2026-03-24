@@ -3,12 +3,11 @@ import { settings, updateSettings } from "./settings.js";
 import { el } from "./types.js";
 
 const TIPS = [
-  "You can sort selected tabs only — highlight a few tabs first, then sort!",
-  "Use Arrow Up / Arrow Down on a focused sort rule to reorder without a mouse.",
-  "Multiple sort rules are applied in order — lower rules only break ties from the one above.",
+  "Highlighting tabs lets you sort them exclusively.",
   "Unloaded tabs are still sorted using their cached metadata from the last time they were open.",
-  "SponsorBlock adjusts the duration used for sorting, not just the display — so shorter effective runtime ranks first.",
-  "If a video's duration looks wrong, the metadata may be stale — 'Delete Storage' resets it.",
+  "We support SponsorBlock, which adjusts the duration used for sorting.",
+  "(bug message)",
+  "(website link)",
 ];
 
 /** @param {number} index */

@@ -8,6 +8,7 @@ import { el, createTabSorter, moveTabsByWindow } from "./types.js";
 export async function sortTabs() {
   const sortBtn = el("tab-button-sort");
   sortBtn.classList.add("loading");
+  sortBtn.classList.remove("error");
   el("alert-error").innerText = "";
   let success = false;
 
@@ -19,14 +20,17 @@ export async function sortTabs() {
       for (const tab of tabs) {
         if (tab.id === undefined) continue;
         await new Promise((resolve) => {
-          const listener = (/** @type {number} */ tabId, /** @type {{ status?: string }} */ changeInfo) => {
+          const listener = (
+            /** @type {number} */ tabId,
+            /** @type {{ status?: string }} */ changeInfo
+          ) => {
             if (tabId === tab.id && changeInfo.status === "complete") {
               browser.tabs.onUpdated.removeListener(listener);
               resolve(undefined);
             }
           };
           browser.tabs.onUpdated.addListener(listener);
-          browser.tabs.reload(tab.id);
+          browser.tabs.reload(/** @type {number} */ (tab.id));
         });
         if (settings.unload_after_reload) {
           await browser.tabs.discard(tab.id);
@@ -46,6 +50,7 @@ export async function sortTabs() {
     }
     success = true;
   } catch (error) {
+    sortBtn.classList.add("error");
     el("alert-error").innerText =
       "Error: " + (error instanceof Error ? error.message : String(error));
   } finally {
