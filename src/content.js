@@ -49,19 +49,12 @@ function fetchVideoData(observer) {
   const meta = (sel) => /** @type {HTMLMetaElement | null} */ (document.querySelector(sel));
   const uploadDate = meta("meta[itemprop='uploadDate']")?.content;
   const title = meta("meta[itemprop='name']")?.content;
-  const ownerRenderer = /** @type {HTMLElement | null} */ (document.querySelector("ytd-video-owner-renderer"));
   const author = isShorts()
-    ? /** @type {HTMLElement | null} */ (
-        document.querySelector(".ytReelChannelBarViewModelChannelName")
-      )?.innerText.trim()
-    : (Array.from(
-        /** @type {NodeListOf<HTMLElement>} */ (ownerRenderer?.querySelectorAll(".ytd-channel-name") ?? [])
-      )
+    ? /** @type {HTMLElement | null} */ (document.querySelector(".ytReelChannelBarViewModelChannelName"))?.innerText.trim()
+    : (Array.from(/** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ytd-channel-name")))
         .find((el) => el.innerText.trim())
         ?.innerText.trim() ??
-      /** @type {HTMLElement | null} */ (
-        ownerRenderer?.querySelector("#attributed-channel-name")
-      )?.innerText
+      /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))?.innerText
         .replace(/\s+/g, " ")
         .trim());
   const interactionCount = (() => {
