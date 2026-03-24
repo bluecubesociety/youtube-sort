@@ -129,26 +129,26 @@ export async function renderList() {
           (tab.live ?? 0) > 0
             ? `Live in ${getPremiereTime(tab.live ?? 0)}`
             : getDuration(/** @type {number} */ (duration)),
-        className: "meta-col",
+        className: "meta-item",
       },
       {
         prop: "uploadDate",
         textFunc: (date) => new Date(/** @type {string} */ (date)).toLocaleDateString(),
-        className: "meta-col",
+        className: "meta-item",
       },
       {
         prop: "views",
         textFunc: (views) => getViews(/** @type {number} */ (views)),
-        className: "meta-col",
+        className: "meta-item",
         icon: `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-label="views"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`,
       },
       {
         prop: "likes",
         textFunc: (likes) => getViews(/** @type {number} */ (likes)),
-        className: "meta-col",
+        className: "meta-item",
         icon: `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-label="likes"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>`,
       },
-      { prop: "author", className: "meta-author" },
+      { prop: "author", className: "meta-item" },
     ];
     properties.forEach(({ prop, textFunc, className, icon }) => {
       if (prop === "duration" ? Number.isFinite(tabData[prop]) : tabData[prop]) {
