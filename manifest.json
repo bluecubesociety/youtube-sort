@@ -31,7 +31,7 @@
   "version": "2.0",
   "web_accessible_resources": [
     {
-      "resources": ["icons/icon-trans.svg", "icons/icon-48.png"],
+      "resources": ["icons/icon-48.png"],
       "matches": ["*://*.youtube.com/*"]
     }
   ],

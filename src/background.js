@@ -1,16 +1,6 @@
 // @ts-check
 /** @import { VideoData, MergedTabData } from './types.js' */
-
-const regex =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?|embed\/|v\/)?)?.*(v=([\w-]+)(?=&|\s|$))/i;
-
-/** @param {string} url */
-function extractYouTubeID(url) {
-  const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
-  if (shortsMatch) return shortsMatch[1];
-  const match = regex.exec(url);
-  return match ? match[7] : false;
-}
+import { extractYouTubeID, createTabSorter, moveTabsByWindow } from "./types.js";
 
 /** @param {number} windowId */
 async function autoSort(windowId) {
@@ -61,47 +51,8 @@ async function autoSort(windowId) {
       (!settings.ignore_shorts || !tab.shorts)
   );
 
-  const sortedTabs = filteredTabs.sort((a, b) => {
-    const tabA = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (a));
-    const tabB = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (b));
-    for (const sorting of settings.sorting) {
-      const criteria = sorting.attr;
-      const critA =
-        typeof tabA[criteria] === "string"
-          ? /** @type {string} */ (tabA[criteria]).toLowerCase()
-          : tabA[criteria];
-      const critB =
-        typeof tabB[criteria] === "string"
-          ? /** @type {string} */ (tabB[criteria]).toLowerCase()
-          : tabB[criteria];
-      let res = String(critA).localeCompare(String(critB), undefined, { numeric: true });
-      if (sorting.asc === true && res !== 0) res = -res;
-      if (res !== 0) return res;
-    }
-    return 0;
-  });
-
-  const windowGroups = new Map();
-  for (const tab of sortedTabs) {
-    if (!windowGroups.has(tab.windowId)) windowGroups.set(tab.windowId, []);
-    windowGroups.get(tab.windowId).push(tab);
-  }
-  for (const [wId, windowTabs] of windowGroups) {
-    if (settings.sort_to_start) {
-      const pinnedTabs = await browser.tabs.query({
-        windowId: wId,
-        pinned: true,
-      });
-      const startIndex = pinnedTabs.length;
-      for (const tab of [...windowTabs].reverse()) {
-        await browser.tabs.move(tab.id, { index: startIndex });
-      }
-    } else {
-      for (const tab of windowTabs) {
-        await browser.tabs.move(tab.id, { index: -1 });
-      }
-    }
-  }
+  const sortedTabs = filteredTabs.sort(createTabSorter(settings.sorting));
+  await moveTabsByWindow(sortedTabs, settings.sort_to_start);
 }
 
 /** @type {ReturnType<typeof setTimeout> | null} */

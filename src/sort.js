@@ -2,9 +2,7 @@
 import { settings, updateSettings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 import { renderList } from "./list.js";
-
-/** @param {string} id @returns {HTMLElement} */
-const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+import { el, createTabSorter, moveTabsByWindow } from "./types.js";
 
 /** sorts tabs based on settings. */
 export async function sortTabs() {
@@ -36,44 +34,8 @@ export async function sortTabs() {
       }
     }
 
-    const sortedTabs = tabs.sort((a, b) => {
-      const tabA = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (a));
-      const tabB = /** @type {Record<string, string | number | boolean | undefined>} */ (/** @type {unknown} */ (b));
-      for (const sorting of settings.sorting) {
-        const criteria = sorting.attr;
-        const critA =
-          typeof tabA[criteria] === "string"
-            ? /** @type {string} */ (tabA[criteria]).toLowerCase()
-            : tabA[criteria];
-        const critB =
-          typeof tabB[criteria] === "string"
-            ? /** @type {string} */ (tabB[criteria]).toLowerCase()
-            : tabB[criteria];
-        let res = String(critA).localeCompare(String(critB), undefined, { numeric: true });
-        if (sorting.asc === true && res !== 0) res = -res;
-        if (res !== 0) return res;
-      }
-      return 0;
-    });
-
-    const windowGroups = new Map();
-    for (const tab of sortedTabs) {
-      if (!windowGroups.has(tab.windowId)) windowGroups.set(tab.windowId, []);
-      windowGroups.get(tab.windowId).push(tab);
-    }
-    for (const [windowId, windowTabs] of windowGroups) {
-      if (settings.sort_to_start) {
-        const pinnedTabs = await browser.tabs.query({ windowId, pinned: true });
-        const startIndex = pinnedTabs.length;
-        for (const tab of [...windowTabs].reverse()) {
-          await browser.tabs.move(tab.id, { index: startIndex });
-        }
-      } else {
-        for (const tab of windowTabs) {
-          await browser.tabs.move(tab.id, { index: -1 });
-        }
-      }
-    }
+    const sortedTabs = tabs.sort(createTabSorter(settings.sorting));
+    await moveTabsByWindow(sortedTabs, settings.sort_to_start);
     renderList();
 
     // wake them up, if wanted
@@ -84,7 +46,6 @@ export async function sortTabs() {
     }
     success = true;
   } catch (error) {
-    console.debug("[YouTube Sort]", error);
     el("alert-error").innerText =
       "Error: " + (error instanceof Error ? error.message : String(error));
   } finally {

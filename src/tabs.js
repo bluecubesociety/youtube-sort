@@ -1,17 +1,7 @@
 // @ts-check
 /** @import { VideoData, MergedTabData, TabEntry } from './types.js' */
 import { settings } from "./settings.js";
-
-const regex =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?|embed\/|v\/)?)?.*(v=([\w-]+)(?=&|\s|$))/i;
-
-/** @param {string} url */
-function extractYouTubeID(url) {
-  const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
-  if (shortsMatch) return shortsMatch[1];
-  const match = regex.exec(url);
-  return match ? match[7] : false;
-}
+import { extractYouTubeID } from "./types.js";
 
 /** @param {string} youtubeID */
 export async function hideVideo(youtubeID) {
