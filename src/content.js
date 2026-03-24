@@ -149,8 +149,13 @@ function fetchVideoData(observer, showTabIcon = true) {
       }, 3000);
     }
 
+    const wouldBeIgnored =
+      (filterSettings.ignore_live && Boolean(isLive)) ||
+      (filterSettings.ignore_playlists && tabUrl.includes("&list=")) ||
+      (filterSettings.ignore_shorts && isShorts());
+
     browser.storage.local.set({ [videoID]: videoData }).then(() => {
-      if (showTabIcon) {
+      if (showTabIcon && !wouldBeIgnored) {
         applyFavicon();
 
         // reapply favicon if YouTube resets it
@@ -170,6 +175,8 @@ function fetchVideoData(observer, showTabIcon = true) {
 
 /** @type {boolean} */
 let showTabIcon = true;
+/** @type {{ ignore_live: boolean, ignore_playlists: boolean, ignore_shorts: boolean }} */
+let filterSettings = { ignore_live: false, ignore_playlists: false, ignore_shorts: false };
 
 const observer = new MutationObserver((mutationsList, observer) => {
   try {
@@ -211,6 +218,11 @@ const sponsorBlockObserver = new MutationObserver((mutationsList, observer) => {
 async function init() {
   const { settings: s } = await browser.storage.sync.get("settings");
   showTabIcon = s?.show_tab_icon !== false; // default true
+  filterSettings = {
+    ignore_live: s?.ignore_live ?? false,
+    ignore_playlists: s?.ignore_playlists ?? false,
+    ignore_shorts: s?.ignore_shorts ?? false,
+  };
 
   if (!foundSponsorBlock) {
     sponsorBlockObserver.observe(document, { childList: true, subtree: true });
