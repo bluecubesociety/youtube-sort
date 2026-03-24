@@ -484,8 +484,30 @@ body {
 }
 
 input[type="checkbox"] {
-  accent-color: var(--color-text);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
   cursor: pointer;
+  vertical-align: middle;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 13px 13px;
+}
+input[type="checkbox"]:checked {
+  background-color: var(--color-text);
+  border-color: var(--color-text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='square'%3E%3Cpolyline points='3,10 8,15 17,5'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%230f0f0f' stroke-width='3' stroke-linecap='square'%3E%3Cpolyline points='3,10 8,15 17,5'/%3E%3C/svg%3E");
+  }
 }
 
 .spinner {
@@ -567,7 +589,8 @@ input[type="checkbox"] {
   color: var(--color-muted);
 }
 #delete-storage-confirm span {
-  flex: 1;
+  color: var(--color-muted);
+  font-size: 13px;
 }
 #delete-storage-yes,
 #delete-storage-no {
@@ -591,6 +614,39 @@ input[type="checkbox"] {
 #delete-storage-no:hover {
   background-color: rgba(255, 1, 1, 0.1);
   color: red;
+}
+
+/* Tip navigation */
+#tip-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#tip-prev,
+#tip-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+#tip-prev:hover,
+#tip-next:hover {
+  background-color: var(--color-hover);
+}
+#tip-prev:disabled,
+#tip-next:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+#tip-counter {
+  color: var(--color-muted);
 }
 
 /* Force-reload note */

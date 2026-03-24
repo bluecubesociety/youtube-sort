@@ -90,6 +90,15 @@
           </button>
           <b>Did you know?</b>
           <span id="tip-text"></span>
+          <div id="tip-nav">
+            <button id="tip-prev" aria-label="Previous tip">
+              <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><polyline points="6,1 2,6 6,11" /></svg>
+            </button>
+            <small id="tip-counter"></small>
+            <button id="tip-next" aria-label="Next tip">
+              <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><polyline points="2,1 6,6 2,11" /></svg>
+            </button>
+          </div>
         </div>
 
         <div class="segment" id="sorting-rules">
@@ -165,13 +174,13 @@
             <div id="delete-storage-wrap">
               <button id="delete-storage">Delete entire storage</button>
               <div id="delete-storage-confirm" class="hidden">
-                <span>Are you sure?</span>
                 <button id="delete-storage-yes" aria-label="Confirm delete">
                   <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><polyline points="3,10 8,15 17,5" /></svg>
                 </button>
                 <button id="delete-storage-no" aria-label="Cancel delete">
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true"><line x1="1" y1="1" x2="9" y2="9" /><line x1="9" y1="1" x2="1" y2="9" /></svg>
                 </button>
+                <span>Are you sure?</span>
               </div>
             </div>
             <button id="reset-tip">Show tips again</button>

@@ -3,7 +3,7 @@ import { settings, getSettings, updateSettings } from "./settings.js";
 import { prefilterTabs } from "./tabs.js";
 import { renderList, deleteStorage } from "./list.js";
 import { sortTabs, renderSortOptions } from "./sort.js";
-import { initTips, closeTip, resetTip } from "./tips.js";
+import { initTips, closeTip, resetTip, navigateTip } from "./tips.js";
 
 /** @param {string} id @returns {HTMLElement} */
 const el = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
@@ -112,6 +112,8 @@ async function init() {
 
   el("close-button").addEventListener("click", closeTip);
   el("reset-tip").addEventListener("click", resetTip);
+  el("tip-prev").addEventListener("click", () => navigateTip(-1));
+  el("tip-next").addEventListener("click", () => navigateTip(1));
 
   for (const [id, key] of /** @type {[string, BoolSetting][]} */ ([
     ["ignore-inactive", "ignore_inactive"],
