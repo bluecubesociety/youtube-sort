@@ -116,6 +116,18 @@ function fetchVideoData(observer) {
     return result;
   }
 
+  // overrides the tab favicon with the extension icon once detected
+  const faviconUrl = browser.runtime.getURL("icons/icon-48.png");
+  function applyFavicon() {
+    const links = /** @type {NodeListOf<HTMLLinkElement>} */ (document.querySelectorAll('link[rel*="icon"]'));
+    if (links.length === 1 && links[0].href === faviconUrl) return;
+    links.forEach((el) => el.remove());
+    const link = document.createElement("link");
+    link.rel = "icon";
+    link.href = faviconUrl;
+    document.head.appendChild(link);
+  }
+
   // saves data with video id as key
   if (videoID) {
     const videoData = {
@@ -135,6 +147,12 @@ function fetchVideoData(observer) {
     };
 
     browser.storage.local.set({ [videoID]: videoData }).then(() => {
+      applyFavicon();
+
+      // reapply favicon if YouTube resets it
+      const faviconObserver = new MutationObserver(() => applyFavicon());
+      faviconObserver.observe(document.head, { childList: true });
+
       // create an indicator and append it to the page at targetNode.
       // (unless the extension is reloading)
       const targetNode = document.querySelector("#description-inner");
