@@ -20,6 +20,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 
 **Fixes**
 - Fixed views, after YouTube changed something again with the layout
+- Fixed channel names, since they added collab names now
 - Fixed observer issue staying alive forever
 - Made force-reload deliberately slower, to avoid huge performance drain
 - Added fallbacks to stats
