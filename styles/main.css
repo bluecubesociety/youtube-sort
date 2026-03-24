@@ -183,8 +183,8 @@ body {
 #main .tab-content .item small {
   color: var(--color-muted);
   display: flex;
-  gap: 4px;
   flex-wrap: wrap;
+  align-items: center;
   min-width: 0;
 }
 #main .tab-content .item.no-data .item-content {
@@ -193,19 +193,10 @@ body {
 #main .tab-content .item.item--sleepy .item-content {
   opacity: 0.6;
 }
-#main .tab-content .item small .meta-col {
-  flex: 1 0 0;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#main .tab-content .item small .meta-author {
-  flex: 0 0 100%;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+#main .tab-content .item small .meta-item:not(:last-child)::after {
+  content: "·";
+  margin: 0 4px;
+  opacity: 0.4;
 }
 #main .tab-content .item small span svg {
   vertical-align: middle;
