@@ -10,7 +10,7 @@ const TIPS = [
   {
     text: "Unloaded tabs are still sorted using their cached metadata from the last time they were open.",
   },
-  { text: "We support SponsorBlock, which adjusts the duration used for sorting." },
+  { text: "We detect SponsorBlock, which adjusts the duration used for sorting." },
   {
     text: "Found a bug or have a suggestion? ",
     linkText: "Report it here.",
