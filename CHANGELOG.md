@@ -10,7 +10,7 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Added support for multiple windows
 - Added option to move tabs to the start (top/left) of the window, instead of the end (bottom/right)
 - Added option to auto-sort tabs immediately when a new one opens
-- Added options to clear cache/data on indivual items
+- Added options to clear cache/data on individual items
 - Tab favicon changes now, if video is detected
 - Design Overhaul:
   - Added DnD for sorting rules,
@@ -24,13 +24,13 @@ After one and a half years, finally an update. Things were actually pretty stabl
 - Fixed channel names, since they added collab names now (might still be a bit buggy with collabs)
 - Fixed observer issue staying alive forever
 - Made force-reload deliberately slower, to avoid huge performance drain
-- Added fallbacks to stats
+- Added fallback to stats
 - Sorting awaits to avoid incorrect order
 - Removals now run in parallel
 - Added debouncer to SponsorBlock detection for improved performance
 - Updated manifest-version
 - Accessibility: Added aria-labels and roles, focus-rings, higher contrast on some elements, changed elements to buttons that weren't before
-- Minor other optimisations (better error handling, redundancy, simplifications, better project structure)
+- Minor other optimizations (better error handling, redundancy, simplifications, better project structure)
 
 ---
 
