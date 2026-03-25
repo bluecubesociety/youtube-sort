@@ -1,108 +1,283 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8" />
+  <head>
+    <meta charset="utf-8" />
 
-        <link
-            href="http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900"
-            rel="stylesheet"
-            type="text/css"
-        />
-        <link rel="stylesheet" href="../styles/main.css" />
-    </head>
-    <body>
-        <div id="menu">
-            <div class="tab-button" id="tab-button-settings">
-                <svg width="24" viewBox="0 0 24 24" height="24">
-                    <path
-                        d="M12 9.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5m0-1c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zM13.22 3l.55 2.2.13.51.5.18c.61.23 1.19.56 1.72.98l.4.32.5-.14 2.17-.62 1.22 2.11-1.63 1.59-.37.36.08.51c.05.32.08.64.08.98s-.03.66-.08.98l-.08.51.37.36 1.63 1.59-1.22 2.11-2.17-.62-.5-.14-.4.32c-.53.43-1.11.76-1.72.98l-.5.18-.13.51-.55 2.24h-2.44l-.55-2.2-.13-.51-.5-.18c-.6-.23-1.18-.56-1.72-.99l-.4-.32-.5.14-2.17.62-1.21-2.12 1.63-1.59.37-.36-.08-.51c-.05-.32-.08-.65-.08-.98s.03-.66.08-.98l.08-.51-.37-.36L3.6 8.56l1.22-2.11 2.17.62.5.14.4-.32c.53-.44 1.11-.77 1.72-.99l.5-.18.13-.51.54-2.21h2.44M14 2h-4l-.74 2.96c-.73.27-1.4.66-2 1.14l-2.92-.83-2 3.46 2.19 2.13c-.06.37-.09.75-.09 1.14s.03.77.09 1.14l-2.19 2.13 2 3.46 2.92-.83c.6.48 1.27.87 2 1.14L10 22h4l.74-2.96c.73-.27 1.4-.66 2-1.14l2.92.83 2-3.46-2.19-2.13c.06-.37.09-.75.09-1.14s-.03-.77-.09-1.14l2.19-2.13-2-3.46-2.92.83c-.6-.48-1.27-.87-2-1.14L14 2z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="tab-button" id="tab-button-sort">
-                <p>Sort Tabs</p>
-            </div>
-            <div class="tab-button" id="tab-button-list">
-                <svg width="24" viewBox="0 0 24 24" height="24">
-                    <path
-                        d="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z"
-                    ></path>
-                </svg>
-            </div>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+  </head>
+  <body>
+    <div id="menu">
+      <button class="tab-button" id="tab-button-settings" aria-label="Settings">
+        <svg width="24" viewBox="0 0 24 24" height="24">
+          <path
+            d="M12 9.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5m0-1c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zM13.22 3l.55 2.2.13.51.5.18c.61.23 1.19.56 1.72.98l.4.32.5-.14 2.17-.62 1.22 2.11-1.63 1.59-.37.36.08.51c.05.32.08.64.08.98s-.03.66-.08.98l-.08.51.37.36 1.63 1.59-1.22 2.11-2.17-.62-.5-.14-.4.32c-.53.43-1.11.76-1.72.98l-.5.18-.13.51-.55 2.24h-2.44l-.55-2.2-.13-.51-.5-.18c-.6-.23-1.18-.56-1.72-.99l-.4-.32-.5.14-2.17.62-1.21-2.12 1.63-1.59.37-.36-.08-.51c-.05-.32-.08-.65-.08-.98s.03-.66.08-.98l.08-.51-.37-.36L3.6 8.56l1.22-2.11 2.17.62.5.14.4-.32c.53-.44 1.11-.77 1.72-.99l.5-.18.13-.51.54-2.21h2.44M14 2h-4l-.74 2.96c-.73.27-1.4.66-2 1.14l-2.92-.83-2 3.46 2.19 2.13c-.06.37-.09.75-.09 1.14s.03.77.09 1.14l-2.19 2.13 2 3.46 2.92-.83c.6.48 1.27.87 2 1.14L10 22h4l.74-2.96c.73-.27 1.4-.66 2-1.14l2.92.83 2-3.46-2.19-2.13c.06-.37.09-.75.09-1.14s-.03-.77-.09-1.14l2.19-2.13-2-3.46-2.92.83c-.6-.48-1.27-.87-2-1.14L14 2z"
+          ></path>
+        </svg>
+      </button>
+      <button class="tab-button" id="tab-button-sort" aria-label="Sort tabs">
+        <p>Sort Tabs</p>
+        <svg
+          class="sort-done-check"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="square"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <polyline points="3,10 8,15 17,5" />
+        </svg>
+        <svg
+          class="sort-error-x"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="square"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="4" x2="16" y2="16" />
+          <line x1="16" y1="4" x2="4" y2="16" />
+        </svg>
+      </button>
+      <button class="tab-button" id="tab-button-list" aria-label="Video list">
+        <svg width="24" viewBox="0 0 24 24" height="24">
+          <path d="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div id="main">
+      <div class="tab-content" id="tab-list">
+        <div class="segment" id="stats">
+          <div class="stat">
+            <span id="stat_tabs">x</span>
+            <small id="stat_tabs_label">videos</small>
+          </div>
+          <div class="stat">
+            <span id="stat_channels">x</span>
+            <small>channels</small>
+          </div>
+          <div class="stat">
+            <span id="stat_duration">x</span>
+            <small>total runtime</small>
+          </div>
+          <div class="stat">
+            <span id="stat_views">x</span>
+            <small>total views</small>
+          </div>
+          <div class="stat">
+            <span id="stat_likes">x</span>
+            <small>total likes</small>
+          </div>
+        </div>
+        <div id="video-list" aria-live="polite" aria-atomic="false"></div>
+      </div>
+
+      <div class="tab-content" id="tab-settings">
+        <div class="segment" id="tips">
+          <button id="close-button" aria-label="Dismiss tip">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="square"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <line x1="1" y1="1" x2="9" y2="9" />
+              <line x1="9" y1="1" x2="1" y2="9" />
+            </svg>
+          </button>
+          <b>Did you know?</b>
+          <span id="tip-text"></span>
+          <div id="tip-nav">
+            <button id="tip-prev" aria-label="Previous tip">
+              <svg
+                width="8"
+                height="12"
+                viewBox="0 0 8 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="square"
+                aria-hidden="true"
+              >
+                <polyline points="6,1 2,6 6,11" />
+              </svg>
+            </button>
+            <small id="tip-counter"></small>
+            <button id="tip-next" aria-label="Next tip">
+              <svg
+                width="8"
+                height="12"
+                viewBox="0 0 8 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="square"
+                aria-hidden="true"
+              >
+                <polyline points="2,1 6,6 2,11" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div id="main">
-            <div class="tab-content" id="tab-list">
-                <div class="segment" id="tips">
-                    <button id="close-button">
-                        <span>&times;</span>
-                    </button>
-                    <b>Did you know?</b>
-                    <span>You can also sort selected tabs only!</span>
-                </div>
-
-                <div class="segment" id="stats">
-                    <b>Statistics</b>
-                    <p>
-                        <span id="stat_tabs">x</span>
-                        <small>detected videos</small>
-                    </p>
-                    <p>
-                        <span id="stat_duration">x</span>
-                        <small>total runtime</small>
-                    </p>
-                    <p>
-                        <span id="stat_views">x</span>
-                        <small>total views</small>
-                    </p>
-                </div>
-                <div id="video-list"></div>
-            </div>
-
-            <div class="tab-content" id="tab-settings">
-                <div class="segment" id="sorting-rules">
-                    <b>Sorting Rules</b>
-                    <ul id="sortable-list"></ul>
-                </div>
-
-                <div class="segment" id="filter-rules">
-                    <b>Filter Rules</b>
-                    <label>
-                        <input type="checkbox" id="ignore-inactive" />
-                        Ignore unloaded tabs
-                    </label>
-                    <label>
-                        <input type="checkbox" id="ignore-live" />
-                        Ignore live streams
-                    </label>
-                    <label>
-                        <input type="checkbox" id="ignore-playlists" />
-                        Ignore playlists
-                    </label>
-                    <label>
-                        <input type="checkbox" id="sort-sponsorblock" />
-                        Sort Duration based on SponsorBlock
-                    </label>
-                </div>
-
-                <div class="segment" id="danger-zone">
-                    <b>Danger Zone</b>
-                    <label>
-                        <input type="checkbox" id="force-reload" />
-                        Force Reload on sort
-                    </label>
-                    <button id="delete-storage">Delete entire storage</button>
-                    <p><small>This may require a restart.</small></p>
-                </div>
-
-                <div id="version">
-                    <small>Version <span id="version-number"></span></small>
-                </div>
-            </div>
-
-            <div id="alert-error"></div>
+        <div class="segment" id="sorting-rules">
+          <div class="segment-header">
+            <b>Sorting Rules</b>
+            <button
+              id="sort-info-btn"
+              class="info-btn"
+              aria-label="How sorting rules work"
+              aria-expanded="false"
+            >
+              i
+            </button>
+          </div>
+          <div id="sort-info-tip" class="info-tip hidden">
+            Rules are applied top to bottom. A lower rule only breaks ties from the rule above it —
+            drag to reorder.
+          </div>
+          <ul id="sortable-list"></ul>
+          <label>
+            <input type="checkbox" id="sort-to-start" />
+            Sort tabs to start of window
+          </label>
+          <label>
+            <input type="checkbox" id="current-window-only" />
+            Current window only
+          </label>
         </div>
 
-        <script src="main.js"></script>
-    </body>
+        <div class="segment" id="filter-rules">
+          <b>Filter Rules</b>
+          <label>
+            <input type="checkbox" id="ignore-inactive" />
+            Ignore unloaded tabs
+          </label>
+          <label>
+            <input type="checkbox" id="ignore-live" />
+            Ignore live streams
+          </label>
+          <label>
+            <input type="checkbox" id="ignore-playlists" />
+            Ignore playlists
+          </label>
+          <label>
+            <input type="checkbox" id="ignore-shorts" />
+            Ignore shorts
+          </label>
+        </div>
+
+        <div class="segment" id="advanced-settings">
+          <button id="advanced-toggle" aria-expanded="false">
+            <b>Advanced</b>
+            <svg
+              class="advanced-arrow"
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <polyline points="2,3 5,7 8,3" />
+            </svg>
+          </button>
+          <div id="advanced-content">
+            <label>
+              <input type="checkbox" id="auto-sort" />
+              Sort automatically when a new tab opens
+            </label>
+            <label>
+              <input type="checkbox" id="sort-sponsorblock" />
+              Sort duration based on SponsorBlock
+            </label>
+            <label>
+              <input type="checkbox" id="force-reload" />
+              Force Reload on sort
+            </label>
+            <p id="force-reload-note">
+              <small>Will be slow; tabs reload one at a time to avoid stress</small>
+            </p>
+            <label id="unload-after-reload-label">
+              <input type="checkbox" id="unload-after-reload" />
+              Unload tabs after reloading
+            </label>
+            <label>
+              <input type="checkbox" id="show-tab-icon" />
+              Change tab icon when video is detected
+            </label>
+            <label>
+              <input type="checkbox" id="show-stats" />
+              Show stats panel
+            </label>
+            <div id="delete-storage-wrap">
+              <button id="delete-storage">Delete entire storage</button>
+              <div id="delete-storage-confirm" class="hidden">
+                <button id="delete-storage-yes" aria-label="Confirm delete">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    aria-hidden="true"
+                  >
+                    <polyline points="3,10 8,15 17,5" />
+                  </svg>
+                </button>
+                <button id="delete-storage-no" aria-label="Cancel delete">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="square"
+                    aria-hidden="true"
+                  >
+                    <line x1="1" y1="1" x2="9" y2="9" />
+                    <line x1="9" y1="1" x2="1" y2="9" />
+                  </svg>
+                </button>
+                <span>Are you sure?</span>
+              </div>
+            </div>
+            <button id="reset-tip">Show tips again</button>
+          </div>
+        </div>
+
+        <div id="version">
+          <small>Version <span id="version-number"></span></small>
+        </div>
+      </div>
+
+      <div id="alert-error" role="alert"></div>
+    </div>
+
+    <script src="../node_modules/webextension-polyfill/dist/browser-polyfill.min.js"></script>
+    <script type="module" src="main.js"></script>
+  </body>
 </html>

@@ -1,15 +1,21 @@
 {
   "name": "youtube-sort",
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
     "scss:watch": "sass --watch styles/main.scss:styles/main.css",
-    "build": "web-ext build --overwrite-dest"
+    "build": "web-ext build --overwrite-dest",
+    "build:chrome": "cp manifest.json /tmp/manifest_firefox_bak.json && cp manifest.chrome.json manifest.json && web-ext build --overwrite-dest && cp /tmp/manifest_firefox_bak.json manifest.json",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandertbratrich/youtube-sort.git"
+    "url": "git+https://github.com/bluecubesociety/youtube-sort.git"
   },
   "keywords": [
     "Firefox",
@@ -18,17 +24,24 @@
     "Mozilla",
     "Tabs"
   ],
-  "author": "Alexander T. Bratrich",
-  "license": "ISC",
+  "author": "Blue Cube Society",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexandertbratrich/youtube-sort/issues"
+    "url": "https://github.com/bluecubesociety/youtube-sort/issues"
   },
-  "homepage": "https://github.com/alexandertbratrich/youtube-sort#readme",
+  "homepage": "https://github.com/bluecubesociety/youtube-sort#readme",
   "dependencies": {
-    "web-ext": "^7.8.0"
+    "web-ext": "^7.8.0",
+    "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
-    "sass": "^1.69.5"
+    "@eslint/js": "^10.0.1",
+    "@types/chrome": "^0.1.38",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "sass": "^1.69.5",
+    "typescript": "^5.9.3"
   },
   "webExt": {
     "sourceDir": "./"
