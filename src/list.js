@@ -164,7 +164,9 @@ export async function renderList() {
               ? textFunc(tabData[prop])
               : String(tabData[prop]);
         if (icon) {
-          spanElement.innerHTML = icon + text;
+          const svgEl = new DOMParser().parseFromString(icon, "image/svg+xml").documentElement;
+          spanElement.appendChild(svgEl);
+          spanElement.appendChild(document.createTextNode(text));
         } else {
           spanElement.textContent = text;
         }

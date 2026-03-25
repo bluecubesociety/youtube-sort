@@ -6,7 +6,7 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "js": [
-        "node_modules/webextension-polyfill/dist/browser-polyfill.min.js",
+        "src/browser-polyfill.min.js",
         "src/content.js"
       ]
     }

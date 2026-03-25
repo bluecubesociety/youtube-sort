@@ -5,10 +5,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": [
-        "node_modules/webextension-polyfill/dist/browser-polyfill.min.js",
-        "src/content.js"
-      ]
+      "js": ["src/browser-polyfill.min.js", "src/content.js"]
     }
   ],
   "action": {
@@ -43,7 +40,14 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{c3b18543-7a38-453c-a4f1-b55b07344d56}",
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "collects": ["none"],
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }
