@@ -135,17 +135,17 @@ function fetchVideoData(observer, showTabIcon = true) {
   // saves data with video id as key
   if (videoID) {
     const videoData = {
-      title: title,
+      ...(title ? { title } : {}),
       duration: calcDuration(duration ?? ""),
       ...(skipDuration
         ? {
             skipped: calcDuration(convertTimeFormat(skipDuration)),
           }
         : {}),
-      uploadDate: uploadDate,
-      author: author,
-      views: interactionCount !== undefined ? parseInt(interactionCount) || undefined : undefined,
-      likes: likes,
+      ...(uploadDate ? { uploadDate } : {}),
+      ...(author ? { author } : {}),
+      ...(interactionCount !== undefined ? { views: parseInt(interactionCount) || undefined } : {}),
+      ...(likes !== undefined ? { likes } : {}),
       ...(isLive ? { live: new Date(startDate ?? "").getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
