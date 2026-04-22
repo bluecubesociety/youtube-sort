@@ -4,6 +4,9 @@
 
 **Fixes**
 - Fixed the polyfill script, which made the chrome version fail entirely (Sorry that the fix took so long!)
+- Channel name / likes should load better
+- Sorts should reload a bit better
+- Adjusted placeholders
 
 ---
 
