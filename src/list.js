@@ -65,6 +65,7 @@ let openMenu = null;
 function closeOpenMenu() {
   if (openMenu) {
     openMenu.classList.remove("item-menu--open");
+    openMenu.style.cssText = "";
     openMenu = null;
   }
 }
@@ -189,6 +190,11 @@ export async function renderList() {
         closeOpenMenu();
       } else {
         closeOpenMenu();
+        const rect = menuBtn.getBoundingClientRect();
+        menu.style.position = "fixed";
+        menu.style.bottom = `${window.innerHeight - rect.top + 2}px`;
+        menu.style.right = `${window.innerWidth - rect.right}px`;
+        menu.style.top = "auto";
         menu.classList.add("item-menu--open");
         openMenu = menu;
       }
