@@ -18,7 +18,7 @@ Available for **Firefox** and **Chromium-based browsers**.
 ## Installation
 
 ### Firefox
-Available on [Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/youtube-sort/).
+Available on [Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/youtube-sort?utm_source=github&utm_content=available-on).
 
 ### Chrome / Chromium
 Available on the [Chrome Web Store](https://chrome.google.com/webstore/detail/youtube-sort/).

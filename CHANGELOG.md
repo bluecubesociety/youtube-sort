@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 2.0.1 – Apr 22, 2026
+
+**Fixes**
+- Fixed the polyfill script, which made the chrome version fail entirely (Sorry that the fix took so long!)
+- Channel name / likes should load better
+- Sorts should reload a bit better
+- Adjusted placeholders
+
+---
+
 ## Version 2.0.0 – Mar 25, 2026
 
 After one and a half years, finally an update. Things were actually pretty stable (for the most part), considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to at least extend the sorting rules due to personal change in use.

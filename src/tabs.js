@@ -58,7 +58,7 @@ export async function prefilterTabs() {
   const filteredTabs = tabArray.filter((tab) => {
     return (
       tab.youtubeID &&
-      tab.title &&
+      (tab.title ?? tab.tabTitle) &&
       !hidden.includes(/** @type {string} */ (tab.youtubeID)) &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
