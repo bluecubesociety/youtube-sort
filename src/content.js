@@ -220,8 +220,10 @@ async function updateLateData() {
       )
         .find((el) => el.innerText.trim())
         ?.innerText.trim() ??
-      /** @type {HTMLElement | null} */ (document.querySelector("#attributed-channel-name"))
-        ?.innerText.replace(/\s+/g, " ")
+      /** @type {HTMLElement | null} */ (
+        document.querySelector("#attributed-channel-name")
+      )?.innerText
+        .replace(/\s+/g, " ")
         .trim());
 
   if (likes === undefined && !author) return;
