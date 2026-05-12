@@ -136,7 +136,7 @@ function fetchVideoData(observer, showTabIcon = true) {
   if (videoID) {
     const videoData = {
       title: title,
-      duration: calcDuration(duration ?? ""),
+      ...(duration ? { duration: calcDuration(duration) } : {}),
       ...(skipDuration
         ? {
             skipped: calcDuration(convertTimeFormat(skipDuration)),
