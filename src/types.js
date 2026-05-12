@@ -60,7 +60,7 @@ export async function moveTabsByWindow(sortedTabs, sortToStart) {
   }
   for (const [windowId, windowTabs] of windowGroups) {
     if (sortToStart) {
-      const youtubeIds = new Set(windowTabs.map((t) => t.id));
+      const youtubeIds = new Set(windowTabs.map((/** @type {any} */ t) => t.id));
       const allTabs = await browser.tabs.query({ windowId, pinned: false });
       const firstNonYouTube = allTabs.find((t) => !youtubeIds.has(t.id));
       const startIndex = firstNonYouTube?.index ?? 0;

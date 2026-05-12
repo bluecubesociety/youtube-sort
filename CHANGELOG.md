@@ -3,7 +3,7 @@
 ## Version 2.0.2 – May 12, 2026
 
 **Fixes**
-- Fixed "Sort to Start" not working in browsers with workspace/folder features (e.g. Zen Browser)
+- Fixed sorting to left/top not working with workspaces/folders (Zen-specific)
 - Fixed video duration occasionally being overwritten with 0 after an extension reload or force-sort, causing duration sorting to appear broken
 
 ---

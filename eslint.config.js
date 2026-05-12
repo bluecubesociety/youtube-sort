@@ -3,6 +3,7 @@ import prettier from "eslint-config-prettier";
 import globals from "globals";
 
 export default [
+  { ignores: ["src/browser-polyfill.min.js"] },
   js.configs.recommended,
   prettier,
   {
