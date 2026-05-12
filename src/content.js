@@ -135,39 +135,34 @@ function fetchVideoData(observer, showTabIcon = true) {
   // saves data with video id as key
   if (videoID) {
     const videoData = {
-      title: title,
+      ...(title ? { title } : {}),
       ...(duration ? { duration: calcDuration(duration) } : {}),
       ...(skipDuration
         ? {
             skipped: calcDuration(convertTimeFormat(skipDuration)),
           }
         : {}),
-      uploadDate: uploadDate,
-      author: author,
-      views: interactionCount !== undefined ? parseInt(interactionCount) || undefined : undefined,
-      likes: likes,
+      ...(uploadDate ? { uploadDate } : {}),
+      ...(author ? { author } : {}),
+      ...(interactionCount !== undefined ? { views: parseInt(interactionCount) || undefined } : {}),
+      ...(likes !== undefined ? { likes } : {}),
       ...(isLive ? { live: new Date(startDate ?? "").getTime() } : {}),
       ...(tabUrl.includes("&list=") ? { playlist: true } : {}),
     };
-
-    // if author wasn't available yet, retry once specifically for #attributed-channel-name (collab videos)
-    if (!author) {
-      setTimeout(() => {
-        const retryAuthor = /** @type {HTMLElement | null} */ (
-          document.querySelector("#attributed-channel-name")
-        )?.innerText
-          .replace(/\s+/g, " ")
-          .trim();
-        if (retryAuthor) fetchVideoData(null, showTabIcon);
-      }, 3000);
-    }
 
     const wouldBeIgnored =
       (filterSettings.ignore_live && Boolean(isLive)) ||
       (filterSettings.ignore_playlists && tabUrl.includes("&list=")) ||
       (filterSettings.ignore_shorts && isShorts());
 
-    browser.storage.local.set({ [videoID]: videoData }).then(() => {
+    browser.storage.local.set({ [videoID]: videoData }).then(async () => {
+      const { _hidden = [] } = /** @type {{ _hidden?: string[] }} */ (
+        await browser.storage.local.get("_hidden")
+      );
+      if (_hidden.includes(videoID)) {
+        await browser.storage.local.set({ _hidden: _hidden.filter((id) => id !== videoID) });
+      }
+
       if (showTabIcon && !wouldBeIgnored) {
         applyFavicon();
 
@@ -199,6 +194,82 @@ const observer = new MutationObserver((mutationsList, observer) => {
         );
         if (loaded && observerActive) fetchVideoData(observer, showTabIcon);
       }
+    }
+  } catch (error) {
+    console.debug("[YouTube Sort]", error);
+  }
+});
+
+/** @type {ReturnType<typeof setTimeout> | null} */
+let lateDataDebounceTimer = null;
+
+async function updateLateData() {
+  const videoID = getVideoID();
+  if (!videoID) return;
+
+  const likesBtn = document.querySelector("like-button-view-model button[aria-label]");
+  const likesMatch = (likesBtn?.getAttribute("aria-label") ?? "").match(/[\d,]+/);
+  const likes = likesMatch ? parseInt(likesMatch[0].replace(/,/g, ""), 10) : undefined;
+
+  const author = isShorts()
+    ? /** @type {HTMLElement | null} */ (
+        document.querySelector(".ytReelChannelBarViewModelChannelName")
+      )?.innerText.trim()
+    : (Array.from(
+        /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ytd-channel-name"))
+      )
+        .find((el) => el.innerText.trim())
+        ?.innerText.trim() ??
+      /** @type {HTMLElement | null} */ (
+        document.querySelector("#attributed-channel-name")
+      )?.innerText
+        .replace(/\s+/g, " ")
+        .trim());
+
+  if (likes === undefined && !author) return;
+
+  const result = await browser.storage.local.get(videoID);
+  const current = result[videoID];
+  if (!current) return;
+
+  const needsUpdate =
+    (likes !== undefined && current.likes === undefined) || (author && !current.author);
+  if (!needsUpdate) {
+    lateDataObserver.disconnect();
+    return;
+  }
+
+  await browser.storage.local.set({
+    [videoID]: {
+      ...current,
+      ...(likes !== undefined ? { likes } : {}),
+      ...(author ? { author } : {}),
+    },
+  });
+
+  if (likes !== undefined && author) lateDataObserver.disconnect();
+}
+
+const lateDataObserver = new MutationObserver((mutationsList) => {
+  try {
+    const relevant = mutationsList.some((mutation) => {
+      if (mutation.target instanceof Element) {
+        if (mutation.target.closest("like-button-view-model")) return true;
+        if (mutation.target.classList.contains("ytd-channel-name")) return true;
+        if (mutation.target.id === "attributed-channel-name") return true;
+      }
+      return Array.from(mutation.addedNodes).some(
+        (n) =>
+          n instanceof Element &&
+          (n.tagName === "LIKE-BUTTON-VIEW-MODEL" ||
+            n.classList.contains("ytd-channel-name") ||
+            n.id === "attributed-channel-name" ||
+            n.querySelector("like-button-view-model, .ytd-channel-name, #attributed-channel-name"))
+      );
+    });
+    if (relevant) {
+      clearTimeout(lateDataDebounceTimer ?? undefined);
+      lateDataDebounceTimer = setTimeout(updateLateData, 500);
     }
   } catch (error) {
     console.debug("[YouTube Sort]", error);
@@ -240,6 +311,13 @@ async function init() {
     sponsorBlockObserver.observe(document, { childList: true, subtree: true });
     setTimeout(() => sponsorBlockObserver.disconnect(), 10000);
   }
+  lateDataObserver.observe(document, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["aria-label"],
+  });
+  setTimeout(() => lateDataObserver.disconnect(), 30000);
   observer.observe(document, { childList: true, subtree: true });
   fetchVideoData(observer, showTabIcon);
 
