@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.0.2 – May 12, 2026
+
+**Fixes**
+- Fixed "Sort to Start" not working in browsers with workspace/folder features (e.g. Zen Browser)
+- Fixed video duration occasionally being overwritten with 0 after an extension reload or force-sort, causing duration sorting to appear broken
+
+---
+
 ## Version 2.0.0 – Mar 25, 2026
 
 After one and a half years, finally an update. Things were actually pretty stable (for the most part), considering YouTube's tendency to randomly change the design and break the code. But I learned a lot new in the meantime, and I wanted to at least extend the sorting rules due to personal change in use.
