@@ -1,4 +1,5 @@
 // @ts-check
+/** @import { VideoData } from './types.js' */
 // This file is being loaded on ever YouTube tab to read out the video information and pass them to the storage.
 
 let observerActive = false;
@@ -229,7 +230,7 @@ async function updateLateData() {
   if (likes === undefined && !author) return;
 
   const result = await browser.storage.local.get(videoID);
-  const current = result[videoID];
+  const current = /** @type {VideoData | undefined} */ (result[videoID]);
   if (!current) return;
 
   const needsUpdate =
