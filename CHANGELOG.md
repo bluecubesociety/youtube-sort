@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.0.2 – May 12, 2026
+
+**Fixes**
+- Fixed sorting to left/top not working with workspaces/folders (Zen-specific)
+- Fixed video duration occasionally being overwritten with 0 after an extension reload or force-sort, causing duration sorting to appear broken
+
+---
+
 ## Version 2.0.1 – Apr 22, 2026
 
 **Fixes**

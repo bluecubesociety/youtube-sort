@@ -10,12 +10,6 @@
 
 ## Chrome (Chrome Web Store)
 
-### First time setup
-- Register at https://chrome.google.com/webstore/devconsole (one-time $5 fee)
-- Create a new item, fill in description, category, and at least one screenshot (1280×800 or 640×400)
-- You'll need a privacy policy URL: a simple "this extension collects no data" page is fine
-
-### Publishing an update
 1. `npm ci`
 2. `npm run build:chrome`: produces a `.zip` in `web-ext-artifacts/`, then restores `manifest.json` automatically
 3. Upload the zip at https://chrome.google.com/webstore/devconsole
