@@ -1,6 +1,6 @@
 {
   "name": "youtube-sort",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Enhance your YouTube viewing experience, by sorting your open video tabs alphabetically, by channel name, view count or time.",
   "type": "module",
   "scripts": {
