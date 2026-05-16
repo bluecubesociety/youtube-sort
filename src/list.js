@@ -1,7 +1,7 @@
 // @ts-check
 /** @import { TabEntry } from './types.js' */
 import { settings } from "./settings.js";
-import { prefilterTabs, hideVideo } from "./tabs.js";
+import { prefilterTabs } from "./tabs.js";
 import { el } from "./types.js";
 
 /** @param {number} views @returns {string} */
@@ -227,16 +227,6 @@ export async function renderList() {
     });
     menuEl.appendChild(clearBtn);
 
-    const hideBtn = document.createElement("button");
-    hideBtn.className = "item-menu-action item-menu-action--danger";
-    hideBtn.textContent = "Remove from list";
-    hideBtn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      closeOpenMenu();
-      if (tab.youtubeID) await hideVideo(tab.youtubeID);
-      renderList();
-    });
-    menuEl.appendChild(hideBtn);
     itemEl.appendChild(menuEl);
 
     fragment.appendChild(itemEl);

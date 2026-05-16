@@ -3,20 +3,9 @@
 import { settings } from "./settings.js";
 import { extractYouTubeID } from "./types.js";
 
-/** @param {string} youtubeID */
-export async function hideVideo(youtubeID) {
-  const { _hidden = [] } = /** @type {{ _hidden?: string[] }} */ (
-    await browser.storage.local.get("_hidden")
-  );
-  if (!_hidden.includes(youtubeID)) {
-    await browser.storage.local.set({ _hidden: [..._hidden, youtubeID] });
-  }
-}
-
 /** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected. */
 export async function prefilterTabs() {
   const videoTabs = /** @type {Record<string, VideoData>} */ (await browser.storage.local.get());
-  const hidden = /** @type {string[]} */ (videoTabs["_hidden"] ?? []);
   const allTabs = await browser.tabs.query({
     pinned: false,
     url: "*://*.youtube.com/*",
@@ -59,7 +48,6 @@ export async function prefilterTabs() {
     return (
       tab.youtubeID &&
       (tab.title ?? tab.tabTitle) &&
-      !hidden.includes(/** @type {string} */ (tab.youtubeID)) &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
       (!settings.ignore_inactive || !tab.sleepy) &&
