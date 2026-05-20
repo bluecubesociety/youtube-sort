@@ -59,13 +59,39 @@ export async function moveTabsByWindow(sortedTabs, sortToStart) {
     windowGroups.get(tab.windowId).push(tab);
   }
   for (const [windowId, windowTabs] of windowGroups) {
-    if (sortToStart) {
-      for (const tab of /** @type {any[]} */ ([...windowTabs]).reverse()) {
-        await browser.tabs.move(tab.id, { index: 0 });
-      }
-    } else {
-      for (const tab of windowTabs) {
-        await browser.tabs.move(tab.id, { index: -1 });
+    const allWindowTabs = await browser.tabs.query({ windowId, pinned: false });
+    const visibleWindowTabs = allWindowTabs.filter((t) => !t.hidden);
+
+    /** @type {Map<number, any[]>} */
+    const byGroup = new Map();
+    for (const tab of windowTabs) {
+      const gid = tab.groupId ?? -1;
+      if (!byGroup.has(gid)) byGroup.set(gid, []);
+      byGroup.get(gid).push(tab);
+    }
+
+    for (const [groupId, groupTabs] of byGroup) {
+      if (groupId === -1) {
+        // moving to a grouped tab's index causes the moved tab to be absorbed into that group.
+        const ungroupedVisible = visibleWindowTabs.filter((t) => (t.groupId ?? -1) === -1);
+        if (sortToStart) {
+          const minIndex = ungroupedVisible.reduce((min, t) => Math.min(min, t.index), Infinity);
+          for (const tab of /** @type {any[]} */ ([...groupTabs]).reverse()) {
+            await browser.tabs.move(tab.id, { index: minIndex });
+          }
+        } else {
+          const maxIndex = ungroupedVisible.reduce((max, t) => Math.max(max, t.index), 0);
+          for (const tab of groupTabs) {
+            await browser.tabs.move(tab.id, { index: maxIndex });
+          }
+        }
+      } else {
+        // sort only within group
+        const allInGroup = visibleWindowTabs.filter((t) => (t.groupId ?? -1) === groupId);
+        const groupStart = allInGroup.reduce((min, t) => Math.min(min, t.index), Infinity);
+        for (const tab of /** @type {any[]} */ ([...groupTabs]).reverse()) {
+          await browser.tabs.move(tab.id, { index: groupStart });
+        }
       }
     }
   }
