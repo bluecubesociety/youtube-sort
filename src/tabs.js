@@ -3,30 +3,22 @@
 import { settings } from "./settings.js";
 import { extractYouTubeID } from "./types.js";
 
-/** @param {string} youtubeID */
-export async function hideVideo(youtubeID) {
-  const { _hidden = [] } = /** @type {{ _hidden?: string[] }} */ (
-    await browser.storage.local.get("_hidden")
-  );
-  if (!_hidden.includes(youtubeID)) {
-    await browser.storage.local.set({ _hidden: [..._hidden, youtubeID] });
-  }
-}
-
 /** returns merged tab and video data, remaps to an array, filters based on settings, filters if selected. */
 export async function prefilterTabs() {
   const videoTabs = /** @type {Record<string, VideoData>} */ (await browser.storage.local.get());
-  const hidden = /** @type {string[]} */ (videoTabs["_hidden"] ?? []);
   const allTabs = await browser.tabs.query({
-    pinned: false,
     url: "*://*.youtube.com/*",
     ...(settings.current_window_only ? { currentWindow: true } : {}),
   });
+  // Pinned tabs that ARE in a group are Zen folder members
+  const visibleTabs = allTabs.filter(
+    (tab) => !tab.hidden && (!tab.pinned || /** @type {any} */ (tab.groupId ?? -1) !== -1)
+  );
 
   /** @type {Record<string, MergedTabData>} */
   const mergedTabData = {};
   // merges firefoxTab info and youtubeTab info and adjusts attribute-names
-  allTabs.forEach((tab) => {
+  visibleTabs.forEach((tab) => {
     const youtubeID = extractYouTubeID(tab.url ?? "");
     if (youtubeID) {
       const key = `${youtubeID}-${tab.id}`;
@@ -56,10 +48,14 @@ export async function prefilterTabs() {
 
   // filter tabs based on settings
   const filteredTabs = tabArray.filter((tab) => {
+    const gid = /** @type {any} */ (tab).groupId ?? -1;
+    const groupFilterOk =
+      settings.group_filter === "all" ||
+      (settings.group_filter === "grouped_only" ? gid !== -1 : gid === -1);
     return (
       tab.youtubeID &&
       (tab.title ?? tab.tabTitle) &&
-      !hidden.includes(/** @type {string} */ (tab.youtubeID)) &&
+      groupFilterOk &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
       (!settings.ignore_inactive || !tab.sleepy) &&

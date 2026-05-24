@@ -11,14 +11,16 @@ async function autoSort(windowId) {
 
   const videoTabs = /** @type {Record<string, VideoData>} */ (await browser.storage.local.get());
   const allTabs = await browser.tabs.query({
-    pinned: false,
     url: "*://*.youtube.com/*",
     ...(settings.current_window_only ? { windowId } : {}),
   });
+  const visibleTabs = allTabs.filter(
+    (tab) => !tab.hidden && (!tab.pinned || /** @type {any} */ ((tab).groupId ?? -1) !== -1)
+  );
 
   /** @type {Record<string, MergedTabData>} */
   const mergedTabData = {};
-  allTabs.forEach((tab) => {
+  visibleTabs.forEach((tab) => {
     const youtubeID = extractYouTubeID(tab.url ?? "");
     if (youtubeID) {
       const key = `${youtubeID}-${tab.id}`;
@@ -57,9 +59,11 @@ async function autoSort(windowId) {
 
 /** @type {ReturnType<typeof setTimeout> | null} */
 let debounceTimer = null;
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url && extractYouTubeID(changeInfo.url)) {
-    clearTimeout(debounceTimer ?? undefined);
-    debounceTimer = setTimeout(() => autoSort(tab.windowId), 1500);
-  }
+browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const youtubeID = changeInfo.url && extractYouTubeID(changeInfo.url);
+  if (!youtubeID) return;
+  const stored = await browser.storage.local.get(String(youtubeID));
+  if (stored[String(youtubeID)]) return; // already known, not a new video
+  clearTimeout(debounceTimer ?? undefined);
+  debounceTimer = setTimeout(() => autoSort(tab.windowId), 1500);
 });

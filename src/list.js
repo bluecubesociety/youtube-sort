@@ -1,7 +1,7 @@
 // @ts-check
 /** @import { TabEntry } from './types.js' */
 import { settings } from "./settings.js";
-import { prefilterTabs, hideVideo } from "./tabs.js";
+import { prefilterTabs } from "./tabs.js";
 import { el } from "./types.js";
 
 /** @param {number} views @returns {string} */
@@ -59,6 +59,19 @@ function updateStats(tabs, isSelection) {
   el("stat_likes").innerText = getViews(totalLikes);
 }
 
+/** @type {Record<string, string>} */
+const GROUP_COLORS = {
+  blue: "#1a73e8",
+  cyan: "#00bcd4",
+  green: "#0f9d58",
+  grey: "#9e9e9e",
+  orange: "#f57c00",
+  pink: "#e91e63",
+  purple: "#9c27b0",
+  red: "#d32f2f",
+  yellow: "#f9ab00",
+};
+
 /** @type {HTMLElement | null} */
 let openMenu = null;
 
@@ -86,7 +99,45 @@ export async function renderList() {
   el("stats").classList.toggle("hidden", !settings.show_stats);
 
   const fragment = document.createDocumentFragment();
+  let currentGroupId = -1;
+  /** @type {DocumentFragment | HTMLElement} */
+  let currentContainer = fragment;
+
   for (const tab of tabs) {
+    const gid = tab.groupId ?? -1;
+
+    if (settings.group_by_tab_group && gid !== -1 && gid !== currentGroupId) {
+      currentGroupId = gid;
+
+      let groupTitle = "";
+      let groupColor = "";
+      try {
+        const group = await /** @type {any} */ (browser).tabGroups?.get(gid);
+        groupTitle = group?.title ?? "";
+        groupColor = group?.color ?? "";
+      } catch { /* tabGroups not available */ }
+
+      const containerEl = document.createElement("div");
+      containerEl.className = "group-container";
+      if (groupColor && groupColor in GROUP_COLORS) {
+        containerEl.style.setProperty("--group-color", GROUP_COLORS[groupColor]);
+      }
+
+      const headerEl = document.createElement("div");
+      headerEl.className = "group-header";
+
+      const label = document.createElement("small");
+      label.textContent = groupTitle || "Tab group";
+      headerEl.appendChild(label);
+
+      containerEl.appendChild(headerEl);
+      fragment.appendChild(containerEl);
+      currentContainer = containerEl;
+    } else if (gid === -1) {
+      currentGroupId = -1;
+      currentContainer = fragment;
+    }
+
     const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (
       /** @type {unknown} */ (tab)
     );
@@ -227,19 +278,9 @@ export async function renderList() {
     });
     menuEl.appendChild(clearBtn);
 
-    const hideBtn = document.createElement("button");
-    hideBtn.className = "item-menu-action item-menu-action--danger";
-    hideBtn.textContent = "Remove from list";
-    hideBtn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      closeOpenMenu();
-      if (tab.youtubeID) await hideVideo(tab.youtubeID);
-      renderList();
-    });
-    menuEl.appendChild(hideBtn);
     itemEl.appendChild(menuEl);
 
-    fragment.appendChild(itemEl);
+    currentContainer.appendChild(itemEl);
   }
   tabList.appendChild(fragment);
 }

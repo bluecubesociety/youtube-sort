@@ -157,13 +157,6 @@ function fetchVideoData(observer, showTabIcon = true) {
       (filterSettings.ignore_shorts && isShorts());
 
     browser.storage.local.set({ [videoID]: videoData }).then(async () => {
-      const { _hidden = [] } = /** @type {{ _hidden?: string[] }} */ (
-        await browser.storage.local.get("_hidden")
-      );
-      if (_hidden.includes(videoID)) {
-        await browser.storage.local.set({ _hidden: _hidden.filter((id) => id !== videoID) });
-      }
-
       if (showTabIcon && !wouldBeIgnored) {
         applyFavicon();
 

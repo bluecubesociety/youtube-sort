@@ -1,0 +1,25 @@
+$border-radius: 10px;
+
+:root {
+    --color-text: #0f0f0f;
+    --color-bg: #ffffff;
+    --color-border: #ccc;
+    --color-surface: rgba(128, 128, 128, 0.1);
+    --color-hover: rgba(0, 0, 0, 0.1);
+    --color-muted: #767676;
+    --color-inactive: #767676;
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f1f1f1;
+        --color-bg: #0f0f0f;
+        --color-border: #3f3f3f;
+        --color-surface: rgba(255, 255, 255, 0.05);
+        --color-hover: rgba(255, 255, 255, 0.1);
+        --color-muted: rgb(144, 144, 144);
+        --color-inactive: #909090;
+        color-scheme: dark;
+    }
+}

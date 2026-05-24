@@ -1,0 +1,96 @@
+@use 'variables' as *;
+
+#sorting-rules {
+    #sortable-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    #sortable-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        transition:
+            color 0.3s ease,
+            fill 0.3s ease;
+        color: var(--color-inactive);
+
+        .title {
+            color: var(--color-text);
+        }
+
+        svg {
+            color: inherit;
+            fill: currentColor;
+        }
+
+        &:hover {
+            color: var(--color-text);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 48%;
+            margin-right: 4px;
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: inherit;
+                cursor: pointer;
+                border: none;
+                border-radius: $border-radius;
+                background-color: transparent;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: var(--color-hover);
+                }
+            }
+        }
+
+        .toggle-asc {
+            cursor: pointer;
+            height: 24px;
+            width: 100%;
+            padding: 0 6px;
+            border: none;
+            border-radius: $border-radius;
+            background-color: var(--color-surface);
+            transition: background-color 0.3s ease;
+            color: inherit;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:hover {
+                background-color: var(--color-hover);
+            }
+        }
+
+        &.dragging {
+            opacity: 0.4;
+        }
+
+        &.drag-over {
+            border-top: 2px solid var(--color-text);
+        }
+    }
+
+    .drag-handle {
+        cursor: grab;
+        color: var(--color-muted);
+        padding: 0 4px;
+        user-select: none;
+        display: flex;
+        align-items: center;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}

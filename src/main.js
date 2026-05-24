@@ -11,7 +11,7 @@ const cb = (id) => /** @type {HTMLInputElement} */ (document.getElementById(id))
 
 /**
  * Boolean settings keys, used by changeSetting to keep assignment type-safe.
- * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload' | 'unload_after_reload' | 'show_tab_icon' | 'show_stats'} BoolSetting
+ * @typedef {'ignore_inactive' | 'ignore_playlists' | 'ignore_live' | 'ignore_shorts' | 'sort_sponsorblock' | 'sort_to_start' | 'current_window_only' | 'auto_sort' | 'force_reload' | 'unload_after_reload' | 'show_tab_icon' | 'show_stats' | 'group_by_tab_group'} BoolSetting
  */
 
 /** changes the active menu in the settings and saves it */
@@ -58,6 +58,9 @@ function renderSettings() {
   cb("sort-to-start").checked = settings.sort_to_start;
   cb("current-window-only").checked = settings.current_window_only;
   cb("auto-sort").checked = settings.auto_sort;
+  cb("group-by-tab-group").checked = settings.group_by_tab_group;
+  /** @type {HTMLSelectElement} */ (document.getElementById("group-filter")).value =
+    settings.group_filter;
   cb("force-reload").checked = settings.force_reload;
   cb("unload-after-reload").checked = settings.unload_after_reload;
   cb("show-tab-icon").checked = settings.show_tab_icon;
@@ -103,6 +106,10 @@ async function init() {
   initTips();
 
   el("version-number").innerText = browser.runtime.getManifest().version || "Unknown";
+  el("version-number").style.cursor = "pointer";
+  el("version-number").addEventListener("click", () => {
+    browser.tabs.create({ url: browser.runtime.getURL("src/test.html") });
+  });
 
   renderSortOptions();
   renderSettings();
@@ -128,9 +135,15 @@ async function init() {
     ["unload-after-reload", "unload_after_reload"],
     ["show-tab-icon", "show_tab_icon"],
     ["show-stats", "show_stats"],
+    ["group-by-tab-group", "group_by_tab_group"],
   ])) {
     el(id).addEventListener("click", (e) => changeSetting(key, e));
   }
+
+  document.getElementById("group-filter")?.addEventListener("change", async (e) => {
+    settings.group_filter = /** @type {any} */ (/** @type {HTMLSelectElement} */ (e.target).value);
+    await updateSettings();
+  });
 
   el("delete-storage").addEventListener("click", () => {
     el("delete-storage").classList.add("hidden");

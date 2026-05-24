@@ -1,0 +1,149 @@
+@use 'variables' as *;
+
+#version {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-muted);
+}
+
+#alert-error {
+    margin: 8px;
+    padding: 8px;
+    border-radius: $border-radius;
+    background-color: red;
+    color: white;
+
+    &:empty {
+        display: none;
+    }
+}
+
+#reset-tip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text);
+    cursor: pointer;
+    border: none;
+    border-radius: $border-radius;
+    max-width: 50%;
+    height: 24px;
+    background-color: var(--color-hover);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        filter: brightness(1.2);
+    }
+}
+
+#delete-storage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text);
+    cursor: pointer;
+    border: none;
+    border-radius: $border-radius;
+    max-width: 50%;
+    height: 24px;
+    background-color: var(--color-hover);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 1, 1, 0.1);
+        color: red;
+    }
+}
+
+#delete-storage-wrap {
+    display: contents;
+}
+
+#delete-storage-confirm {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--color-muted);
+
+    span {
+        color: var(--color-muted);
+        font-size: 13px;
+    }
+}
+
+#delete-storage-yes,
+#delete-storage-no {
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--color-hover);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#delete-storage-yes:hover {
+    background-color: rgba(0, 180, 0, 0.15);
+    color: green;
+}
+
+#delete-storage-no:hover {
+    background-color: rgba(255, 1, 1, 0.1);
+    color: red;
+}
+
+#tip-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#tip-prev,
+#tip-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: var(--color-hover);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: default;
+    }
+}
+
+#tip-counter {
+    color: var(--color-muted);
+}
+
+#tip-text a {
+    color: var(--color-muted);
+}
+
+#force-reload-note {
+    padding-left: 20px;
+    color: var(--color-muted);
+    font-size: 12px;
+    line-height: 18px;
+}

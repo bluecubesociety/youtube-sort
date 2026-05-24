@@ -24,8 +24,8 @@
   "manifest_version": 3,
   "name": "YouTube Sort",
   "short_name": "YouTube Sort",
-  "permissions": ["tabs", "storage"],
-  "version": "2.0.2",
+  "permissions": ["tabs", "storage", "tabGroups"],
+  "version": "2.1.0",
   "web_accessible_resources": [
     {
       "resources": ["icons/icon-48.png"],
@@ -42,7 +42,6 @@
       "id": "{c3b18543-7a38-453c-a4f1-b55b07344d56}",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
-        "collects": ["none"],
         "required": ["none"]
       }
     },
