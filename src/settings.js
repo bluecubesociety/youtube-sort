@@ -9,6 +9,8 @@ export const settings = {
   sort_to_start: false,
   current_window_only: false,
   auto_sort: false,
+  group_by_tab_group: true,
+  group_filter: /** @type {'all' | 'grouped_only' | 'ungrouped_only'} */ ("all"),
   force_reload: false,
   unload_after_reload: false,
   show_tab_icon: true,

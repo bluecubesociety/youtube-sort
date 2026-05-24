@@ -45,9 +45,14 @@ export async function prefilterTabs() {
 
   // filter tabs based on settings
   const filteredTabs = tabArray.filter((tab) => {
+    const gid = (/** @type {any} */ (tab).groupId ?? -1);
+    const groupFilterOk =
+      settings.group_filter === "all" ||
+      (settings.group_filter === "grouped_only" ? gid !== -1 : gid === -1);
     return (
       tab.youtubeID &&
       (tab.title ?? tab.tabTitle) &&
+      groupFilterOk &&
       (!settings.ignore_playlists || !tab.playlist) &&
       (!settings.ignore_live || !tab.live) &&
       (!settings.ignore_inactive || !tab.sleepy) &&
