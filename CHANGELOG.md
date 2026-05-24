@@ -3,8 +3,12 @@
 ## Version 2.1.0 – May 24, 2026
 
 **Fixes**
-- Better support for groups in vanilla-firefox
-- Groups should now sort within each other, instead of ungrouping (thanks for letting me know, @ETURNA !)
+- Better support for groups in vanilla Firefox
+- Groups should now sort within each other, instead of ungrouping (thanks for letting me know, @ETURNA!)
+- Auto-Sort on youtube tab detection should now work with folders
+- Adjusted auto-Sort wording
+- Sorting while having Zen-like folders should now also work instead of quietly doing literally nothing
+- Adjusted general sorting logic
 
 **Features**
 - Added in-browser testing-area for bug testing
