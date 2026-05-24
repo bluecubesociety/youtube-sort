@@ -99,7 +99,45 @@ export async function renderList() {
   el("stats").classList.toggle("hidden", !settings.show_stats);
 
   const fragment = document.createDocumentFragment();
+  let currentGroupId = -1;
+  /** @type {DocumentFragment | HTMLElement} */
+  let currentContainer = fragment;
+
   for (const tab of tabs) {
+    const gid = tab.groupId ?? -1;
+
+    if (settings.group_by_tab_group && gid !== -1 && gid !== currentGroupId) {
+      currentGroupId = gid;
+
+      let groupTitle = "";
+      let groupColor = "";
+      try {
+        const group = await /** @type {any} */ (browser).tabGroups?.get(gid);
+        groupTitle = group?.title ?? "";
+        groupColor = group?.color ?? "";
+      } catch { /* tabGroups not available */ }
+
+      const containerEl = document.createElement("div");
+      containerEl.className = "group-container";
+      if (groupColor && groupColor in GROUP_COLORS) {
+        containerEl.style.setProperty("--group-color", GROUP_COLORS[groupColor]);
+      }
+
+      const headerEl = document.createElement("div");
+      headerEl.className = "group-header";
+
+      const label = document.createElement("small");
+      label.textContent = groupTitle || "Tab group";
+      headerEl.appendChild(label);
+
+      containerEl.appendChild(headerEl);
+      fragment.appendChild(containerEl);
+      currentContainer = containerEl;
+    } else if (gid === -1) {
+      currentGroupId = -1;
+      currentContainer = fragment;
+    }
+
     const tabData = /** @type {Record<string, string | number | boolean | undefined>} */ (
       /** @type {unknown} */ (tab)
     );
@@ -242,7 +280,7 @@ export async function renderList() {
 
     itemEl.appendChild(menuEl);
 
-    fragment.appendChild(itemEl);
+    currentContainer.appendChild(itemEl);
   }
   tabList.appendChild(fragment);
 }
