@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 2.1.0 – May 24, 2026
+
+**Fixes**
+- Better support for groups in vanilla-firefox
+- Groups should now sort within each other, instead of ungrouping (thanks for letting me know, @ETURNA !)
+
+**Features**
+- Added in-browser testing-area for bug testing
+- Added option to group tabs by group in the list (activated by default)
+
 ## Version 2.0.2 – May 12, 2026
 
 **Fixes**
