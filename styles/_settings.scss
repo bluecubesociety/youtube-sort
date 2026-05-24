@@ -1,0 +1,112 @@
+@use 'variables' as *;
+
+#filter-rules label,
+#advanced-content label,
+#sorting-rules > label {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 1px 4px;
+    margin: 0 -4px;
+    width: calc(100% + 8px);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: var(--color-hover);
+    }
+}
+
+.select-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    select {
+        width: 100%;
+        background-color: var(--color-surface);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        border-radius: $border-radius;
+        padding: 3px 6px;
+        font: 400 13px/1.4 "Roboto", "Arial", sans-serif;
+        cursor: pointer;
+    }
+}
+
+#advanced-settings {
+    gap: 0;
+}
+
+#advanced-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    font:
+        400 14px/20px "Roboto",
+        "Arial",
+        sans-serif;
+
+    .advanced-arrow {
+        transition: transform 0.2s ease;
+    }
+
+    &[aria-expanded="true"] {
+        .advanced-arrow {
+            transform: rotate(180deg);
+        }
+
+        + #advanced-content {
+            max-height: 400px;
+            padding-top: 6px;
+        }
+    }
+}
+
+#advanced-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+        max-height 0.2s ease,
+        padding-top 0.2s ease;
+
+    label {
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--color-hover);
+    cursor: pointer;
+    vertical-align: middle;
+    transition: background-color 0.15s ease;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+
+    &:checked {
+        background-color: var(--color-text);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='square'%3E%3Cpolyline points='3,10 8,15 17,5'/%3E%3C/svg%3E");
+
+        @media (prefers-color-scheme: dark) {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2020/svg' viewBox='0 0 20 20' fill='none' stroke='%230f0f0f' stroke-width='3' stroke-linecap='square'%3E%3Cpolyline points='3,10 8,15 17,5'/%3E%3C/svg%3E");
+        }
+    }
+}

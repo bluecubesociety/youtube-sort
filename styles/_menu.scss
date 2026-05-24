@@ -1,0 +1,143 @@
+@use 'variables' as *;
+
+#menu,
+#tab-settings {
+    user-select: none;
+}
+
+#menu {
+    height: 56px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    grid-gap: 8px;
+    overflow: hidden;
+    cursor: pointer;
+
+    .tab-button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--color-text);
+        fill: var(--color-text);
+        font:
+            400 14px/20px "Roboto",
+            "Arial",
+            sans-serif;
+
+        height: 40px;
+        min-width: 40px;
+        margin: 8px;
+        padding: 8px;
+
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition:
+            background-color 0.3s ease,
+            color 0.3s ease,
+            width 0.1s ease,
+            fill 0.3s ease;
+
+        &:hover {
+            fill: currentColor;
+            background-color: var(--color-hover);
+        }
+
+        &.active {
+            fill: currentColor;
+            background-color: var(--color-hover);
+        }
+
+        svg {
+            display: block;
+            height: 24px;
+        }
+    }
+
+    #tab-button-sort {
+        width: 50%;
+        border-radius: $border-radius;
+        background-color: var(--color-hover);
+        font-weight: 500;
+
+        &:hover {
+            width: 55%;
+        }
+
+        &.loading {
+            pointer-events: none;
+
+            p {
+                display: none;
+            }
+
+            &::after {
+                content: "";
+                display: block;
+                width: 18px;
+                height: 18px;
+                border: 2px solid var(--color-text);
+                border-top-color: transparent;
+                border-radius: 50%;
+                animation: spin 0.7s linear infinite;
+            }
+        }
+
+        .sort-done-check,
+        .sort-error-x {
+            display: none;
+        }
+
+        &.done {
+            pointer-events: none;
+
+            p {
+                display: none;
+            }
+
+            .sort-done-check {
+                display: block;
+            }
+        }
+
+        &.error {
+            p {
+                display: none;
+            }
+
+            .sort-error-x {
+                display: block;
+                color: red;
+            }
+        }
+    }
+
+    #tab-button-settings {
+        svg {
+            transition: transform 0.5s ease;
+        }
+
+        &:hover svg {
+            transform: rotate(60deg);
+        }
+    }
+
+    #tab-button-list {
+        svg {
+            transition: transform 0.2s ease;
+        }
+
+        &:hover svg {
+            transform: scaleY(1.3) scaleX(0.88);
+        }
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
