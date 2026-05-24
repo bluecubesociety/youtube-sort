@@ -59,6 +59,19 @@ function updateStats(tabs, isSelection) {
   el("stat_likes").innerText = getViews(totalLikes);
 }
 
+/** @type {Record<string, string>} */
+const GROUP_COLORS = {
+  blue: "#1a73e8",
+  cyan: "#00bcd4",
+  green: "#0f9d58",
+  grey: "#9e9e9e",
+  orange: "#f57c00",
+  pink: "#e91e63",
+  purple: "#9c27b0",
+  red: "#d32f2f",
+  yellow: "#f9ab00",
+};
+
 /** @type {HTMLElement | null} */
 let openMenu = null;
 
