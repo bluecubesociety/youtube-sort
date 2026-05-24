@@ -7,15 +7,18 @@ import { extractYouTubeID } from "./types.js";
 export async function prefilterTabs() {
   const videoTabs = /** @type {Record<string, VideoData>} */ (await browser.storage.local.get());
   const allTabs = await browser.tabs.query({
-    pinned: false,
     url: "*://*.youtube.com/*",
     ...(settings.current_window_only ? { currentWindow: true } : {}),
   });
+  // Pinned tabs that ARE in a group are Zen folder members
+  const visibleTabs = allTabs.filter(
+    (tab) => !tab.hidden && (!tab.pinned || /** @type {any} */ (tab.groupId ?? -1) !== -1)
+  );
 
   /** @type {Record<string, MergedTabData>} */
   const mergedTabData = {};
   // merges firefoxTab info and youtubeTab info and adjusts attribute-names
-  allTabs.forEach((tab) => {
+  visibleTabs.forEach((tab) => {
     const youtubeID = extractYouTubeID(tab.url ?? "");
     if (youtubeID) {
       const key = `${youtubeID}-${tab.id}`;
@@ -45,7 +48,7 @@ export async function prefilterTabs() {
 
   // filter tabs based on settings
   const filteredTabs = tabArray.filter((tab) => {
-    const gid = (/** @type {any} */ (tab).groupId ?? -1);
+    const gid = /** @type {any} */ (tab).groupId ?? -1;
     const groupFilterOk =
       settings.group_filter === "all" ||
       (settings.group_filter === "grouped_only" ? gid !== -1 : gid === -1);

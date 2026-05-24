@@ -47,6 +47,15 @@ export function createTabSorter(sortingRules) {
   };
 }
 
+/** @param {number} windowId @returns {Promise<any[]>} */
+async function queryVisible(windowId) {
+  const all = await browser.tabs.query({ windowId });
+  return all.filter(
+    (t) =>
+      !(/** @type {any} */ (t).hidden) && (!t.pinned || /** @type {any} */ (t.groupId ?? -1) !== -1)
+  );
+}
+
 /**
  * Groups sorted tabs by window and moves them into position.
  * @param {any[]} sortedTabs
@@ -59,9 +68,6 @@ export async function moveTabsByWindow(sortedTabs, sortToStart) {
     windowGroups.get(tab.windowId).push(tab);
   }
   for (const [windowId, windowTabs] of windowGroups) {
-    const allWindowTabs = await browser.tabs.query({ windowId, pinned: false });
-    const visibleWindowTabs = allWindowTabs.filter((t) => !t.hidden);
-
     /** @type {Map<number, any[]>} */
     const byGroup = new Map();
     for (const tab of windowTabs) {
@@ -71,24 +77,31 @@ export async function moveTabsByWindow(sortedTabs, sortToStart) {
     }
 
     for (const [groupId, groupTabs] of byGroup) {
+      const visible = await queryVisible(windowId);
+
       if (groupId === -1) {
-        // moving to a grouped tab's index causes the moved tab to be absorbed into that group.
-        const ungroupedVisible = visibleWindowTabs.filter((t) => (t.groupId ?? -1) === -1);
+        const ourIds = new Set(groupTabs.map((/** @type {any} */ t) => t.id));
+        const ours = visible.filter((t) => ourIds.has(t.id));
         if (sortToStart) {
-          const minIndex = ungroupedVisible.reduce((min, t) => Math.min(min, t.index), Infinity);
+          // Move to the first non-pinned index in the window
+          const firstNonPinned = visible
+            .filter((t) => !t.pinned)
+            .reduce(
+              (m, t) => Math.min(m, t.index),
+              ours.reduce((m, t) => Math.min(m, t.index), Infinity)
+            );
           for (const tab of /** @type {any[]} */ ([...groupTabs]).reverse()) {
-            await browser.tabs.move(tab.id, { index: minIndex });
+            await browser.tabs.move(tab.id, { index: firstNonPinned });
           }
         } else {
-          const maxIndex = ungroupedVisible.reduce((max, t) => Math.max(max, t.index), 0);
+          const maxIndex = ours.reduce((m, t) => Math.max(m, t.index), 0);
           for (const tab of groupTabs) {
             await browser.tabs.move(tab.id, { index: maxIndex });
           }
         }
       } else {
-        // sort only within group
-        const allInGroup = visibleWindowTabs.filter((t) => (t.groupId ?? -1) === groupId);
-        const groupStart = allInGroup.reduce((min, t) => Math.min(min, t.index), Infinity);
+        const allInGroup = visible.filter((t) => /** @type {any} */ (t.groupId ?? -1) === groupId);
+        const groupStart = allInGroup.reduce((m, t) => Math.min(m, t.index), Infinity);
         for (const tab of /** @type {any[]} */ ([...groupTabs]).reverse()) {
           await browser.tabs.move(tab.id, { index: groupStart });
         }
