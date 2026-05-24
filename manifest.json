@@ -42,7 +42,6 @@
       "id": "{c3b18543-7a38-453c-a4f1-b55b07344d56}",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
-        "collects": ["none"],
         "required": ["none"]
       }
     },
