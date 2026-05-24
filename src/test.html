@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- DEV ONLY — open via: moz-extension://[ext-id]/src/test.html
+     Find the ext-id in about:debugging → This Firefox → YouTube Sort → Extension ID -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>YouTube Sort — Dev Test</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font: 13px/1.6 monospace;
+        background: #0f0f0f;
+        color: #d0d0d0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 14px;
+        gap: 10px;
+      }
+      h1 {
+        font-size: 14px;
+        color: #666;
+        letter-spacing: 1px;
+      }
+      #controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      button {
+        background: #1a1a1a;
+        border: 1px solid #3a3a3a;
+        color: #d0d0d0;
+        border-radius: 3px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font: inherit;
+        transition: background 0.15s;
+      }
+      button:hover {
+        background: #2a2a2a;
+      }
+      button:active {
+        background: #111;
+      }
+      .btn-primary {
+        border-color: #447;
+        background: #1a1a2e;
+        color: #aaf;
+      }
+      .btn-primary:hover {
+        background: #252545;
+      }
+      .btn-danger {
+        border-color: #622;
+        color: #f88;
+      }
+      .btn-danger:hover {
+        background: #2a1010;
+      }
+      .sep {
+        color: #444;
+      }
+      #log-wrap {
+        flex: 1;
+        overflow: hidden;
+        border: 1px solid #2a2a2a;
+        border-radius: 3px;
+        background: #080808;
+      }
+      #log {
+        height: 100%;
+        overflow-y: auto;
+        padding: 8px 10px;
+        font: inherit;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .l-section {
+        color: #555;
+        margin-top: 6px;
+      }
+      .l-pass {
+        color: #4c8;
+      }
+      .l-fail {
+        color: #f44;
+        font-weight: bold;
+      }
+      .l-warn {
+        color: #fa6;
+      }
+      .l-info {
+        color: #d0d0d0;
+      }
+      .l-dim {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>YOUTUBE SORT — DEV TEST</h1>
+
+    <div id="controls">
+      <button id="btn-snapshot">Snapshot</button>
+      <button id="btn-save">Save</button>
+      <button id="btn-restore">Restore</button>
+      <button id="btn-shuffle">Shuffle</button>
+      <span class="sep">|</span>
+      <button id="btn-sort-1">Sort 1×</button>
+      <button id="btn-sort-5">Sort 5×</button>
+      <button id="btn-verify">Verify</button>
+      <span class="sep">|</span>
+      <button id="btn-unload">Unload tabs</button>
+      <button id="btn-clear" class="btn-danger">Clear</button>
+    </div>
+
+    <div id="log-wrap"><pre id="log"></pre></div>
+
+    <script src="browser-polyfill.min.js"></script>
+    <script type="module" src="test.js"></script>
+  </body>
+</html>
