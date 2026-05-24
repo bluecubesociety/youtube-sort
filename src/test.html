@@ -66,6 +66,46 @@
       .sep {
         color: #444;
       }
+      .btn-split {
+        position: relative;
+        display: flex;
+      }
+      .btn-split > .btn-main {
+        border-radius: 3px 0 0 3px;
+        border-right: none;
+      }
+      .btn-split > .btn-arrow {
+        border-radius: 0 3px 3px 0;
+        padding: 4px 7px;
+      }
+      .btn-split-menu {
+        position: absolute;
+        bottom: calc(100% + 3px);
+        left: 0;
+        background: #1a1a2e;
+        border: 1px solid #447;
+        border-radius: 3px;
+        display: none;
+        z-index: 10;
+        min-width: 100%;
+      }
+      .btn-split-menu.open {
+        display: block;
+      }
+      .btn-split-menu button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        color: #aaf;
+        white-space: nowrap;
+      }
+      .btn-split-menu button:hover {
+        background: #252545;
+      }
       #log-wrap {
         flex: 1;
         overflow: hidden;
@@ -117,6 +157,17 @@
       <button id="btn-verify">Verify</button>
       <span class="sep">|</span>
       <button id="btn-unload">Unload tabs</button>
+      <span class="sep">|</span>
+      <div class="btn-split">
+        <button id="btn-full-auto" class="btn-primary btn-main">Full Auto Test</button>
+        <button id="btn-split-arrow" class="btn-primary btn-arrow" aria-label="More options">
+          ▾
+        </button>
+        <div id="btn-split-menu" class="btn-split-menu">
+          <button id="btn-init-run">Open tabs &amp; run</button>
+          <button id="btn-grouped-sort">Grouped sort test</button>
+        </div>
+      </div>
       <button id="btn-clear" class="btn-danger">Clear</button>
     </div>
 

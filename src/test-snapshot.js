@@ -28,7 +28,7 @@ export async function snapshot() {
           const group = await /** @type {any} */ (browser).tabGroups?.get(gid);
           groupTitle = group?.title ?? null;
           groupColor = group?.color ?? null;
-        } catch {}
+        } catch { /* tabGroups not available */ }
       }
       const youtubeID = extractYouTubeID(tab.url ?? "");
       return {
@@ -91,17 +91,48 @@ export async function doSnapshot() {
   }
 }
 
-/** @type {Array<{id: number, index: number, windowId: number, groupId: number}> | null} */
+const STANDARD_GROUP_COLORS = new Set([
+  "blue",
+  "cyan",
+  "green",
+  "grey",
+  "orange",
+  "pink",
+  "purple",
+  "red",
+  "yellow",
+]);
+
+/** @type {Array<{id: number, index: number, windowId: number, groupId: number, groupColor: string | null}> | null} */
 let savedOrder = null;
 
 export async function doSave() {
   const tabs = await browser.tabs.query({});
-  savedOrder = tabs.map((t) => ({
-    id: /** @type {number} */ (t.id),
-    index: t.index,
-    windowId: t.windowId ?? 0,
-    groupId: /** @type {any} */ (t).groupId ?? -1,
-  }));
+
+  const uniqueGids = [
+    ...new Set(tabs.map((t) => /** @type {any} */ (t).groupId ?? -1).filter((g) => g !== -1)),
+  ];
+  /** @type {Map<number, string | null>} */
+  const groupColors = new Map();
+  for (const gid of uniqueGids) {
+    try {
+      const g = await /** @type {any} */ (browser).tabGroups?.get(gid);
+      groupColors.set(gid, g?.color ?? null);
+    } catch {
+      groupColors.set(gid, null);
+    }
+  }
+
+  savedOrder = tabs.map((t) => {
+    const gid = /** @type {any} */ (t).groupId ?? -1;
+    return {
+      id: /** @type {number} */ (t.id),
+      index: t.index,
+      windowId: t.windowId ?? 0,
+      groupId: gid,
+      groupColor: gid !== -1 ? (groupColors.get(gid) ?? null) : null,
+    };
+  });
   const grouped = savedOrder.filter((e) => e.groupId !== -1).length;
   log(`Saved: ${savedOrder.length} tabs (${grouped} in groups).`, "info");
 }
@@ -122,18 +153,30 @@ export async function doRestore() {
     for (const e of [...entries].sort((a, b) => a.index - b.index)) {
       try {
         await browser.tabs.move(e.id, { index: e.index });
-      } catch {}
+      } catch { /* tab may have been closed */ }
     }
   }
 
   try {
-    const allIds = savedOrder.map((e) => e.id);
-    await /** @type {any} */ (browser).tabs.ungroup(allIds);
+    // Non-standard Zen groups, leave untouched
+    const nonStandardGroupIds = new Set(
+      savedOrder
+        .filter(
+          (e) =>
+            e.groupId !== -1 && e.groupColor != null && !STANDARD_GROUP_COLORS.has(e.groupColor)
+        )
+        .map((e) => e.groupId)
+    );
+
+    const idsToUngroup = savedOrder
+      .filter((e) => !nonStandardGroupIds.has(e.groupId))
+      .map((e) => e.id);
+    await /** @type {any} */ (browser).tabs.ungroup(idsToUngroup);
 
     /** @type {Map<number, number[]>} */
     const byGroup = new Map();
     for (const e of savedOrder) {
-      if (e.groupId !== -1) {
+      if (e.groupId !== -1 && !nonStandardGroupIds.has(e.groupId)) {
         if (!byGroup.has(e.groupId)) byGroup.set(e.groupId, []);
         byGroup.get(e.groupId)?.push(e.id);
       }
@@ -141,7 +184,12 @@ export async function doRestore() {
     for (const [, tabIds] of byGroup) {
       await /** @type {any} */ (browser).tabs.group({ tabIds });
     }
-    log(`Groups restored: ${byGroup.size} group(s).`, "pass");
+
+    const skipped = nonStandardGroupIds.size;
+    log(
+      `Groups restored: ${byGroup.size} vanilla group(s)${skipped > 0 ? `, ${skipped} non-standard group(s) left intact` : ""}.`,
+      "pass"
+    );
   } catch (e) {
     log(`Could not restore groups: ${e instanceof Error ? e.message : String(e)}`, "warn");
   }
